@@ -12,6 +12,12 @@
 #include <GLFW/glfw3.h>
 
 /**
+ * OpenGL parameters.
+ */
+
+auto const NUM_PIXEL_BUFFERS = 2; // TODO: this might be a useless optimization
+
+/**
  * RAW file information.
  */
 
@@ -112,61 +118,42 @@ int main() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	assert(!glGetError());
 
-	GLuint pixel_buffer {0};
-	glGenBuffers(1, &pixel_buffer);
-	assert(!glGetError());
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
-	assert(!glGetError());
-	glBufferData(
-		GL_PIXEL_PACK_BUFFER,			// target
-		2 * RAW_DIM_X * RAW_DIM_Y,		// size
-		static_cast<GLvoid *>(data),	// data
-		GL_DYNAMIC_DRAW					// usage
-		);
-	assert(!glGetError());
-	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+	GLuint pixel_buffers[NUM_PIXEL_BUFFERS];
+	glGenBuffers(NUM_PIXEL_BUFFERS, pixel_buffers);
 	assert(!glGetError());
 
-	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
-	assert(!glGetError());
-	glActiveTexture(GL_TEXTURE0 + 0);
-	assert(!glGetError());
-	glTexImage2D(
-		GL_TEXTURE_2D,		// target
-		0,					// level
-		GL_LUMINANCE16,		// internalformat
-		RAW_DIM_X,			// width
-		RAW_DIM_Y,			// height
-		0,					// border
-		GL_LUMINANCE,		// format
-		GL_UNSIGNED_SHORT,	// type
-		nullptr				// pixels
-		);
-	assert(!glGetError());
-	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-	assert(!glGetError());
+	for (auto const & pixel_buffer: pixel_buffers) {
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
+		assert(!glGetError());
+		glBufferData(
+			GL_PIXEL_PACK_BUFFER,			// target
+			2 * RAW_DIM_X * RAW_DIM_Y,		// size
+			static_cast<GLvoid *>(data),	// data
+			GL_DYNAMIC_DRAW					// usage
+			);
+		assert(!glGetError());
+		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+		assert(!glGetError());
 
-	// GLuint texture {0};
-	// glGenTextures(1, &texture);
-	// assert(!glGetError());
-	// glBindTexture(GL_TEXTURE_2D, texture);
-	// assert(!glGetError());
-	// glTexImage2D(
-	// 	GL_TEXTURE_2D,		// target
-	// 	0,					// level
-	// 	GL_LUMINANCE16,		// internalformat
-	// 	RAW_DIM_X,			// width
-	// 	RAW_DIM_Y,			// height
-	// 	0,					// border
-	// 	GL_LUMINANCE,		// format
-	// 	GL_UNSIGNED_SHORT,	// type
-	// 	data				// pixels
-	// 	);
-	// assert(!glGetError());
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	// assert(!glGetError());
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	// assert(!glGetError());
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
+		assert(!glGetError());
+		glActiveTexture(GL_TEXTURE0 + 0);
+		assert(!glGetError());
+		glTexImage2D(
+			GL_TEXTURE_2D,					// target
+			0,								// level
+			GL_LUMINANCE16,					// internalformat
+			RAW_DIM_X,						// width
+			RAW_DIM_Y,						// height
+			0,								// border
+			GL_BGRA,						// format
+			GL_UNSIGNED_SHORT_1_5_5_5_REV,	// type
+			nullptr							// pixels
+			);
+		assert(!glGetError());
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+		assert(!glGetError());
+	}
 
 	// Create vertex data and corresponding VBO.
 
@@ -356,6 +343,8 @@ int main() {
 			
 		auto data = static_cast<uint16_t *>(region.get_address()) + frame_offset;
 
+		auto const pixel_buffer = pixel_buffers[frame % NUM_PIXEL_BUFFERS];
+
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
 		glBufferSubData(
 			GL_PIXEL_PACK_BUFFER,		// target
@@ -367,15 +356,15 @@ int main() {
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
 		glTexSubImage2D(
-			GL_TEXTURE_2D,		// target
-			0,					// level
-			0,					// xoffset
-			0,					// yoffset
-			RAW_DIM_X,			// width
-			RAW_DIM_Y,			// height
-			GL_LUMINANCE,		// format
-			GL_UNSIGNED_SHORT,	// type
-			nullptr				// pixels
+			GL_TEXTURE_2D,					// target
+			0,								// level
+			0,								// xoffset
+			0,								// yoffset
+			RAW_DIM_X,						// width
+			RAW_DIM_Y,						// height
+			GL_BGRA,						// format
+			GL_UNSIGNED_SHORT_1_5_5_5_REV,	// type
+			nullptr							// pixels
 			);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
