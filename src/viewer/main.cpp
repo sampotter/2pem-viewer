@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cinttypes>
+#include <complex>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -9,13 +10,14 @@
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 
+#include <fftw3.h>
 #include <GLFW/glfw3.h>
 
 /**
  * OpenGL parameters.
  */
 
-auto const NUM_PIXEL_BUFFERS = 2; // TODO: this might be a useless optimization
+auto const NUM_TEXTURE_LAYERS = 16;
 
 /**
  * RAW file information.
@@ -55,6 +57,12 @@ std::string get_shader_info_log(GLuint shader) {
 		&info_log[0]
 		);
 	return info_log;
+}
+
+void check_for_errors() {
+#ifdef VIEWER_DEBUG
+	assert(!glGetError());
+#endif // VIEWER_DEBUG
 }
 
 int main() {
@@ -104,58 +112,70 @@ int main() {
 	 * OpenGL initialization.
 	 */
 
+	glDisable(GL_DITHER);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_FOG);
+	glDisable(GL_DEPTH_TEST);
+
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+
 	// Create, bind, and specify texture.
 
-	GLuint texture {0};
+	GLuint texture;
 	glGenTextures(1, &texture);
-	assert(!glGetError());
+	check_for_errors();
+
 	glActiveTexture(GL_TEXTURE0 + 0);
-	assert(!glGetError());
+	check_for_errors();
 	glBindTexture(GL_TEXTURE_2D, texture);
-	assert(!glGetError());
+	check_for_errors();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	assert(!glGetError());
+	check_for_errors();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	assert(!glGetError());
+	check_for_errors();
 
-	GLuint pixel_buffers[NUM_PIXEL_BUFFERS];
-	glGenBuffers(NUM_PIXEL_BUFFERS, pixel_buffers);
-	assert(!glGetError());
+	// Set up PBOs.
 
-	for (auto const & pixel_buffer: pixel_buffers) {
-		glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
-		assert(!glGetError());
-		glBufferData(
-			GL_PIXEL_PACK_BUFFER,			// target
-			2 * RAW_DIM_X * RAW_DIM_Y,		// size
-			static_cast<GLvoid *>(data),	// data
-			GL_DYNAMIC_DRAW					// usage
-			);
-		assert(!glGetError());
-		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-		assert(!glGetError());
+	GLuint pixel_buffer;
+	glGenBuffers(1, &pixel_buffer);
+	check_for_errors();
 
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
-		assert(!glGetError());
-		glActiveTexture(GL_TEXTURE0 + 0);
-		assert(!glGetError());
-		glTexImage2D(
-			GL_TEXTURE_2D,					// target
-			0,								// level
-			GL_LUMINANCE16,					// internalformat
-			RAW_DIM_X,						// width
-			RAW_DIM_Y,						// height
-			0,								// border
-			GL_BGRA,						// format
-			GL_UNSIGNED_SHORT_1_5_5_5_REV,	// type
-			nullptr							// pixels
-			);
-		assert(!glGetError());
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		assert(!glGetError());
-	}
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
+	check_for_errors();
+	glBufferData(
+		GL_PIXEL_PACK_BUFFER,			// target
+		2 * RAW_DIM_X * RAW_DIM_Y,		// size
+		static_cast<GLvoid *>(data),	// data
+		GL_DYNAMIC_DRAW					// usage
+		);
+	check_for_errors();
+	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+	check_for_errors();
 
-	// Create vertex data and corresponding VBO.
+	// TODO: only do this once -- move it to before the while loop
+		
+	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pixel_buffer);
+	check_for_errors();
+	glActiveTexture(GL_TEXTURE0 + 0);
+	check_for_errors();
+	glTexImage2D(
+		GL_TEXTURE_2D,					// target
+		0,								// level
+		GL_LUMINANCE16,					// internalformat
+		RAW_DIM_X,						// width
+		RAW_DIM_Y,						// height
+		0,								// border
+		GL_BGRA,						// format
+		GL_UNSIGNED_SHORT_1_5_5_5_REV,	// type
+		nullptr							// pixels
+		);
+	check_for_errors();
+	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+	check_for_errors();
+	
+    // Create vertex data and corresponding VBO.
 
 	GLfloat verts[] = {
 		1.0, 1.0,	// top right
@@ -166,11 +186,11 @@ int main() {
 
 	GLuint verts_vbo;
 	glGenBuffers(1, &verts_vbo);
-	assert(!glGetError());
+	check_for_errors();
 	glBindBuffer(GL_ARRAY_BUFFER, verts_vbo);
-	assert(!glGetError());
+	check_for_errors();
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
-	assert(!glGetError());
+	check_for_errors();
 
 	// Create texcoord data and corresponding VBO.
 
@@ -183,28 +203,28 @@ int main() {
 
 	GLuint texcoords_vbo;
 	glGenBuffers(1, &texcoords_vbo);
-	assert(!glGetError());
+	check_for_errors();
 	glBindBuffer(GL_ARRAY_BUFFER, texcoords_vbo);
-	assert(!glGetError());
+	check_for_errors();
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texcoords), texcoords, GL_STATIC_DRAW);
-	assert(!glGetError());
+	check_for_errors();
 
 	// Load and compile vertex shader.
 
 	auto const vertex_shader_string = string_from_file(VERTEX_SHADER_PATH);
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	assert(!glGetError());
+	check_for_errors();
 	{
 		char const * string = vertex_shader_string.data();
 		glShaderSource(vertex_shader, 1, &string, nullptr);
-		assert(!glGetError());
+		check_for_errors();
 	}
 	glCompileShader(vertex_shader);
-	assert(!glGetError());
+	check_for_errors();
 	{
 		GLint compile_status = GL_FALSE;
 		glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compile_status);
-		assert(!glGetError());
+		check_for_errors();
 		if (!compile_status) {
 			std::cerr << "Failed to compile vertex shader" << std::endl;
 			std::cerr << get_shader_info_log(vertex_shader) << std::endl;
@@ -215,19 +235,19 @@ int main() {
 
 	auto const fragment_shader_string = string_from_file(FRAGMENT_SHADER_PATH);
 	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	assert(!glGetError());
+	check_for_errors();
 	{
 		char const * string = fragment_shader_string.data();
 		GLint const length = fragment_shader_string.size();
 		glShaderSource(fragment_shader, 1, &string, &length);
-		assert(!glGetError());
+		check_for_errors();
 	}
 	glCompileShader(fragment_shader);
-	assert(!glGetError());
+	check_for_errors();
 	{
 		GLint compile_status = GL_FALSE;
 		glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compile_status);
-		assert(!glGetError());
+		check_for_errors();
 		if (!compile_status) {
 			std::cerr << "Failed to compile fragment shader" << std::endl;
 			std::cerr << get_shader_info_log(fragment_shader) << std::endl;
@@ -237,17 +257,17 @@ int main() {
 	// Link shader program.
 
 	GLuint shader_program = glCreateProgram();
-	assert(!glGetError());
+	check_for_errors();
 	glAttachShader(shader_program, vertex_shader);
-	assert(!glGetError());
+	check_for_errors();
 	glAttachShader(shader_program, fragment_shader);
-	assert(!glGetError());
+	check_for_errors();
 	glLinkProgram(shader_program);
-	assert(!glGetError());
+	check_for_errors();
 	{
 		GLint link_status = GL_FALSE;
 		glGetProgramiv(shader_program, GL_LINK_STATUS, &link_status);
-		assert(!glGetError());
+		check_for_errors();
 		if (!link_status) {
 			std::cerr << "Failed to link shader program" << std::endl;
 		}
@@ -256,7 +276,7 @@ int main() {
 	// Get coord2d attribute location.
 
 	GLint attrib_coord2d {glGetAttribLocation(shader_program, "coord2d")};
-	assert(!glGetError());
+	check_for_errors();
 	if (attrib_coord2d == -1) {
 		std::cerr << "Failed to bind 'coord2d' attribute" << std::endl;
 	}
@@ -264,7 +284,7 @@ int main() {
 	// Get texcoord attribute location.
 
 	GLint attrib_texcoord {glGetAttribLocation(shader_program, "texcoord")};
-	assert(!glGetError());
+	check_for_errors();
 	if (attrib_texcoord == -1) {
 		std::cerr << "Failed to bind 'texcoord' attribute" << std::endl;
 	}
@@ -272,7 +292,7 @@ int main() {
 	// Get tex uniform location and set its value to GL_TEXTURE0.
 
 	GLint uniform_tex {glGetUniformLocation(shader_program, "tex")};
-	assert(!glGetError());
+	check_for_errors();
 	if (uniform_tex == -1) {
 		std::cerr << "Failed to bind 'tex' uniform" << std::endl;
 	}
@@ -295,11 +315,11 @@ int main() {
 		glUseProgram(shader_program);
 
 		glActiveTexture(GL_TEXTURE0 + 0);
-		assert(!glGetError());
+		check_for_errors();
 		glBindTexture(GL_TEXTURE_2D, texture);
-		assert(!glGetError());
+		check_for_errors();
 		glUniform1i(uniform_tex, 0);
-		assert(!glGetError());
+		check_for_errors();
 	
 		glEnableVertexAttribArray(attrib_coord2d);
 		glBindBuffer(GL_ARRAY_BUFFER, verts_vbo);
@@ -342,8 +362,6 @@ int main() {
 		};
 			
 		auto data = static_cast<uint16_t *>(region.get_address()) + frame_offset;
-
-		auto const pixel_buffer = pixel_buffers[frame % NUM_PIXEL_BUFFERS];
 
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
 		glBufferSubData(
