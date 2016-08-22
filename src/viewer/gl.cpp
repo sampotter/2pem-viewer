@@ -128,6 +128,27 @@ gl::drawArrays(GLenum mode, GLint first, GLsizei count)
 }
 
 void
+gl::deleteBuffers(GLsizei n, GLuint * buffers)
+{
+	glDeleteBuffers(n, buffers);
+	handle_errors();
+}
+
+void
+gl::deleteProgram(GLuint program)
+{
+	glDeleteProgram(program);
+	handle_errors();
+}
+
+void
+gl::deleteShader(GLuint shader)
+{
+	glDeleteShader(shader);
+	handle_errors();
+}
+
+void
 gl::deleteTextures(GLsizei n, GLuint * textures)
 {
 	glDeleteTextures(n, textures);

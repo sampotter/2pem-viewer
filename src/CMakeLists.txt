@@ -8,6 +8,7 @@ set (server_srcs viewer/server.cpp)
 set (viewer_srcs viewer/main.cpp)
 
 add_executable (client ${client_srcs})
+target_link_libraries (client ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries (client ${Boost_SYSTEM_LIBRARY})
 target_link_libraries (client glfw)
 target_link_libraries (client ${OPENGL_gl_LIBRARY})

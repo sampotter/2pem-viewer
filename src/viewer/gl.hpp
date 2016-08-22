@@ -18,6 +18,9 @@ namespace gl {
 	void compileShader(GLuint shader);
 	GLuint createProgram();
 	GLuint createShader(GLenum shaderType);
+	void deleteBuffers(GLsizei n, GLuint * buffers);
+	void deleteProgram(GLuint program);
+	void deleteShader(GLuint shader);
 	void deleteTextures(GLsizei n, GLuint * textures);
 	void disable(GLenum cap);
 	void drawArrays(GLenum mode, GLint first, GLsizei count);

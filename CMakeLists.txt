@@ -1,7 +1,7 @@
 project (viewer CXX)
 cmake_minimum_required (VERSION 3.4)
 
-find_package (Boost QUIET COMPONENTS system REQUIRED)
+find_package (Boost QUIET COMPONENTS program_options system REQUIRED)
 find_package (glfw3 3.2 REQUIRED)
 find_package (OpenGL REQUIRED)
 
