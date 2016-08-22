@@ -71,3 +71,9 @@ glfw::window::swapBuffers() const
 {
 	glfwSwapBuffers(window_);
 }
+
+void
+glfw::window::setCloseCallback(GLFWwindowclosefun cbfun) const
+{
+	glfwSetWindowCloseCallback(window_, cbfun);
+}
