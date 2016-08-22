@@ -220,27 +220,38 @@ void initLocations() {
 	}
 }
 
-auto connect(std::string const & hostname, std::string const & port) {
+boost::asio::io_service io;
+boost::asio::ip::tcp::socket sock(io);
+
+void connect(std::string const & hostname, std::string const & port) {
 	using namespace boost::asio;
 	using namespace boost::asio::ip;
 
-	io_service io;
 	tcp::resolver resolver(io);
 	tcp::resolver::query query(hostname.c_str(), port.c_str());
 	tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-	tcp::socket socket(io);
-	connect(socket, endpoint_iterator);
-	return socket;
+	connect(sock, endpoint_iterator);
+}
+
+void disconnect() {
+	boost::system::error_code error_code;
+	sock.shutdown(boost::asio::ip::tcp::socket::shutdown_both, error_code);
+	sock.close();
+	io.stop();
+}
+
+void closeCallback(GLFWwindow *) {
+	disconnect();
 }
 
 std::vector<float> frame(RAW_DIM_X*RAW_DIM_Y);
 
-void receiveFrame(boost::asio::ip::tcp::socket & socket) {
+void receiveFrame() {
 	boost::system::error_code error_code;
 	auto data = (void *) &frame[0];
 	auto size_in_bytes = sizeof(float)*frame.size();
 	auto buffer = boost::asio::buffer(data, size_in_bytes);
-	std::size_t len = boost::asio::read(socket, buffer);
+	std::size_t len = boost::asio::read(sock, buffer);
 #ifdef VIEWER_DEBUG
 	fprintf(stderr, "Received frame (read %lu bytes, expected %lu)\n",
 			len, sizeof(float)*frame.size());
@@ -317,6 +328,7 @@ int main(int argc, char ** argv) {
 	glfw::init();
 	glfw::window window(RAW_DIM_X, RAW_DIM_Y);
 	window.makeContextCurrent();
+	window.setCloseCallback(closeCallback);
 
 	initOpenGL();
 	initTexture();
@@ -328,10 +340,10 @@ int main(int argc, char ** argv) {
 	initShaderProgram();
 	initLocations();
 
-	auto socket = connect(opts->hostname, opts->port);
+	connect(opts->hostname, opts->port);
 
 	while (!window.shouldClose()) {
-		receiveFrame(socket);
+		receiveFrame();
 		updateViewport(window);
 		loadFrame();
 		drawTexture();
