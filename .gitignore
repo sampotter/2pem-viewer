@@ -3,3 +3,4 @@ GRTAGS
 GTAGS
 build
 ._*
+.DS_Store

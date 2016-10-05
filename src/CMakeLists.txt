@@ -1,5 +1,13 @@
 set (client_srcs
   viewer/client.cpp
+  viewer/client_app_state.hpp
+  viewer/client_app_state.cpp
+  viewer/client_asio_state.hpp
+  viewer/client_asio_state.cpp
+  viewer/client_gl_state.hpp
+  viewer/client_gl_state.cpp
+  viewer/client_glfw_state.hpp
+  viewer/client_glfw_state.cpp
   viewer/client_options.hpp
   viewer/client_options.cpp
   viewer/frame.hpp

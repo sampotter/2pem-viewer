@@ -10,52 +10,6 @@ frame::frame(std::size_t width, std::size_t height):
 {}
 
 void
-frame::receive(boost::asio::ip::tcp::socket & socket)
-{
-    boost::system::error_code error_code;
-    auto buffer = boost::asio::buffer(
-		(void *) &data_[0],
-		sizeof(GLfloat)*data_.size()
-		);
-    std::size_t len = boost::asio::read(socket, buffer);
-#ifdef VIEWER_DEBUG
-    fprintf(
-		stderr,
-		"Received frame (read %lu bytes, expected %lu)\n",
-		len,
-		sizeof(float)*data_.size()
-		);
-#endif // VIEWER_DEBUG
-}
-
-void
-frame::buffer_and_teximage(GLuint pbo, GLsizeiptr pbo_size) const
-{
-    gl::bindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-    gl::bufferSubData(
-        GL_PIXEL_PACK_BUFFER,									// target
-        0,														// offset
-        pbo_size,												// size
-        static_cast<GLvoid *>(const_cast<GLfloat *>(&data_[0])) // data
-        );
-    gl::bindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-
-    gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-    gl::texSubImage2D(
-        GL_TEXTURE_2D,  // target
-        0,              // level
-        0,              // xoffset
-        0,              // yoffset
-        width_,			// width
-        height_,		// height
-        GL_LUMINANCE,   // format
-        GL_FLOAT,       // type
-        nullptr         // pixels
-        );
-    gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-}
-
-void
 frame::translate(int ishift, int jshift)
 {
     std::size_t M = height_;
@@ -167,4 +121,35 @@ frame::align(frame const & other_frame)
 #ifdef VIEWER_DEBUG
 	fprintf(stdout, "%d, %d\n", i0, j0);
 #endif // VIEWER_DEBUG
+}
+
+std::size_t
+frame::get_width() const
+{
+	return width_;
+}
+
+std::size_t
+frame::get_height() const
+{
+	return height_;
+}
+
+std::size_t
+frame::size() const
+{
+	return data_.size();
+}
+
+GLfloat *
+frame::data()
+{
+	return data_.data();
+}
+
+
+GLfloat const *
+frame::data() const
+{
+	return data_.data();
 }

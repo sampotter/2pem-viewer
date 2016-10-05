@@ -9,10 +9,13 @@
 
 struct frame {
 	frame(std::size_t width, std::size_t height);
-	void receive(boost::asio::ip::tcp::socket & socket);
-	void buffer_and_teximage(GLuint pbo, GLsizeiptr pbo_size) const;
 	void translate(int ishift, int jshift);
 	void align(frame const & other_frame);
+	std::size_t get_width() const;
+	std::size_t get_height() const;
+	std::size_t size() const;
+	GLfloat * data();
+	GLfloat const * data() const;
 private:
 	std::vector<GLfloat> data_;
 	std::size_t width_;
@@ -20,3 +23,4 @@ private:
 };
 
 #endif // __FRAME_HPP__
+
