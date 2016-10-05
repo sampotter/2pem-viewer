@@ -1,85 +1,15 @@
-#include <cassert>
-#include <cinttypes>
-#include <complex>
 #include <cstdio>
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <sstream>
 #include <string>
-#include <vector>
 
-#include <boost/array.hpp>
 #include <boost/asio.hpp>
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-#include <boost/program_options.hpp>
+#include <boost/optional.hpp>
 
-#include <fftw3.h>
-
+#include "client_options.hpp"
+#include "frame.hpp"
 #include "glfw.hpp"
 #include "gl.hpp"
 
 static_assert(sizeof(GLfloat) == sizeof(float)); // guaranteed?
-
-struct {
-    std::string hostname;
-    std::string port;
-    struct {
-        std::size_t width;
-        std::size_t height;
-    } image;
-} options;
-
-void
-parse_command_line_options(int argc, char ** argv) {
-    using namespace boost::program_options;
-
-    options_description desc {"Testing testing"};
-
-    desc.add_options()
-        ("help,h", "Display help")
-        ("hostname",
-         value<std::string>()->default_value("localhost"),
-         "The server hostname")
-        ("port",
-         value<std::string>()->default_value("8888"),
-         "The server port")
-        ("image_width",
-         value<std::size_t>()->default_value(512),
-         "The width of the image in pixels")
-        ("image_height",
-         value<std::size_t>()->default_value(512),
-         "The height of the image in pixels");
-
-    variables_map varmap;
-    store(parse_command_line(argc, argv, desc), varmap);
-    notify(varmap);
-
-    if (varmap.count("help")) {
-        std::cout << desc << std::endl;
-        std::exit(EXIT_FAILURE);
-    }
-
-    options.hostname = varmap["hostname"].as<std::string>();
-    options.port = varmap["port"].as<std::string>();
-    options.image.width = varmap["image_width"].as<std::size_t>();
-    options.image.height = varmap["image_height"].as<std::size_t>();
-}
-
-/**
- * Shader file locations.
- */
-
-auto const VERTEX_SHADER_PATH = "/Volumes/Molly/Dropbox/research/two-photon/viewer/src/viewer/vertex.glsl";
-auto const FRAGMENT_SHADER_PATH = "/Volumes/Molly/Dropbox/research/two-photon/viewer/src/viewer/fragment.glsl";
-
-std::string string_from_file(std::string path) {
-    std::ifstream ifstream {path};
-    std::stringstream stringstream;
-    stringstream << ifstream.rdbuf();
-    return stringstream.str();
-}
 
 std::string get_shader_info_log(GLuint shader) {
     GLint info_log_length {0};
@@ -88,7 +18,6 @@ std::string get_shader_info_log(GLuint shader) {
     gl::getShaderInfoLog(shader, info_log_length, nullptr, &info_log[0]);
     return info_log;
 }
-
 
 void initOpenGL() {
     gl::disable(GL_DITHER);
@@ -114,8 +43,8 @@ void initTexture() {
 GLuint pbo;
 GLsizeiptr pbo_size;
 
-void initPBO() {
-    pbo_size = sizeof(GLfloat)*options.image.width*options.image.height;
+void initPBO(client_options const & options) {
+    pbo_size = sizeof(GLfloat)*options.get_img_width()*options.get_img_height();
 
     gl::genBuffers(1, &pbo);
 
@@ -135,15 +64,15 @@ void initPBO() {
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
     gl::activeTexture(GL_TEXTURE0 + 0);
     gl::texImage2D(
-        GL_TEXTURE_2D,          // target
-        0,                      // level
-        GL_LUMINANCE,           // internalformat
-        options.image.width,    // width
-        options.image.height,   // height
-        0,                      // border
-        GL_LUMINANCE,           // format
-        GL_FLOAT,               // type
-        nullptr                 // pixels
+        GL_TEXTURE_2D,				// target
+        0,							// level
+        GL_LUMINANCE,				// internalformat
+        options.get_img_width(),    // width
+        options.get_img_height(),   // height
+        0,							// border
+        GL_LUMINANCE,				// format
+        GL_FLOAT,					// type
+        nullptr						// pixels
         );
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
@@ -177,13 +106,9 @@ void initTexcoordsVBO() {
                    GL_STATIC_DRAW);
 }
 
-void initShader(char const * path, GLenum shaderType, GLuint * shader) {
-    auto const shader_string = string_from_file(path);
+void initShader(char const * source, GLenum shaderType, GLuint * shader) {
     *shader = gl::createShader(shaderType);
-    {
-        auto string = &shader_string[0];
-        gl::shaderSource(*shader, 1, &string, nullptr);
-    }
+    gl::shaderSource(*shader, 1, &source, nullptr);
     gl::compileShader(*shader);
 
     GLint compile_status = GL_FALSE;
@@ -197,13 +122,33 @@ void initShader(char const * path, GLenum shaderType, GLuint * shader) {
 GLuint vertex_shader;
 
 void initVertexShader() {
-    initShader(VERTEX_SHADER_PATH, GL_VERTEX_SHADER, &vertex_shader);
+    auto source =
+        "#version 120\n"
+        "\n"
+        "attribute vec2 coord2d;\n"
+        "attribute vec2 texcoord;\n"
+        "varying vec2 v_texcoord;\n"
+        "\n"
+        "void main(void) {\n"
+        "    gl_Position = vec4(coord2d, 0.0, 1.0);\n"
+        "    v_texcoord = texcoord;\n"
+        "}";
+    initShader(source, GL_VERTEX_SHADER, &vertex_shader);
 }
 
 GLuint fragment_shader;
 
 void initFragmentShader() {
-    initShader(FRAGMENT_SHADER_PATH, GL_FRAGMENT_SHADER, &fragment_shader);
+    auto source =
+        "#version 120\n"
+        "\n"
+        "varying vec2 v_texcoord;\n"
+        "uniform sampler2D tex;\n"
+        "\n"
+        "void main(void) {\n"
+        "    gl_FragColor = 2 * texture2D(tex, v_texcoord);\n"
+        "}";
+    initShader(source, GL_FRAGMENT_SHADER, &fragment_shader);
 }
 
 GLuint program;
@@ -256,18 +201,6 @@ void connect(std::string const & hostname, std::string const & port) {
     connect(sock, endpoint_iterator);
 }
 
-void receiveFrame(std::vector<GLfloat> & frame) {
-    boost::system::error_code error_code;
-    auto data = (void *) &frame[0];
-    auto size_in_bytes = sizeof(float)*frame.size();
-    auto buffer = boost::asio::buffer(data, size_in_bytes);
-    std::size_t len = boost::asio::read(sock, buffer);
-#ifdef VIEWER_DEBUG
-    fprintf(stderr, "Received frame (read %lu bytes, expected %lu)\n",
-            len, sizeof(float)*frame.size());
-#endif // VIEWER_DEBUG
-}
-
 void updateViewport(glfw::window const & window) {
     auto const size = window.getFramebufferSize();
     gl::viewport(0, 0, size.width, size.height);
@@ -298,29 +231,21 @@ void drawTexture() {
     gl::drawArrays(GL_QUADS, 0, 4);
 }
 
-void loadFrame(std::vector<GLfloat> & frame) {
-    gl::bindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
-    gl::bufferSubData(
-        GL_PIXEL_PACK_BUFFER,               // target
-        0,                                  // offset
-        pbo_size,                           // size
-        static_cast<GLvoid *>(&frame[0])    // data
-        );
-    gl::bindBuffer(GL_PIXEL_PACK_BUFFER, 0);
-
-    gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-    gl::texSubImage2D(
-        GL_TEXTURE_2D,          // target
-        0,                      // level
-        0,                      // xoffset
-        0,                      // yoffset
-        options.image.width,    // width
-        options.image.height,   // height
-        GL_LUMINANCE,           // format
-        GL_FLOAT,               // type
-        nullptr                 // pixels
-        );
-    gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+void processFrame(
+    glfw::window const & window,
+    frame & main_frame,
+    boost::optional<frame &> template_frame = boost::none)
+{
+    main_frame.receive(sock);
+    if (template_frame) {
+        main_frame.align(*template_frame);
+    }
+    updateViewport(window);
+    main_frame.buffer_and_teximage(pbo, pbo_size);
+    drawTexture();
+    window.swapBuffers();
+    glfw::pollEvents();
+    gl::flush();
 }
 
 void disconnect() {
@@ -355,16 +280,16 @@ void closeCallback(GLFWwindow *) {
 }
 
 int main(int argc, char ** argv) {
-    parse_command_line_options(argc, argv);
+	auto const options = client_options::from_cli_args(argc, argv);
 
     glfw::init();
-    glfw::window window(options.image.width, options.image.height);
+    glfw::window window(options.get_img_width(), options.get_img_height());
     window.makeContextCurrent();
     window.setCloseCallback(closeCallback);
 
     initOpenGL();
     initTexture();
-    initPBO();
+    initPBO(options);
     initVertexVBO();
     initTexcoordsVBO();
     initVertexShader();
@@ -372,18 +297,14 @@ int main(int argc, char ** argv) {
     initShaderProgram();
     initLocations();
 
-    connect(options.hostname, options.port);
+    connect(options.get_hostname(), options.get_port());
 
-    std::vector<float> frame(options.image.width*options.image.height);
+	frame main_frame {options.get_img_width(), options.get_img_height()};
+	frame template_frame {options.get_img_width(), options.get_img_height()};
 
+    processFrame(window, main_frame, template_frame);
     while (!window.shouldClose()) {
-        receiveFrame(frame);
-        updateViewport(window);
-        loadFrame(frame);
-        drawTexture();
-        window.swapBuffers();
-        glfw::pollEvents();
-        gl::flush();
+        processFrame(window, main_frame, template_frame);
     }
 
     cleanup();

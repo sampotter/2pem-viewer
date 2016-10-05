@@ -7,53 +7,13 @@
 #include <vector>
 
 #include <boost/asio.hpp>
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
 #include <boost/optional.hpp>
+
+#include "raw_file.hpp"
 
 struct options {
 	int port;
 	std::string rawfile;
-};
-
-struct raw_file {
-	raw_file(std::string path):
-		file_mapping_ {path.c_str(), boost::interprocess::read_only},
-		mapped_region_ {
-			file_mapping_, 
-			boost::interprocess::read_only,
-			0,
-			get_file_size()}
-	{}
-				
-	std::size_t get_file_size() const {
-		return get_frame_size()*num_chans*time_pts;
-	}
-
-	std::size_t get_frame_size() const {
-		return dim_x*dim_y;
-	}
-
-	uint16_t const * get_frame_data(std::size_t time_pt, std::size_t chan) const {
-#ifdef VIEWER_DEBUG
-		assert(time_pt < time_pts);
-		assert(chan < num_chans);
-#endif // VIEWER_DEBUG
-		auto const addr = static_cast<uint16_t *>(mapped_region_.get_address());
-		auto const offset = (time_pt*num_chans + chan)*get_frame_size();
-		return addr + offset;
-	}
-
-	std::size_t time_pts {15000};
-	std::size_t dim_x {512};
-	std::size_t dim_y {512};
-	std::size_t num_chans {4};
-	std::size_t display_chan {1};
-	std::size_t elt_bytes {sizeof(uint16_t)};
-	
-private:
-	boost::interprocess::file_mapping file_mapping_;
-	boost::interprocess::mapped_region mapped_region_;
 };
 
 boost::optional<options>
@@ -78,7 +38,7 @@ int main(int argc, char ** argv) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	raw_file raw_file {options->rawfile};
+	raw_file<uint16_t> raw_file {{.path = options->rawfile}};
 
 	{
 		using namespace boost::asio;
@@ -88,8 +48,8 @@ int main(int argc, char ** argv) {
 		io_service io;
 		tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), options->port));
 
-		auto time_pts = raw_file.time_pts;
-		auto chan = raw_file.display_chan;
+		auto time_pts = raw_file.get_time_pts();
+		auto chan = raw_file.get_display_chan();
 		
 		tcp::socket socket(io);
 		acceptor.accept(socket);

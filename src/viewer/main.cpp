@@ -10,20 +10,20 @@
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 
-#include <fftw3.h>
 #include <GLFW/glfw3.h>
 
 /**
  * OpenGL parameters.
  */
 
-auto const NUM_TEXTURE_LAYERS = 16;
+// none...
 
 /**
  * RAW file information.
  */
 
 auto const RAW_PATH = "/Volumes/Molly/Data/Spont0001/Image_0001_0001.raw";
+// auto const RAW_PATH = "/Volumes/Molly/Dropbox/Research/two-photon/src/m/regseq/blah";
 std::size_t const RAW_TIME_PTS {15000};
 std::size_t const RAW_DIM_X {512};
 std::size_t const RAW_DIM_Y {512};
@@ -119,7 +119,7 @@ int main() {
 	glDisable(GL_FOG);
 	glDisable(GL_DEPTH_TEST);
 
-	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+	// glEnable(GL_TEXTURE_RECTANGLE_ARB);
 
 	// Create, bind, and specify texture.
 
@@ -362,6 +362,11 @@ int main() {
 		};
 			
 		auto data = static_cast<uint16_t *>(region.get_address()) + frame_offset;
+
+		for (int i = 0; i < 16; ++i) {
+			printf("%d ", data[i]);
+		}
+		printf("\n");
 
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, pixel_buffer);
 		glBufferSubData(
