@@ -3,11 +3,13 @@
 
 #include "client_input_window.hpp"
 #include "client_options.hpp"
+#include "client_signal_dispatcher.hpp"
 #include "client_slm_window.hpp"
 #include "glfw.hpp"
 
 struct client_glfw_state {
-	client_glfw_state(client_options const & options);
+	client_glfw_state(client_options const & options,
+					  client_signal_dispatcher const & signal_dispatcher);
 	void init();
 	void cleanup() const;
 	client_input_window const & get_input_window() const;

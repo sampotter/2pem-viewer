@@ -8,6 +8,7 @@
 #include "client_gl_state.hpp"
 #include "client_glfw_state.hpp"
 #include "client_options.hpp"
+#include "client_signal_dispatcher.hpp"
 #include "frame.hpp"
 
 struct client_app_state {
@@ -20,6 +21,7 @@ private:
 	client_app_state(client_options const & options);
 
 	client_options options_;
+	client_signal_dispatcher signal_dispatcher_;
 	client_asio_state asio_state_;
 	client_gl_state gl_state_;
 	client_glfw_state glfw_state_;

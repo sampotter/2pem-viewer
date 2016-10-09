@@ -68,7 +68,7 @@ client_app_state::run()
 
 client_app_state::client_app_state(client_options const & options):
 	options_ {options},
-	glfw_state_ {options},
+	glfw_state_ {options, signal_dispatcher_},
 	frame_ {options_.get_img_width(), options_.get_img_height()},
 	template_frame_ {boost::none}
 {}

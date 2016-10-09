@@ -12,6 +12,8 @@ set (client_srcs
   viewer/client_input_window.cpp
   viewer/client_options.hpp
   viewer/client_options.cpp
+  viewer/client_signal_dispatcher.hpp
+  viewer/client_signal_dispatcher.cpp
   viewer/client_slm_window.hpp
   viewer/client_slm_window.cpp
   viewer/frame.hpp

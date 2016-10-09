@@ -2,8 +2,14 @@
 
 #include <iostream>
 
-client_glfw_state::client_glfw_state(client_options const & options):
-	input_window_ {options.get_img_width(), options.get_img_height()},
+client_glfw_state::client_glfw_state(
+	client_options const & options,
+	client_signal_dispatcher const & signal_dispatcher):
+	input_window_ {
+	    options.get_img_width(),
+		options.get_img_height(),
+		signal_dispatcher
+    },
 	slm_window_ {options.get_slm_width(), options.get_slm_height()}
 {}
 
