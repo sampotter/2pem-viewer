@@ -55,6 +55,10 @@ glfw::window::window(std::size_t width, std::size_t height, const char * title,
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFWwindow");
 	}
+	glfwSetWindowUserPointer(window_, (void *) this);
+	glfwSetCursorPosCallback(window_, glfw::window::cursor_pos_callback);
+	glfwSetMouseButtonCallback(window_, glfw::window::mouse_button_callback);
+	glfwSetScrollCallback(window_, glfw::window::scroll_callback);
 }
 
 glfw::window::~window()
@@ -86,4 +90,27 @@ void
 glfw::window::swap_buffers() const
 {
 	glfwSwapBuffers(window_);
+}
+
+void
+glfw::window::cursor_pos_callback(GLFWwindow * window, double xpos, double ypos)
+{
+	auto glfw_window = (glfw::window *) glfwGetWindowUserPointer(window);
+	glfw_window->cursor_pos_callback_impl(xpos, ypos);
+}
+
+void
+glfw::window::mouse_button_callback(GLFWwindow * window, int button, int action,
+									int mods)
+{
+	auto glfw_window = (glfw::window *) glfwGetWindowUserPointer(window);
+	glfw_window->mouse_button_callback_impl(button, action, mods);
+}
+
+void
+glfw::window::scroll_callback(GLFWwindow * window, double xoffset,
+							  double yoffset)
+{
+	auto glfw_window = (glfw::window *) glfwGetWindowUserPointer(window);
+	glfw_window->scroll_callback_impl(xoffset, yoffset);
 }

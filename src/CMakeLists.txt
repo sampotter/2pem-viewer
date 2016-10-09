@@ -8,8 +8,12 @@ set (client_srcs
   viewer/client_gl_state.cpp
   viewer/client_glfw_state.hpp
   viewer/client_glfw_state.cpp
+  viewer/client_input_window.hpp
+  viewer/client_input_window.cpp
   viewer/client_options.hpp
   viewer/client_options.cpp
+  viewer/client_slm_window.hpp
+  viewer/client_slm_window.cpp
   viewer/frame.hpp
   viewer/frame.cpp
   viewer/glfw.hpp

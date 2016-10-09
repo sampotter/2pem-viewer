@@ -33,6 +33,19 @@ namespace glfw {
 		rect get_framebuffer_size() const;
 		void swap_buffers() const;
 	private:
+		static void cursor_pos_callback(GLFWwindow * window, double xpos,
+										double ypos);
+		virtual void cursor_pos_callback_impl(double xpos, double ypos) = 0;
+
+		static void mouse_button_callback(GLFWwindow * window, int button,
+										  int action, int mods);
+		virtual void mouse_button_callback_impl(int button, int action,
+												int mods) = 0;
+
+		static void scroll_callback(GLFWwindow * window, double xoffset,
+									double yoffset);
+		virtual void scroll_callback_impl(double xoffset, double yoffset) = 0;
+
 		int width_;
 		int height_;
 		char const * title_;
