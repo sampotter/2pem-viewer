@@ -18,13 +18,14 @@ struct client_app_state {
 	void run();
 private:
 	client_app_state(client_options const & options);
-	
+
 	client_options options_;
 	client_asio_state asio_state_;
 	client_gl_state gl_state_;
 	client_glfw_state glfw_state_;
 	frame frame_;
 	boost::optional<frame> template_frame_;
+	bool initialized_ {false};
 };
 
 #endif // __CLIENT_APP_STATE_HPP__

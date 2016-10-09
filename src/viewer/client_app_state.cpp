@@ -29,6 +29,8 @@ client_app_state::init()
 	gl_state_.init_fragment_shader();
 	gl_state_.init_shader_program();
 	gl_state_.init_locations();
+
+	initialized_ = true;
 }
 
 void
@@ -55,6 +57,9 @@ client_app_state::process_frame(client_error & error)
 void
 client_app_state::run()
 {
+	if (!initialized_) {
+		init();
+	}
 	client_error error {client_error::success};
 	do {
 		process_frame(error);
