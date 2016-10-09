@@ -2,6 +2,7 @@
 #define __VIEWER_GLFW_HPP__
 
 #include <cstddef>
+
 #include <GLFW/glfw3.h>
 
 struct rect {
