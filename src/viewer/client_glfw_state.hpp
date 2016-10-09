@@ -8,10 +8,10 @@ struct client_glfw_state {
 	client_glfw_state(client_options const & options);
 	void init();
 	void cleanup() const;
-	glfw::window const & get_window() const;
+	glfw::window const & get_input_window() const;
 private:
 	glfw::library library_;
-	glfw::window window_;
+	glfw::window input_window_;
 };
 
 #endif // __CLIENT_GLFW_STATE_HPP__

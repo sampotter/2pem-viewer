@@ -45,11 +45,11 @@ client_app_state::process_frame(client_error & error)
     if (template_frame_) {
         frame_.align(*template_frame_);
     }
-	gl_state_.update_viewport(glfw_state_.get_window());
+	gl_state_.update_viewport(glfw_state_.get_input_window());
     gl_state_.buffer_frame(frame_);
 	gl_state_.texture_frame(frame_);
     gl_state_.draw_texture();
-    glfw_state_.get_window().swapBuffers();
+    glfw_state_.get_input_window().swapBuffers();
     glfw::pollEvents();
     gl::flush();
 }
@@ -63,7 +63,7 @@ client_app_state::run()
 	client_error error {client_error::success};
 	do {
 		process_frame(error);
-	} while (!glfw_state_.get_window().shouldClose());
+	} while (!glfw_state_.get_input_window().shouldClose());
 }
 
 client_app_state::client_app_state(client_options const & options):

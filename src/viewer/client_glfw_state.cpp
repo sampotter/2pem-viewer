@@ -1,13 +1,13 @@
 #include "client_glfw_state.hpp"
 
 client_glfw_state::client_glfw_state(client_options const & options):
-	window_ {options.get_img_width(), options.get_img_height()}
+	input_window_ {options.get_img_width(), options.get_img_height()}
 {}
 
 void
 client_glfw_state::init()
 {
-	window_.makeContextCurrent();
+	input_window_.makeContextCurrent();
 }
 
 void
@@ -17,7 +17,7 @@ client_glfw_state::cleanup() const
 }
 
 glfw::window const &
-client_glfw_state::get_window() const
+client_glfw_state::get_input_window() const
 {
-	return window_;
+	return input_window_;
 }
