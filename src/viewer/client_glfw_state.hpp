@@ -5,10 +5,12 @@
 #include "glfw.hpp"
 
 struct client_glfw_state {
-	void init(client_options const & options);
+	client_glfw_state(client_options const & options);
+	void init();
 	void cleanup() const;
 	glfw::window const & get_window() const;
 private:
+	glfw::library library_;
 	glfw::window window_;
 };
 

@@ -1,6 +1,7 @@
 #ifndef __VIEWER_GLFW_HPP__
 #define __VIEWER_GLFW_HPP__
 
+#include <cstddef>
 #include <GLFW/glfw3.h>
 
 struct rect {
@@ -14,10 +15,15 @@ namespace glfw {
 	void init();
 	void terminate();
 	void pollEvents();
+
+	struct library {
+		library();
+		~library();
+	};
 	
 	struct window {
-		window(int width = 640,
-			   int height = 480,
+		window(std::size_t width = 640,
+			   std::size_t height = 480,
 			   char const * title = nullptr,
 			   GLFWmonitor * monitor = nullptr,
 			   GLFWwindow * share = nullptr);
