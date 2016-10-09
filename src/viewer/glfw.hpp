@@ -32,7 +32,6 @@ namespace glfw {
 		bool should_close() const;
 		rect get_framebuffer_size() const;
 		void swap_buffers() const;
-		void set_close_callback(GLFWwindowclosefun cbfun) const;
 	private:
 		int width_;
 		int height_;
