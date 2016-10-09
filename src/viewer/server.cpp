@@ -59,8 +59,6 @@ int main(int argc, char ** argv) {
 		std::vector<float> frame(frame_size);
 			
 		for (decltype(time_pts) time_pt {0}; time_pt < time_pts; ++time_pt) {
-			fprintf(stdout, "Sending frame %lu...", time_pt);
-			
 			auto const data = raw_file.get_frame_data(time_pt, chan);
 			for (std::size_t i {0}; i < frame_size; ++i) {
 				frame[i] = static_cast<float>(data[i])/
@@ -73,8 +71,6 @@ int main(int argc, char ** argv) {
 				socket,
 				buffer((void *) &frame[0], num_frame_bytes),
 				error_code);
-			fprintf(stdout, " wrote %lu bytes (expected %lu)\n",
-					len, num_frame_bytes);
 			if (error_code) {
 				fprintf(stderr, "error: %s\n", error_code.message().c_str());
 				std::exit(EXIT_FAILURE);
