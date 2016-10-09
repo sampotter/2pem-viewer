@@ -27,8 +27,13 @@ client_input_window::mouse_button_callback_impl(int button, int action,
 {
 	switch (button) {
 	case GLFW_MOUSE_BUTTON_LEFT:
-		left_mouse_down_();
-		break;
+		switch (action) {
+		case GLFW_PRESS:
+			left_mouse_down_();
+			break;
+		default:
+			break;
+		}
 	default:
 		break;
 	}
