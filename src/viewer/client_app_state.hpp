@@ -9,6 +9,7 @@
 #include "client_glfw_state.hpp"
 #include "client_options.hpp"
 #include "client_signal_dispatcher.hpp"
+#include "client_slm_state.hpp"
 #include "frame.hpp"
 
 struct client_app_state {
@@ -25,6 +26,7 @@ private:
 	client_asio_state asio_state_;
 	client_gl_state gl_state_;
 	client_glfw_state glfw_state_;
+	client_slm_state slm_state_;
 	frame frame_;
 	boost::optional<frame> template_frame_;
 	bool initialized_ {false};
