@@ -12,6 +12,7 @@ struct client_glfw_state {
 private:
 	glfw::library library_;
 	glfw::window input_window_;
+	glfw::window slm_window_;
 };
 
 #endif // __CLIENT_GLFW_STATE_HPP__
