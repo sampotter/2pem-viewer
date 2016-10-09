@@ -32,9 +32,14 @@ client_app_state::init()
 }
 
 void
-client_app_state::process_frame()
+client_app_state::process_frame(client_error & error)
 {
-	asio_state_.receive_frame(frame_);
+	asio_state_.receive_frame(frame_, error);
+	switch (error) {
+	default:
+		break;
+	}
+
     if (template_frame_) {
         frame_.align(*template_frame_);
     }
@@ -50,8 +55,9 @@ client_app_state::process_frame()
 void
 client_app_state::run()
 {
+	client_error error {client_error::success};
 	do {
-		process_frame();
+		process_frame(error);
 	} while (!glfw_state_.get_window().shouldClose());
 }
 

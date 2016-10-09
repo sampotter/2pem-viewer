@@ -16,21 +16,29 @@ client_asio_state::connect(client_options const & options)
 }
 
 void
-client_asio_state::receive_frame(frame const & f)
+client_asio_state::receive_frame(frame const & f, client_error & error)
 {
     boost::system::error_code error_code;
 	auto const data = static_cast<void *>(const_cast<GLfloat *>(f.data()));
 	auto const num_bytes = sizeof(GLfloat)*f.size();
     auto buffer = boost::asio::buffer(data, num_bytes);
-    std::size_t len = boost::asio::read(socket_, buffer);
+    std::size_t len = boost::asio::read(socket_, buffer, error_code);
+	switch (error_code.value()) {
+	case boost::system::errc::success:
+		error = client_error::success;
 #ifdef VIEWER_DEBUG
-    fprintf(
-		stderr,
-		"Received frame (read %lu bytes, expected %lu)\n",
-		len,
-		num_bytes
-		);
+		fprintf(
+			stderr,
+			"Received frame (read %lu bytes, expected %lu)\n",
+			len,
+			num_bytes
+			);
 #endif // VIEWER_DEBUG
+		break;
+	default:
+		error = client_error::net_read_failure;
+		break;
+	}
 }
 
 void
