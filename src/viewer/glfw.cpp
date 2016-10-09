@@ -63,19 +63,19 @@ glfw::window::~window()
 }
 
 void
-glfw::window::makeContextCurrent() const
+glfw::window::make_context_current() const
 {
 	glfwMakeContextCurrent(window_);
 }
 
 bool
-glfw::window::shouldClose() const
+glfw::window::should_close() const
 {
 	return glfwWindowShouldClose(window_);
 }
 
 rect
-glfw::window::getFramebufferSize() const
+glfw::window::get_framebuffer_size() const
 {
 	rect size;
 	glfwGetFramebufferSize(window_, &size.width, &size.height);
@@ -83,13 +83,13 @@ glfw::window::getFramebufferSize() const
 }
 
 void
-glfw::window::swapBuffers() const
+glfw::window::swap_buffers() const
 {
 	glfwSwapBuffers(window_);
 }
 
 void
-glfw::window::setCloseCallback(GLFWwindowclosefun cbfun) const
+glfw::window::set_close_callback(GLFWwindowclosefun cbfun) const
 {
 	glfwSetWindowCloseCallback(window_, cbfun);
 }

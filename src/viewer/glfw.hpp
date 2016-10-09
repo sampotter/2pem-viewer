@@ -28,11 +28,11 @@ namespace glfw {
 			   GLFWmonitor * monitor = nullptr,
 			   GLFWwindow * share = nullptr);
 		~window();
-		void makeContextCurrent() const;
-		bool shouldClose() const;
-		rect getFramebufferSize() const;
-		void swapBuffers() const;
-		void setCloseCallback(GLFWwindowclosefun cbfun) const;
+		void make_context_current() const;
+		bool should_close() const;
+		rect get_framebuffer_size() const;
+		void swap_buffers() const;
+		void set_close_callback(GLFWwindowclosefun cbfun) const;
 	private:
 		int width_;
 		int height_;

@@ -8,7 +8,7 @@ client_glfw_state::client_glfw_state(client_options const & options):
 void
 client_glfw_state::init()
 {
-	input_window_.makeContextCurrent();
+	input_window_.make_context_current();
 }
 
 void

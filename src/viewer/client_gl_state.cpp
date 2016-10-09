@@ -195,7 +195,7 @@ client_gl_state::init_shader_program()
 void
 client_gl_state::update_viewport(glfw::window const & window) const
 {
-    auto const size = window.getFramebufferSize();
+    auto const size = window.get_framebuffer_size();
     gl::viewport(0, 0, size.width, size.height);
 }
 
