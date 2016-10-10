@@ -11,6 +11,9 @@ client_input_window::client_input_window(
 	window(width, height),
 	left_mouse_down_ {[&] () {
 		signal_dispatcher.left_mouse_down(xpos_, ypos_);
+	}},
+	right_mouse_down_ {[&] () {
+		signal_dispatcher.right_mouse_down(xpos_, ypos_);
 	}}
 {}
 
@@ -34,6 +37,16 @@ client_input_window::mouse_button_callback_impl(int button, int action,
 		default:
 			break;
 		}
+		break;
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		switch (action) {
+		case GLFW_PRESS:
+			right_mouse_down_();
+			break;
+		default:
+			break;
+		}
+		break;
 	default:
 		break;
 	}

@@ -17,6 +17,7 @@ private:
 	double xpos_;
 	double ypos_;
 	std::function<void()> left_mouse_down_;
+	std::function<void()> right_mouse_down_;
 };
 
 #endif // __CLIENT_INPUT_WINDOW_HPP__

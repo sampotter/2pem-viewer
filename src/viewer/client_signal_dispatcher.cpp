@@ -12,3 +12,16 @@ client_signal_dispatcher::connect_left_mouse_down_slot(
 {
 	left_mouse_down_signal_.connect(cb);
 }
+
+void
+client_signal_dispatcher::right_mouse_down(double xpos, double ypos) const
+{
+	right_mouse_down_signal_(xpos, ypos);
+}
+
+void
+client_signal_dispatcher::connect_right_mouse_down_slot(
+	std::function<void(double, double)> & cb)
+{
+	right_mouse_down_signal_.connect(cb);
+}

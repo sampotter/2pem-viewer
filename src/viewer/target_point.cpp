@@ -17,7 +17,7 @@ target_point::get_y() const
 }
 
 bool
-target_point::contains_point(double x, double y) const
+target_point::contains(double x, double y) const
 {
 	double dx = x_ - x;
 	double dy = y_ - y;
