@@ -23,7 +23,11 @@ set (client_srcs
   viewer/glfw.hpp
   viewer/glfw.cpp
   viewer/gl.hpp
-  viewer/gl.cpp)
+  viewer/gl.cpp
+  viewer/target_point.hpp
+  viewer/target_point.cpp
+  viewer/target_point_store.hpp
+  viewer/target_point_store.cpp)
 set (server_srcs
   viewer/server.cpp
   viewer/raw_file.hpp

@@ -5,10 +5,12 @@
 
 client_slm_state::client_slm_state(client_signal_dispatcher & signal_dispatcher)
 {
-	std::function<void(double, double)> left_mouse_down = [] (double xpos, double ypos) {
-		std::cout << xpos << ", " << ypos << std::endl;
-	};
-
-	signal_dispatcher.connect_left_mouse_down_slot(left_mouse_down);
+	{
+		auto func = std::function<void(double, double)> {
+			[this] (double x, double y) {
+				point_store_.add_target_point(x, y);
+			}
+		};
+		signal_dispatcher.connect_left_mouse_down_slot(func);
+	}
 }
-	
