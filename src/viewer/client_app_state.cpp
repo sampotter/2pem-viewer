@@ -25,9 +25,13 @@ client_app_state::init()
 	gl_state_.init_pbo(options_);
 	gl_state_.init_vertex_vbo();
 	gl_state_.init_texcoords_vbo();
+	gl_state_.init_circle_vbo();
 	gl_state_.init_scope_frame_vshader();
 	gl_state_.init_scope_frame_fshader();
 	gl_state_.init_scope_frame_shader_program();
+	gl_state_.init_target_circle_vshader();
+	gl_state_.init_target_circle_fshader();
+	gl_state_.init_target_circle_shader_program();
 	gl_state_.init_locations();
 
 	initialized_ = true;
