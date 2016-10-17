@@ -38,6 +38,28 @@ client_app_state::init()
 }
 
 void
+client_app_state::run()
+{
+	if (!initialized_) {
+		init();
+	}
+	client_error error {client_error::success};
+	do {
+		process_frame(error);
+		draw_target_circles();
+		finish();
+	} while (!glfw_state_.get_input_window().should_close());
+}
+
+client_app_state::client_app_state(client_options const & options):
+	options_ {options},
+	glfw_state_ {options, signal_dispatcher_},
+	slm_state_ {signal_dispatcher_},
+	frame_ {options_.get_img_width(), options_.get_img_height()},
+	template_frame_ {boost::none}
+{}
+
+void
 client_app_state::process_frame(client_error & error)
 {
 	asio_state_.receive_frame(frame_, error);
@@ -53,27 +75,18 @@ client_app_state::process_frame(client_error & error)
     gl_state_.buffer_frame(frame_);
 	gl_state_.texture_frame(frame_);
     gl_state_.draw_texture();
+}
+
+void
+client_app_state::draw_target_circles() const
+{
+	gl_state_.draw_target_circles(slm_state_.get_target_points());
+}
+
+void
+client_app_state::finish() const
+{
     glfw_state_.get_input_window().swap_buffers();
     glfw::pollEvents();
     gl::flush();
 }
-
-void
-client_app_state::run()
-{
-	if (!initialized_) {
-		init();
-	}
-	client_error error {client_error::success};
-	do {
-		process_frame(error);
-	} while (!glfw_state_.get_input_window().should_close());
-}
-
-client_app_state::client_app_state(client_options const & options):
-	options_ {options},
-	glfw_state_ {options, signal_dispatcher_},
-	slm_state_ {signal_dispatcher_},
-	frame_ {options_.get_img_width(), options_.get_img_height()},
-	template_frame_ {boost::none}
-{}

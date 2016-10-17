@@ -8,6 +8,7 @@
 struct target_point_store {
 	void add_target_point(double x, double y);
 	void remove_target_point(double x, double y);
+	std::vector<target_point> const & get_target_points() const;
 private:
 	std::vector<target_point> pts_;
 };

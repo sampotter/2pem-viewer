@@ -104,6 +104,12 @@ client_gl_state::init_texcoords_vbo()
 }
 
 void
+client_gl_state::init_circle_vbo()
+{
+	gl::genBuffers(1, &circle_vbo_);
+}
+
+void
 client_gl_state::init_shader(char const * source, GLenum shader_type,
 							 GLuint * shader)
 {
@@ -152,8 +158,67 @@ client_gl_state::init_scope_frame_fshader()
 }
 
 void
+client_gl_state::init_scope_frame_shader_program()
+{
+    scope_frame_shader_program_ = gl::createProgram();
+    gl::attachShader(scope_frame_shader_program_, scope_frame_vshader_);
+    gl::attachShader(scope_frame_shader_program_, scope_frame_fshader_);
+    gl::linkProgram(scope_frame_shader_program_);
+
+	GLint link_status = GL_FALSE;
+	gl::getProgramiv(scope_frame_shader_program_, GL_LINK_STATUS, &link_status);
+	if (!link_status) {
+		fprintf(stderr, "Failed to link 'scope frame' shader program\n");
+	}
+}
+
+void
+client_gl_state::init_target_circle_vshader()
+{
+	auto source =
+		"#version 120\n"
+		"\n"
+		"attribute vec2 coord2d;\n"
+		"\n"
+		"void main(void) {\n"
+		"    gl_Position = vec4(coord2d.xy, 0.0, 1.0);\n"
+		"}";
+	init_shader(source, GL_VERTEX_SHADER, &target_circle_vshader_);
+}
+
+void
+client_gl_state::init_target_circle_fshader()
+{
+	auto source =
+		"#version 120\n"
+		"\n"
+		"void main(void) {\n"
+		"    gl_FragColor = vec4(1.0, 0.0, 0.0, 0.0);\n"
+		"}";
+	init_shader(source, GL_FRAGMENT_SHADER, &target_circle_fshader_);
+}
+
+void
+client_gl_state::init_target_circle_shader_program()
+{
+    target_circle_shader_program_ = gl::createProgram();
+    gl::attachShader(target_circle_shader_program_, target_circle_vshader_);
+    gl::attachShader(target_circle_shader_program_, target_circle_fshader_);
+    gl::linkProgram(target_circle_shader_program_);
+
+	GLint link_status = GL_FALSE;
+	gl::getProgramiv(target_circle_shader_program_, GL_LINK_STATUS,
+					 &link_status);
+	if (!link_status) {
+		fprintf(stderr, "Failed to link 'target circle' shader program\n");
+	}
+}
+
+void
 client_gl_state::init_locations()
 {
+	// Initialize 'scope frame' locations:
+
     a_coord2d_ = gl::getAttribLocation(scope_frame_shader_program_, "coord2d");
 #ifdef VIEWER_DEBUG
     if (a_coord2d_ == -1) {
@@ -174,22 +239,17 @@ client_gl_state::init_locations()
         fprintf(stderr, "Failed to bind 'tex' uniform\n");
     }
 #endif // VIEWER_DEBUG
-}
 
-void
-client_gl_state::init_scope_frame_shader_program()
-{
-    scope_frame_shader_program_ = gl::createProgram();
-    gl::attachShader(scope_frame_shader_program_, scope_frame_vshader_);
-    gl::attachShader(scope_frame_shader_program_, scope_frame_fshader_);
-    gl::linkProgram(scope_frame_shader_program_);
-    {
-        GLint link_status = GL_FALSE;
-        gl::getProgramiv(scope_frame_shader_program_, GL_LINK_STATUS, &link_status);
-        if (!link_status) {
-            fprintf(stderr, "Failed to link shader program\n");
-        }
+	// Initialize 'target circle' locations:
+
+	a_coord2d_target_circle_ =
+		gl::getAttribLocation(target_circle_shader_program_, "coord2d");
+#ifdef VIEWER_DEBUG
+    if (a_coord2d_target_circle_ == -1) {
+        fprintf(stderr, "Failed to bind 'coord2d' attribute of 'target circle' "
+				"program\n");
     }
+#endif // VIEWER_DEBUG
 }
 
 void
@@ -258,13 +318,54 @@ client_gl_state::draw_texture() const
 }
 
 void
+client_gl_state::draw_target_circles(std::vector<target_point> const & pts)
+	const
+{
+	// TODO: this is going to be really slow...
+
+	// TODO: need to buffer data and probably use another shader
+	// program to get this to work.
+
+	auto const r = target_point::screen_axicon_radius;
+	auto const dtheta = 360/(1.570796326794897*r);
+	auto const num_segs = static_cast<std::size_t>(1.570796326794897*r);
+
+	std::vector<GLfloat> verts(2*num_segs);
+	for (auto const & pt: pts) {
+		double theta {0};
+		auto const x = pt.get_x();
+		auto const y = pt.get_y();
+		for (auto i {0ul}; i < num_segs; ++i) {
+			verts[2*i] = r*std::cos(6.283185307*theta/360.0) + x;
+			verts[2*i] = 2*(verts[2*i]/512.0) - 1;
+			verts[2*i + 1] = r*std::sin(6.283185307*theta/360.0) + y;
+			verts[2*i + 1] = 1 - 2*(verts[2*i + 1]/512.0);
+			theta += dtheta;
+		}
+
+		gl::useProgram(target_circle_shader_program_);
+		gl::enableVertexAttribArray(a_coord2d_target_circle_);
+		gl::bindBuffer(GL_ARRAY_BUFFER, circle_vbo_);
+		gl::bufferData(GL_ARRAY_BUFFER, 2*sizeof(GLfloat)*num_segs, &verts[0],
+					   GL_DYNAMIC_DRAW);
+		gl::vertexAttribPointer(a_coord2d_target_circle_, 2, GL_FLOAT, GL_FALSE,
+								0, 0);
+		gl::drawArrays(GL_LINE_LOOP, 0, num_segs);
+	}
+}
+
+void
 client_gl_state::cleanup()
 {
     gl::deleteBuffers(1, &pbo_);
     gl::deleteBuffers(1, &verts_vbo_);
     gl::deleteBuffers(1, &texcoords_vbo_);
+	gl::deleteBuffers(1, &circle_vbo_);
     gl::deleteProgram(scope_frame_shader_program_);
     gl::deleteShader(scope_frame_fshader_);
     gl::deleteShader(scope_frame_vshader_);
+	gl::deleteProgram(target_circle_shader_program_);
+	gl::deleteShader(target_circle_fshader_);
+	gl::deleteShader(target_circle_vshader_);
     gl::deleteTextures(1, &texture_);
 }

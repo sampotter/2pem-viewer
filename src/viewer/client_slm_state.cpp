@@ -22,3 +22,9 @@ client_slm_state::client_slm_state(client_signal_dispatcher & signal_dispatcher)
 		signal_dispatcher.connect_right_mouse_down_slot(func);
 	}
 }
+
+std::vector<target_point> const &
+client_slm_state::get_target_points() const
+{
+	return point_store_.get_target_points();
+}

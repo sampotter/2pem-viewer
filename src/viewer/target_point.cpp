@@ -1,6 +1,6 @@
 #include "target_point.hpp"
 
-double target_point::screen_axicon_radius = 5;
+double target_point::screen_axicon_radius = 25;
 
 target_point::target_point(double x, double y): x_ {x}, y_ {y} {}
 

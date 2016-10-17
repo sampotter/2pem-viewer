@@ -16,10 +16,12 @@ struct client_app_state {
 	static client_app_state from_cli_args(int argc, char ** argv);
 	~client_app_state();
 	void init();
-	void process_frame(client_error & error);
 	void run();
 private:
 	client_app_state(client_options const & options);
+	void process_frame(client_error & error);
+	void draw_target_circles() const;
+	void finish() const;
 
 	client_options options_;
 	client_signal_dispatcher signal_dispatcher_;
