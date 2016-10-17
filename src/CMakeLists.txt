@@ -32,7 +32,6 @@ set (server_srcs
   viewer/server.cpp
   viewer/raw_file.hpp
   viewer/raw_file.impl.hpp)
-set (viewer_srcs viewer/main.cpp)
 
 add_executable (client ${client_srcs})
 target_link_libraries (client ${fftw3_LIBRARY})
