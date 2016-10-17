@@ -13,9 +13,9 @@ struct client_gl_state {
 	void init_vertex_vbo();
 	void init_texcoords_vbo();
 	void init_shader(char const * source, GLenum shader_type, GLuint * shader);
-	void init_vertex_shader();
-	void init_fragment_shader();
-	void init_shader_program();
+	void init_scope_frame_vshader();
+	void init_scope_frame_fshader();
+	void init_scope_frame_shader_program();
 	void init_locations();
 	void update_viewport(glfw::window const & window) const;
 	void buffer_frame(frame const & f) const;
@@ -28,9 +28,9 @@ private:
 	GLsizeiptr pbo_size_;
 	GLuint verts_vbo_;
 	GLuint texcoords_vbo_;
-	GLuint vertex_shader_;
-	GLuint fragment_shader_;
-	GLuint program_;
+	GLuint scope_frame_vshader_;
+	GLuint scope_frame_fshader_;
+	GLuint scope_frame_shader_program_;
 	GLint a_coord2d_;
 	GLint a_texcoord_;
 	GLint u_tex_;

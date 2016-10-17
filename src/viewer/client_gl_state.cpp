@@ -120,7 +120,7 @@ client_gl_state::init_shader(char const * source, GLenum shader_type,
 }
 
 void
-client_gl_state::init_vertex_shader()
+client_gl_state::init_scope_frame_vshader()
 {
     auto source =
         "#version 120\n"
@@ -133,11 +133,11 @@ client_gl_state::init_vertex_shader()
         "    gl_Position = vec4(coord2d, 0.0, 1.0);\n"
         "    v_texcoord = texcoord;\n"
         "}";
-    init_shader(source, GL_VERTEX_SHADER, &vertex_shader_);
+    init_shader(source, GL_VERTEX_SHADER, &scope_frame_vshader_);
 }
 
 void
-client_gl_state::init_fragment_shader()
+client_gl_state::init_scope_frame_fshader()
 {
     auto source =
         "#version 120\n"
@@ -148,27 +148,27 @@ client_gl_state::init_fragment_shader()
         "void main(void) {\n"
         "    gl_FragColor = 2 * texture2D(tex, v_texcoord);\n"
         "}";
-    init_shader(source, GL_FRAGMENT_SHADER, &fragment_shader_);
+    init_shader(source, GL_FRAGMENT_SHADER, &scope_frame_fshader_);
 }
 
 void
 client_gl_state::init_locations()
 {
-    a_coord2d_ = gl::getAttribLocation(program_, "coord2d");
+    a_coord2d_ = gl::getAttribLocation(scope_frame_shader_program_, "coord2d");
 #ifdef VIEWER_DEBUG
     if (a_coord2d_ == -1) {
         fprintf(stderr, "Failed to bind 'coord2d' attribute\n");
     }
 #endif // VIEWER_DEBUG
 
-    a_texcoord_ = gl::getAttribLocation(program_, "texcoord");
+    a_texcoord_ = gl::getAttribLocation(scope_frame_shader_program_, "texcoord");
 #ifdef VIEWER_DEBUG
     if (a_texcoord_ == -1) {
         fprintf(stderr, "Failed to bind 'texcoord' attribute\n");
     }
 #endif // VIEWER_DEBUG
 
-    u_tex_ = gl::getUniformLocation(program_, "tex");
+    u_tex_ = gl::getUniformLocation(scope_frame_shader_program_, "tex");
 #ifdef VIEWER_DEBUG
     if (u_tex_ == -1) {
         fprintf(stderr, "Failed to bind 'tex' uniform\n");
@@ -177,15 +177,15 @@ client_gl_state::init_locations()
 }
 
 void
-client_gl_state::init_shader_program()
+client_gl_state::init_scope_frame_shader_program()
 {
-    program_ = gl::createProgram();
-    gl::attachShader(program_, vertex_shader_);
-    gl::attachShader(program_, fragment_shader_);
-    gl::linkProgram(program_);
+    scope_frame_shader_program_ = gl::createProgram();
+    gl::attachShader(scope_frame_shader_program_, scope_frame_vshader_);
+    gl::attachShader(scope_frame_shader_program_, scope_frame_fshader_);
+    gl::linkProgram(scope_frame_shader_program_);
     {
         GLint link_status = GL_FALSE;
-        gl::getProgramiv(program_, GL_LINK_STATUS, &link_status);
+        gl::getProgramiv(scope_frame_shader_program_, GL_LINK_STATUS, &link_status);
         if (!link_status) {
             fprintf(stderr, "Failed to link shader program\n");
         }
@@ -240,7 +240,7 @@ client_gl_state::draw_texture() const
     gl::activeTexture(GL_TEXTURE0 + 0);
     gl::bindTexture(GL_TEXTURE_2D, texture_);
 
-    gl::useProgram(program_);
+    gl::useProgram(scope_frame_shader_program_);
 
     gl::uniform(u_tex_, 0);
 
@@ -263,8 +263,8 @@ client_gl_state::cleanup()
     gl::deleteBuffers(1, &pbo_);
     gl::deleteBuffers(1, &verts_vbo_);
     gl::deleteBuffers(1, &texcoords_vbo_);
-    gl::deleteProgram(program_);
-    gl::deleteShader(fragment_shader_);
-    gl::deleteShader(vertex_shader_);
+    gl::deleteProgram(scope_frame_shader_program_);
+    gl::deleteShader(scope_frame_fshader_);
+    gl::deleteShader(scope_frame_vshader_);
     gl::deleteTextures(1, &texture_);
 }
