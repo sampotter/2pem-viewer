@@ -25,3 +25,16 @@ client_signal_dispatcher::connect_right_mouse_down_slot(
 {
 	right_mouse_down_signal_.connect(cb);
 }
+
+void
+client_signal_dispatcher::scroll(double xoffset, double yoffset) const
+{
+	scroll_signal_(xoffset, yoffset);
+}
+
+void
+client_signal_dispatcher::connect_scroll_slot(
+	std::function<void(double, double)> & cb)
+{
+	scroll_signal_.connect(cb);
+}

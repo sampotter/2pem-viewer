@@ -18,6 +18,7 @@ private:
 	double ypos_;
 	std::function<void()> left_mouse_down_;
 	std::function<void()> right_mouse_down_;
+	std::function<void(double, double)> scroll_;
 };
 
 #endif // __CLIENT_INPUT_WINDOW_HPP__

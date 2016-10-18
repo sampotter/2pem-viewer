@@ -2,6 +2,7 @@
 
 #include <boost/signals2.hpp>
 
+#include <cmath>
 #include <iostream>
 
 client_input_window::client_input_window(
@@ -14,6 +15,9 @@ client_input_window::client_input_window(
 	}},
 	right_mouse_down_ {[&] () {
 		signal_dispatcher.right_mouse_down(xpos_, ypos_);
+	}},
+	scroll_ {[&] (double xoffset, double yoffset) {
+		signal_dispatcher.scroll(xoffset, yoffset);
 	}}
 {}
 
@@ -55,4 +59,5 @@ client_input_window::mouse_button_callback_impl(int button, int action,
 void
 client_input_window::scroll_callback_impl(double xoffset, double yoffset)
 {
+	scroll_(xoffset, yoffset);
 }
