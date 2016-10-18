@@ -43,10 +43,6 @@ target_link_libraries (client ${OPENGL_gl_LIBRARY})
 add_executable (server ${server_srcs})
 target_link_libraries (server ${Boost_SYSTEM_LIBRARY})
 
-add_executable (viewer ${viewer_srcs})
-target_link_libraries (viewer glfw)
-target_link_libraries (viewer ${OPENGL_gl_LIBRARY})
-
 # Local Variables:
 # indent-tabs-mode: nil
 # End:
