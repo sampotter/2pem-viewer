@@ -7,6 +7,9 @@
 #include "glfw.hpp"
 #include "target_point.hpp"
 
+// TODO: this currently lives in client_app_state, but really should
+// be moved into client_input_window.
+
 struct client_gl_state {
 	void init() const;
 	void init_texture();

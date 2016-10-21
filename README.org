@@ -1,8 +1,31 @@
 * 2pem-viewer
 
-** Installation Instructions
+** Installation and Compilation Instructions
 
 *** OS X
 
 	1. Install [[http://brew.sh][Homebrew]] (follow the instructions on the Homebrew website).
-	2. 
+	2. Using the terminal, install the following packages using
+       Homebrew: ~armadillo~, ~boost~, ~cmake~, ~fftw~, and ~glfw3~:
+
+	   - ~brew install armadillo~
+	   - ~brew install boost~
+	   - ~brew install cmake~
+	   - ~brew install fftw~
+	   - ~brew install glfw3~
+		 
+	3. In a reasonable location, clone this git repository:
+
+	   - ~git clone https://github.com/sampotter/2pem-viewer.git~
+
+	4. Change directories into the repository, create a build
+       directory (for an out-of-source build), run CMake, and build:
+
+	   - ~cd 2pem-viewer~
+	   - ~mkdir build~
+	   - ~cd build~
+	   - ~cmake -DCMAKE_BUILD_TYPE=Release ..~
+	   - ~make~
+
+	5. The resulting binaries in the ~build~ directory are
+       ~./src/client~ and ~./src/server~.

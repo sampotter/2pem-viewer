@@ -83,6 +83,9 @@ client_slm_state::recompute_phase_mask()
 		slm_height_,
 		gs_iter_count_,
 		phase_mask_);
+	gerchberg_saxton::apply_axicon_phase_mask(
+		target_point::screen_axicon_radius,
+		phase_mask_);
 	redraw_slm_window_();
 }
 

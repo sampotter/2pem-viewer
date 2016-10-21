@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-client_slm_window ::client_slm_window(
+client_slm_window::client_slm_window(
 	std::size_t width,
 	std::size_t height,
 	client_signal_dispatcher & signal_dispatcher):
-	window(width, height)
+	window {width, height}
 {
 	{
 		auto cb = std::function<void(frame const &)> {
@@ -16,6 +16,38 @@ client_slm_window ::client_slm_window(
 		};
 		signal_dispatcher.connect_redraw_slm_window_slot(cb);
 	}
+	
+	// TODO: all this crap should just be handled in a constructor...
+
+	make_context_current();
+
+	gl_state_.init();
+	gl_state_.init_texture();
+	gl_state_.init_pbo(width, height);
+	gl_state_.init_vertex_vbo();
+	gl_state_.init_texcoords_vbo();
+	gl_state_.init_vshader();
+	gl_state_.init_fshader();
+	gl_state_.init_shader_program();
+	gl_state_.init_locations();
+}
+
+void
+client_slm_window::redraw(frame const & f) const
+{
+	make_context_current();
+	
+	gl_state_.update_viewport(*this);
+	gl_state_.buffer_frame(f);
+	gl_state_.texture_frame(f);
+	gl_state_.draw_texture();
+	
+	swap_buffers();
+}
+
+client_slm_window::~client_slm_window()
+{
+	gl_state_.cleanup();
 }
 
 void
@@ -43,10 +75,4 @@ client_slm_window::key_callback_impl(int /* key */,
 									 int /* action */,
 									 int /* mods */)
 {
-}
-
-void
-client_slm_window::redraw(frame const & /* f */) const
-{
-	std::cout << "redraw" << std::endl;
 }

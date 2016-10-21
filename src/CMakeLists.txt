@@ -18,6 +18,8 @@ set (client_srcs
   viewer/client_slm_state.cpp
   viewer/client_slm_window.hpp
   viewer/client_slm_window.cpp
+  viewer/client_slm_window_gl_state.hpp
+  viewer/client_slm_window_gl_state.cpp
   viewer/frame.hpp
   viewer/frame.cpp
   viewer/gerchberg_saxton.hpp

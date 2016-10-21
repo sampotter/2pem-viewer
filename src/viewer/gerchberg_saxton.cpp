@@ -1,6 +1,7 @@
 #include "gerchberg_saxton.hpp"
 
 #include <cassert>
+#include <cmath>
 
 #include <armadillo>
 
@@ -70,12 +71,33 @@ gerchberg_saxton::compute_phase_mask(
 		++iter;
 	}
 
-	A = A/(2*datum::pi);
+	A = (A + datum::pi)/(2*datum::pi);
 
 	auto tmp = phase_mask.data();
 	for (auto i {0ul}; i < out_height; ++i) {
 		for (auto j {0ul}; j < out_width; ++j) {
 			tmp[out_width*i + j] = A(i % in_height, j % in_width).real();
+		}
+	}
+}
+
+void
+gerchberg_saxton::apply_axicon_phase_mask(double axicon_radius, frame & mask)
+{
+	auto const w = mask.get_width();
+	auto const h = mask.get_height();
+
+	double x, y, z;
+
+	auto tmp = mask.data();
+
+	for (auto i {0ul}; i < h; ++i) {
+		for (auto j {0ul}; j < w; ++j) {
+			x = j - w/2.0;
+			y = i - h/2.0;
+			z = std::sqrt(x*x + y*y)/axicon_radius;
+			
+			tmp[w*i + j] = std::fmod(tmp[w*i + j] + z, 1.0);
 		}
 	}
 }

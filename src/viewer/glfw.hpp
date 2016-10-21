@@ -22,13 +22,16 @@ namespace glfw {
 		~library();
 	};
 	
+	// TODO: move this into its own file and move glfw into its own
+	// directory.
+	
 	struct window {
 		window(std::size_t width = 640,
 			   std::size_t height = 480,
 			   char const * title = nullptr,
 			   GLFWmonitor * monitor = nullptr,
 			   GLFWwindow * share = nullptr);
-		~window();
+		virtual ~window();
 		void make_context_current() const;
 		bool should_close() const;
 		rect get_framebuffer_size() const;

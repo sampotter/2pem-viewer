@@ -15,6 +15,8 @@ namespace gerchberg_saxton {
 		std::size_t out_height,
 		std::size_t iter_count,
 		frame & phase_mask);
+
+	void apply_axicon_phase_mask(double axicon_radius, frame & phase_mask);
 }
 
 #endif // __GERCHBERG_SAXTON_HPP__
