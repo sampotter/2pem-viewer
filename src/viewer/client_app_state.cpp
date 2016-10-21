@@ -57,21 +57,10 @@ client_app_state::run()
 client_app_state::client_app_state(client_options const & options):
 	options_ {options},
 	glfw_state_ {options, signal_dispatcher_},
-	slm_state_ {signal_dispatcher_},
+	slm_state_ {options, signal_dispatcher_},
 	frame_ {options_.get_img_width(), options_.get_img_height()},
 	template_frame_ {boost::none}
-{
-	{
-		auto cb = std::function<void(double, double)> {
-			[] (double /* xoffset */, double yoffset) {
-				auto const r = target_point::screen_axicon_radius;
-				auto const new_r = std::max(5.0, r + yoffset/10.0);
-				target_point::screen_axicon_radius = new_r;
-			}
-		};
-		signal_dispatcher_.connect_scroll_slot(cb);
-	}
-}
+{}
 
 void
 client_app_state::process_frame(client_error & error)

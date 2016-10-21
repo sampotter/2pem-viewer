@@ -18,6 +18,9 @@ client_input_window::client_input_window(
 	}},
 	scroll_ {[&] (double xoffset, double yoffset) {
 		signal_dispatcher.scroll(xoffset, yoffset);
+	}},
+	key_down_ {[&] (int key, int mods) {
+		signal_dispatcher.key_down(key, mods);
 	}}
 {}
 
@@ -30,7 +33,7 @@ client_input_window::cursor_pos_callback_impl(double xpos, double ypos)
 
 void
 client_input_window::mouse_button_callback_impl(int button, int action,
-												int mods)
+												int /* mods */)
 {
 	switch (button) {
 	case GLFW_MOUSE_BUTTON_LEFT:
@@ -60,4 +63,17 @@ void
 client_input_window::scroll_callback_impl(double xoffset, double yoffset)
 {
 	scroll_(xoffset, yoffset);
+}
+
+void
+client_input_window::key_callback_impl(int key, int /* scancode */, int action,
+									   int mods)
+{
+	switch (action) {
+	case GLFW_PRESS:
+		key_down_(key, mods);
+		break;
+	default:
+		break;
+	}
 }

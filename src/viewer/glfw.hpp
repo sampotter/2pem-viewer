@@ -48,6 +48,11 @@ namespace glfw {
 									double yoffset);
 		virtual void scroll_callback_impl(double xoffset, double yoffset) = 0;
 
+		static void key_callback(GLFWwindow * window, int key, int scancode,
+								 int action, int mods);
+		virtual void key_callback_impl(int key, int scancode, int action,
+									   int mods) = 0;
+
 		int width_;
 		int height_;
 		char const * title_;

@@ -38,3 +38,29 @@ client_signal_dispatcher::connect_scroll_slot(
 {
 	scroll_signal_.connect(cb);
 }
+
+void
+client_signal_dispatcher::key_down(int key, int mods) const
+{
+	key_down_signal_(key, mods);
+}
+
+void
+client_signal_dispatcher::connect_key_down_slot(
+	std::function<void(int, int)> & cb)
+{
+	key_down_signal_.connect(cb);
+}
+
+void
+client_signal_dispatcher::redraw_slm_window(frame const & f) const
+{
+	redraw_slm_window_signal_(f);
+}
+
+void
+client_signal_dispatcher::connect_redraw_slm_window_slot(
+	std::function<void(frame const &)> & cb)
+{
+	redraw_slm_window_signal_.connect(cb);
+}

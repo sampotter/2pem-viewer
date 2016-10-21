@@ -9,7 +9,7 @@
 
 struct client_glfw_state {
 	client_glfw_state(client_options const & options,
-					  client_signal_dispatcher const & signal_dispatcher);
+					  client_signal_dispatcher & signal_dispatcher);
 	void init();
 	void cleanup() const;
 	client_input_window const & get_input_window() const;

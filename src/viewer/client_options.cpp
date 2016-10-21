@@ -30,7 +30,11 @@ client_options::from_cli_args(int argc, char ** argv)
 		 "The width of the spatial light modulator (SLM) display.")
 		("slm_height",
 		 value<std::size_t>()->default_value(768),
-		 "The height of the SLM display.");
+		 "The height of the SLM display.")
+		("gs_iter_count",
+		 value<std::size_t>()->default_value(10),
+		 "The default number of Gerchberg-Saxton iterations used to compute "
+		 "the SLM phase mask.");
 
     variables_map varmap;
     store(parse_command_line(argc, argv, desc), varmap);
@@ -47,7 +51,8 @@ client_options::from_cli_args(int argc, char ** argv)
 		varmap["image_width"].as<std::size_t>(),
 		varmap["image_height"].as<std::size_t>(),
 		varmap["slm_width"].as<std::size_t>(),
-		varmap["slm_height"].as<std::size_t>()
+		varmap["slm_height"].as<std::size_t>(),
+		varmap["gs_iter_count"].as<std::size_t>(),
 	};
 }
 
@@ -87,16 +92,24 @@ client_options::get_slm_height() const
 	return slm_height_;
 }
 
+std::size_t
+client_options::get_gs_iter_count() const
+{
+	return gs_iter_count_;
+}
+
 client_options::client_options(std::string const & hostname,
 							   std::string const & port,
 							   std::size_t img_width,
 							   std::size_t img_height,
 							   std::size_t slm_width,
-							   std::size_t slm_height):
+							   std::size_t slm_height,
+							   std::size_t gs_iter_count):
 	hostname_ {hostname},
 	port_ {port},
 	img_width_ {img_width},
 	img_height_ {img_height},
 	slm_width_ {slm_width},
-	slm_height_ {slm_height}
+	slm_height_ {slm_height},
+	gs_iter_count_ {gs_iter_count}
 {}

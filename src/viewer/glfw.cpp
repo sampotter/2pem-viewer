@@ -59,6 +59,7 @@ glfw::window::window(std::size_t width, std::size_t height, const char * title,
 	glfwSetCursorPosCallback(window_, glfw::window::cursor_pos_callback);
 	glfwSetMouseButtonCallback(window_, glfw::window::mouse_button_callback);
 	glfwSetScrollCallback(window_, glfw::window::scroll_callback);
+	glfwSetKeyCallback(window_, glfw::window::key_callback);
 }
 
 glfw::window::~window()
@@ -119,4 +120,12 @@ glfw::window::scroll_callback(GLFWwindow * window, double xoffset,
 {
 	auto glfw_window = (glfw::window *) glfwGetWindowUserPointer(window);
 	glfw_window->scroll_callback_impl(xoffset, yoffset);
+}
+
+void
+glfw::window::key_callback(GLFWwindow * window, int key, int scancode,
+						   int action, int mods)
+{
+	auto glfw_window = (glfw::window *) glfwGetWindowUserPointer(window);
+	glfw_window->key_callback_impl(key, scancode, action, mods);
 }
