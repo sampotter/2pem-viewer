@@ -20,6 +20,8 @@ set (client_srcs
   viewer/client_slm_window.cpp
   viewer/frame.hpp
   viewer/frame.cpp
+  viewer/gerchberg_saxton.hpp
+  viewer/gerchberg_saxton.cpp
   viewer/glfw.hpp
   viewer/glfw.cpp
   viewer/gl.hpp
@@ -34,6 +36,7 @@ set (server_srcs
   viewer/raw_file.impl.hpp)
 
 add_executable (client ${client_srcs})
+target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
 target_link_libraries (client ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries (client ${Boost_SYSTEM_LIBRARY})
