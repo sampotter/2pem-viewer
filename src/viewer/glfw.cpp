@@ -93,6 +93,12 @@ glfw::window::swap_buffers() const
 }
 
 void
+glfw::window::hide() const
+{
+	glfwHideWindow(window_);
+}
+
+void
 glfw::window::cursor_pos_callback(GLFWwindow * window, double xpos, double ypos)
 {
 	auto glfw_window = (glfw::window *) glfwGetWindowUserPointer(window);

@@ -47,6 +47,7 @@ client_app_state::run()
 	}
 	client_error error {client_error::success};
 	do {
+		glfw_state_.get_input_window().make_context_current();
 		process_frame(error);
 		draw_target_circles();
 		finish();

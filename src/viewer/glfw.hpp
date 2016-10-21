@@ -33,6 +33,7 @@ namespace glfw {
 		bool should_close() const;
 		rect get_framebuffer_size() const;
 		void swap_buffers() const;
+		void hide() const;
 	private:
 		static void cursor_pos_callback(GLFWwindow * window, double xpos,
 										double ypos);

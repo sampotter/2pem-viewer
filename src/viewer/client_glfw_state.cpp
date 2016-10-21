@@ -16,6 +16,7 @@ client_glfw_state::client_glfw_state(
 void
 client_glfw_state::init()
 {
+	slm_window_.hide(); // TODO: make this work...
 	input_window_.make_context_current();
 }
 
