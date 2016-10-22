@@ -35,10 +35,6 @@ void
 client_app_state::run()
 {
     do {
-        if (slm_state_.phase_mask_recomputed()) {
-            slm_window_.redraw(slm_state_.get_recomputed_phase_mask());
-        }
-
         asio_state_.receive_frame(frame_);
         if (template_frame_) {
             frame_.align(*template_frame_);
@@ -47,6 +43,10 @@ client_app_state::run()
         input_window_.redraw(frame_, slm_state_.get_target_points());
         
         glfw::pollEvents();
+
+        if (slm_state_.phase_mask_recomputed()) {
+            slm_window_.redraw(slm_state_.get_recomputed_phase_mask());
+        }
     } while (!input_window_.should_close());
 }
 
