@@ -7,14 +7,18 @@
 #include "frame.hpp"
 
 struct client_asio_state {
-	client_asio_state(client_options const & options);
-	~client_asio_state();
-	void connect(client_options const & options);
-	void receive_frame(frame const & f);
-	void disconnect();
+    client_asio_state(client_options const & options);
+    ~client_asio_state();
+    void connect(client_options const & options);
+    void receive_frame(frame const & f);
+    void disconnect();
 private:
-	boost::asio::io_service io_;
-	boost::asio::ip::tcp::socket socket_ {io_};
+    boost::asio::io_service io_;
+    boost::asio::ip::tcp::socket socket_ {io_};
 };
 
 #endif // __CLIENT_ASIO_STATE_HPP__
+
+// Local Variables:
+// indent-tabs-mode: nil
+// End:

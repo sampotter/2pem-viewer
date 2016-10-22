@@ -4,9 +4,9 @@
 #include <fftw3.h>
 
 frame::frame(std::size_t width, std::size_t height):
-	data_(width*height),
-	width_ {width},
-	height_ {height}
+    data_(width*height),
+    width_ {width},
+    height_ {height}
 {}
 
 void
@@ -101,8 +101,8 @@ frame::align(frame const & other_frame)
     }
 
 #ifdef VIEWER_DEBUG
-	assert(height_/2 <= std::numeric_limits<int>::max());
-	assert(width_/2 <= std::numeric_limits<int>::max());
+    assert(height_/2 <= std::numeric_limits<int>::max());
+    assert(width_/2 <= std::numeric_limits<int>::max());
 #endif // VIEWER_DEBUG
     if (i0 > static_cast<int>(height_/2)) {
         i0 -= height_;
@@ -117,39 +117,43 @@ frame::align(frame const & other_frame)
     fftw_free(in);
     fftw_free(out1);
     fftw_free(out2);
-	
+    
 #ifdef VIEWER_DEBUG
-	fprintf(stdout, "%d, %d\n", i0, j0);
+    fprintf(stdout, "%d, %d\n", i0, j0);
 #endif // VIEWER_DEBUG
 }
 
 std::size_t
 frame::get_width() const
 {
-	return width_;
+    return width_;
 }
 
 std::size_t
 frame::get_height() const
 {
-	return height_;
+    return height_;
 }
 
 std::size_t
 frame::size() const
 {
-	return data_.size();
+    return data_.size();
 }
 
 GLfloat *
 frame::data()
 {
-	return data_.data();
+    return data_.data();
 }
 
 
 GLfloat const *
 frame::data() const
 {
-	return data_.data();
+    return data_.data();
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// End:

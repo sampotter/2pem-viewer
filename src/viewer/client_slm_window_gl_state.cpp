@@ -37,7 +37,7 @@ client_slm_window_gl_state::init_texture()
 void
 client_slm_window_gl_state::init_pbo(std::size_t slm_width, std::size_t slm_height)
 {
-	pbo_size_ = sizeof(GLfloat)*slm_width*slm_height;
+    pbo_size_ = sizeof(GLfloat)*slm_width*slm_height;
 
     gl::genBuffers(1, &pbo_);
 
@@ -57,15 +57,15 @@ client_slm_window_gl_state::init_pbo(std::size_t slm_width, std::size_t slm_heig
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_);
     gl::activeTexture(GL_TEXTURE0 + 0);
     gl::texImage2D(
-        GL_TEXTURE_2D,	// target
-        0,				// level
-        GL_LUMINANCE,	// internalformat
-        slm_width,		// width
-        slm_height,		// height
-        0,				// border
-        GL_LUMINANCE,	// format
-        GL_FLOAT,		// type
-        nullptr			// pixels
+        GL_TEXTURE_2D,  // target
+        0,              // level
+        GL_LUMINANCE,   // internalformat
+        slm_width,      // width
+        slm_height,     // height
+        0,              // border
+        GL_LUMINANCE,   // format
+        GL_FLOAT,       // type
+        nullptr         // pixels
         );
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
@@ -101,7 +101,7 @@ client_slm_window_gl_state::init_texcoords_vbo()
 
 void
 client_slm_window_gl_state::init_shader(char const * source, GLenum shader_type,
-							 GLuint * shader)
+                             GLuint * shader)
 {
     *shader = gl::createShader(shader_type);
     gl::shaderSource(*shader, 1, &source, nullptr);
@@ -155,17 +155,17 @@ client_slm_window_gl_state::init_shader_program()
     gl::attachShader(shader_program_, fshader_);
     gl::linkProgram(shader_program_);
 
-	GLint link_status = GL_FALSE;
-	gl::getProgramiv(shader_program_, GL_LINK_STATUS, &link_status);
-	if (!link_status) {
-		fprintf(stderr, "Failed to link 'scope frame' shader program\n");
-	}
+    GLint link_status = GL_FALSE;
+    gl::getProgramiv(shader_program_, GL_LINK_STATUS, &link_status);
+    if (!link_status) {
+        fprintf(stderr, "Failed to link 'scope frame' shader program\n");
+    }
 }
 
 void
 client_slm_window_gl_state::init_locations()
 {
-	// Initialize 'scope frame' locations:
+    // Initialize 'scope frame' locations:
 
     a_coord2d_ = gl::getAttribLocation(shader_program_, "coord2d");
 #ifdef VIEWER_DEBUG
@@ -201,10 +201,10 @@ client_slm_window_gl_state::buffer_frame(frame const & f) const
 {
     gl::bindBuffer(GL_PIXEL_PACK_BUFFER, pbo_);
     gl::bufferSubData(
-        GL_PIXEL_PACK_BUFFER,									// target
-        0,														// offset
-        pbo_size_,												// size
-        static_cast<GLvoid *>(const_cast<GLfloat *>(f.data()))	// data
+        GL_PIXEL_PACK_BUFFER,                                   // target
+        0,                                                      // offset
+        pbo_size_,                                              // size
+        static_cast<GLvoid *>(const_cast<GLfloat *>(f.data()))  // data
         );
     gl::bindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 }
@@ -218,8 +218,8 @@ client_slm_window_gl_state::texture_frame(frame const & f) const
         0,              // level
         0,              // xoffset
         0,              // yoffset
-        f.get_width(),	// width
-        f.get_height(),	// height
+        f.get_width(),  // width
+        f.get_height(), // height
         GL_LUMINANCE,   // format
         GL_FLOAT,       // type
         nullptr         // pixels
@@ -265,3 +265,7 @@ client_slm_window_gl_state::cleanup()
     gl::deleteShader(vshader_);
     gl::deleteTextures(1, &texture_);
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// End:
