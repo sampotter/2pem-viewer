@@ -2,21 +2,9 @@
 
 #include <iostream>
 
-client_slm_window::client_slm_window(
-    std::size_t width,
-    std::size_t height,
-    client_signal_dispatcher & signal_dispatcher):
-    window {width, height}
+client_slm_window::client_slm_window(std::size_t width, std::size_t height):
+	window {width, height}
 {
-    {
-        auto cb = std::function<void(frame const &)> {
-            [this] (frame const & f) {
-                redraw(f);
-            }
-        };
-        signal_dispatcher.connect_redraw_slm_window_slot(cb);
-    }
-    
     make_context_current();
     gl_state_.init();
     gl_state_.init_texture();

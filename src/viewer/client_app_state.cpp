@@ -12,8 +12,7 @@ client_app_state::client_app_state(client_options const & options):
     },
     slm_window_ {
         options.get_slm_width(),
-        options.get_slm_height(),
-        signal_dispatcher_,
+        options.get_slm_height()
     },
     slm_state_ {
         options,
@@ -36,20 +35,19 @@ void
 client_app_state::run()
 {
     do {
-        process_frame();
-    } while (!input_window_.should_close());
-}
+        if (slm_state_.phase_mask_recomputed()) {
+            slm_window_.redraw(slm_state_.get_recomputed_phase_mask());
+        }
 
-void
-client_app_state::process_frame()
-{
-    asio_state_.receive_frame(frame_);
-    if (template_frame_) {
-        frame_.align(*template_frame_);
-    }
-    input_window_.redraw(frame_, slm_state_.get_target_points());
-    glfw::pollEvents();
-    gl::flush();
+        asio_state_.receive_frame(frame_);
+        if (template_frame_) {
+            frame_.align(*template_frame_);
+        }
+        
+        input_window_.redraw(frame_, slm_state_.get_target_points());
+        
+        glfw::pollEvents();
+    } while (!input_window_.should_close());
 }
 
 // Local Variables:

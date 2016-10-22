@@ -5,6 +5,7 @@
 
 #include "phase_retrieval.hpp"
 #include "glfw.hpp"
+#include "utility.hpp"
 
 client_slm_state::client_slm_state(
     client_options const & options,
@@ -15,13 +16,7 @@ client_slm_state::client_slm_state(
     slm_height_ {options.get_slm_height()},
     gs_iter_count_ {options.get_gs_iter_count()},
     source_(img_width_*img_height_, 1.0),
-    target_(img_width_*img_height_, 0.0),
-    phase_mask_(slm_width_, slm_height_),
-    redraw_slm_window_ {
-        [this, &signal_dispatcher] () {
-            signal_dispatcher.redraw_slm_window(phase_mask_);
-        }
-    }
+    target_(img_width_*img_height_, 0.0)
 {
     {
         auto func = std::function<void(double, double)> {
@@ -73,20 +68,37 @@ client_slm_state::get_target_points() const
 void
 client_slm_state::recompute_phase_mask()
 {
-    recompute_target();
-    phase_retrieval::compute_phase_mask(
-        &source_[0],
-        &target_[0],
-        img_width_,
-        img_height_,
-        slm_width_,
-        slm_height_,
-        gs_iter_count_,
-        phase_mask_);
-    phase_retrieval::apply_axicon_phase_mask(
-        target_point::screen_axicon_radius,
-        phase_mask_);
-    redraw_slm_window_();
+	recomputed_phase_mask_ = std::async(
+		std::launch::async,
+		[this] () {
+			recompute_target();
+			frame phase_mask {slm_width_, slm_height_};
+			phase_retrieval::compute_phase_mask(
+				&source_[0],
+				&target_[0],
+				img_width_,
+				img_height_,
+				slm_width_,
+				slm_height_,
+				gs_iter_count_,
+				phase_mask);
+			phase_retrieval::apply_axicon_phase_mask(
+				target_point::screen_axicon_radius,
+				phase_mask);
+			return phase_mask;
+		});
+}
+
+bool
+client_slm_state::phase_mask_recomputed() const
+{
+	return recomputed_phase_mask_.valid() && is_ready(recomputed_phase_mask_);
+}
+
+frame
+client_slm_state::get_recomputed_phase_mask()
+{
+	return recomputed_phase_mask_.get();
 }
 
 void

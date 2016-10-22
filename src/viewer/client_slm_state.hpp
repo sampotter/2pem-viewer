@@ -1,6 +1,8 @@
 #ifndef __CLIENT_SLM_STATE_HPP__
 #define __CLIENT_SLM_STATE_HPP__
 
+#include <future>
+
 #include "client_options.hpp"
 #include "client_signal_dispatcher.hpp"
 #include "frame.hpp"
@@ -11,6 +13,8 @@ struct client_slm_state {
                      client_signal_dispatcher & signal_dispatcher);
     std::vector<target_point> const & get_target_points() const;
     void recompute_phase_mask();
+	bool phase_mask_recomputed() const;
+	frame get_recomputed_phase_mask();
 private:
     void recompute_target();
 
@@ -25,9 +29,8 @@ private:
     target_point_store point_store_;
     std::vector<double> source_;
     std::vector<double> target_;
-    frame phase_mask_;
 
-    std::function<void()> redraw_slm_window_;
+	std::future<frame> recomputed_phase_mask_;
 };
 
 #endif // __CLIENT_SLM_STATE_HPP__

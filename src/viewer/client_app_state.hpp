@@ -16,8 +16,6 @@ struct client_app_state {
     static client_app_state from_cli_args(int argc, char ** argv);
     void run();
 private:
-    void process_frame();
-
     client_options options_;
     client_signal_dispatcher signal_dispatcher_;
     client_asio_state asio_state_;
