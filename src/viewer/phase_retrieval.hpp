@@ -1,11 +1,11 @@
-#ifndef __GERCHBERG_SAXTON_HPP__
-#define __GERCHBERG_SAXTON_HPP__
+#ifndef __PHASE_RETRIEVAL_HPP__
+#define __PHASE_RETRIEVAL_HPP__
 
 #include <cstddef>
 
 #include "frame.hpp"
 
-namespace gerchberg_saxton {
+namespace phase_retrieval {
 	void compute_phase_mask(
 		double const * source,
 		double const * target,
@@ -19,4 +19,4 @@ namespace gerchberg_saxton {
 	void apply_axicon_phase_mask(double axicon_radius, frame & phase_mask);
 }
 
-#endif // __GERCHBERG_SAXTON_HPP__
+#endif // __PHASE_RETRIEVAL_HPP__

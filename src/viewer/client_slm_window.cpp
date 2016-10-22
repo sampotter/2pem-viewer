@@ -17,10 +17,7 @@ client_slm_window::client_slm_window(
 		signal_dispatcher.connect_redraw_slm_window_slot(cb);
 	}
 	
-	// TODO: all this crap should just be handled in a constructor...
-
 	make_context_current();
-
 	gl_state_.init();
 	gl_state_.init_texture();
 	gl_state_.init_pbo(width, height);
@@ -36,17 +33,16 @@ void
 client_slm_window::redraw(frame const & f) const
 {
 	make_context_current();
-	
 	gl_state_.update_viewport(*this);
 	gl_state_.buffer_frame(f);
 	gl_state_.texture_frame(f);
 	gl_state_.draw_texture();
-	
 	swap_buffers();
 }
 
 client_slm_window::~client_slm_window()
 {
+	make_context_current();
 	gl_state_.cleanup();
 }
 

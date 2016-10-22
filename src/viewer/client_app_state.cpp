@@ -2,94 +2,52 @@
 
 #include <algorithm>
 
+client_app_state::client_app_state(client_options const & options):
+	options_ {options},
+	asio_state_ {options},
+	input_window_ {
+		options.get_img_width(),
+		options.get_img_height(),
+		signal_dispatcher_,
+	},
+	slm_window_ {
+		options.get_slm_width(),
+		options.get_slm_height(),
+		signal_dispatcher_,
+	},
+	slm_state_ {
+		options,
+		signal_dispatcher_
+	},
+	frame_ {
+		options_.get_img_width(),
+		options_.get_img_height()
+	},
+	template_frame_ {boost::none}
+{}
+
 client_app_state
 client_app_state::from_cli_args(int argc, char ** argv)
 {
 	return {client_options::from_cli_args(argc, argv)};
 }
 
-client_app_state::~client_app_state()
-{
-	gl_state_.cleanup();
-	asio_state_.disconnect();
-	glfw_state_.cleanup();
-}
-
-void
-client_app_state::init()
-{
-	asio_state_.connect(options_);
-
-	glfw_state_.init();
-
-	gl_state_.init();
-	gl_state_.init_texture();
-	gl_state_.init_pbo(options_);
-	gl_state_.init_vertex_vbo();
-	gl_state_.init_texcoords_vbo();
-	gl_state_.init_circle_vbo();
-	gl_state_.init_scope_frame_vshader();
-	gl_state_.init_scope_frame_fshader();
-	gl_state_.init_scope_frame_shader_program();
-	gl_state_.init_target_circle_vshader();
-	gl_state_.init_target_circle_fshader();
-	gl_state_.init_target_circle_shader_program();
-	gl_state_.init_locations();
-
-	initialized_ = true;
-}
-
 void
 client_app_state::run()
 {
-	if (!initialized_) {
-		init();
-	}
-	client_error error {client_error::success};
 	do {
-		glfw_state_.get_input_window().make_context_current();
-		process_frame(error);
-		draw_target_circles();
-		finish();
-	} while (!glfw_state_.get_input_window().should_close());
+		process_frame();
+	} while (!input_window_.should_close());
 }
 
-client_app_state::client_app_state(client_options const & options):
-	options_ {options},
-	glfw_state_ {options, signal_dispatcher_},
-	slm_state_ {options, signal_dispatcher_},
-	frame_ {options_.get_img_width(), options_.get_img_height()},
-	template_frame_ {boost::none}
-{}
-
 void
-client_app_state::process_frame(client_error & error)
+client_app_state::process_frame()
 {
-	asio_state_.receive_frame(frame_, error);
-	switch (error) {
-	default:
-		break;
+	asio_state_.receive_frame(frame_);
+	if (template_frame_) {
+		frame_.align(*template_frame_);
 	}
-
-    if (template_frame_) {
-        frame_.align(*template_frame_);
-    }
-	gl_state_.update_viewport(glfw_state_.get_input_window());
-    gl_state_.buffer_frame(frame_);
-	gl_state_.texture_frame(frame_);
-    gl_state_.draw_texture();
-}
-
-void
-client_app_state::draw_target_circles() const
-{
-	gl_state_.draw_target_circles(slm_state_.get_target_points());
-}
-
-void
-client_app_state::finish() const
-{
-    glfw_state_.get_input_window().swap_buffers();
+	input_window_.redraw(frame_, slm_state_.get_target_points());
     glfw::pollEvents();
     gl::flush();
 }

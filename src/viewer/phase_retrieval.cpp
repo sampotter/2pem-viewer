@@ -1,4 +1,4 @@
-#include "gerchberg_saxton.hpp"
+#include "phase_retrieval.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -8,7 +8,7 @@
 #include "glfw.hpp"
 
 void
-gerchberg_saxton::compute_phase_mask(
+phase_retrieval::compute_phase_mask(
 	double const * source,
 	double const * target,
 	std::size_t in_width,
@@ -82,7 +82,7 @@ gerchberg_saxton::compute_phase_mask(
 }
 
 void
-gerchberg_saxton::apply_axicon_phase_mask(double axicon_radius, frame & mask)
+phase_retrieval::apply_axicon_phase_mask(double axicon_radius, frame & mask)
 {
 	auto const w = mask.get_width();
 	auto const h = mask.get_height();

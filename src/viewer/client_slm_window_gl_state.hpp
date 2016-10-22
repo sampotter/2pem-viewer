@@ -6,8 +6,9 @@
 #include "glfw.hpp"
 
 struct client_slm_window_gl_state {
-	// TODO: most of these duplicate functions in client_gl_state and
-	// should be made into free functions and put somewhere else.
+	// TODO: most of these duplicate functions in
+	// client_input_window_gl_state and should be made into free
+	// functions and put somewhere else.
 	
 	void init() const;
 	void init_texture();
@@ -25,7 +26,7 @@ struct client_slm_window_gl_state {
 	void draw_texture() const;
 	void cleanup();
 private:
-	// TODO: this just replicates what's in the client_gl_state
+	// TODO: this just replicates what's in the client_input_window_gl_state
 	// struct... Need to figure out a good way to manage this.
 	GLuint texture_;
 	GLuint pbo_;

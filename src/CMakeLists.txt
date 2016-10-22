@@ -4,12 +4,10 @@ set (client_srcs
   viewer/client_app_state.cpp
   viewer/client_asio_state.hpp
   viewer/client_asio_state.cpp
-  viewer/client_gl_state.hpp
-  viewer/client_gl_state.cpp
-  viewer/client_glfw_state.hpp
-  viewer/client_glfw_state.cpp
   viewer/client_input_window.hpp
   viewer/client_input_window.cpp
+  viewer/client_input_window_gl_state.hpp
+  viewer/client_input_window_gl_state.cpp
   viewer/client_options.hpp
   viewer/client_options.cpp
   viewer/client_signal_dispatcher.hpp
@@ -22,8 +20,8 @@ set (client_srcs
   viewer/client_slm_window_gl_state.cpp
   viewer/frame.hpp
   viewer/frame.cpp
-  viewer/gerchberg_saxton.hpp
-  viewer/gerchberg_saxton.cpp
+  viewer/phase_retrieval.hpp
+  viewer/phase_retrieval.cpp
   viewer/glfw.hpp
   viewer/glfw.cpp
   viewer/gl.hpp

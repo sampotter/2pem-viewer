@@ -3,13 +3,14 @@
 
 #include <boost/asio.hpp>
 
-#include "client_error.hpp"
 #include "client_options.hpp"
 #include "frame.hpp"
 
 struct client_asio_state {
+	client_asio_state(client_options const & options);
+	~client_asio_state();
 	void connect(client_options const & options);
-	void receive_frame(frame const & f, client_error & error);
+	void receive_frame(frame const & f);
 	void disconnect();
 private:
 	boost::asio::io_service io_;

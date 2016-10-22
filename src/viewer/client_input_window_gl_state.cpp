@@ -1,4 +1,4 @@
-#include "client_gl_state.hpp"
+#include "client_input_window_gl_state.hpp"
 
 #include <string>
 
@@ -13,7 +13,7 @@ get_shader_info_log(GLuint shader)
 }
 
 void
-client_gl_state::init() const
+client_input_window_gl_state::init() const
 {
     gl::disable(GL_DITHER);
     gl::disable(GL_ALPHA_TEST);
@@ -25,7 +25,7 @@ client_gl_state::init() const
 }
 
 void
-client_gl_state::init_texture()
+client_input_window_gl_state::init_texture()
 {
     gl::genTextures(1, &texture_);
     gl::activeTexture(GL_TEXTURE0 + 0);
@@ -35,13 +35,9 @@ client_gl_state::init_texture()
 }
 
 void
-client_gl_state::init_pbo(client_options const & options)
+client_input_window_gl_state::init_pbo(std::size_t width, std::size_t height)
 {
-	{
-		auto const w = options.get_img_width();
-		auto const h = options.get_img_height();
-		pbo_size_ = sizeof(GLfloat)*w*h;
-	}
+	pbo_size_ = sizeof(GLfloat)*width*height;
 
     gl::genBuffers(1, &pbo_);
 
@@ -50,7 +46,7 @@ client_gl_state::init_pbo(client_options const & options)
     gl::bindBuffer(GL_PIXEL_PACK_BUFFER, pbo_);
     gl::bufferData(
         GL_PIXEL_PACK_BUFFER,   // target
-        pbo_size_,               // size
+        pbo_size_,              // size
         nullptr,                // data
         GL_DYNAMIC_DRAW         // usage
         );
@@ -61,21 +57,21 @@ client_gl_state::init_pbo(client_options const & options)
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_);
     gl::activeTexture(GL_TEXTURE0 + 0);
     gl::texImage2D(
-        GL_TEXTURE_2D,				// target
-        0,							// level
-        GL_LUMINANCE,				// internalformat
-        options.get_img_width(),    // width
-        options.get_img_height(),   // height
-        0,							// border
-        GL_LUMINANCE,				// format
-        GL_FLOAT,					// type
-        nullptr						// pixels
+        GL_TEXTURE_2D,	// target
+        0,				// level
+        GL_LUMINANCE,	// internalformat
+        width,			// width
+        height,			// height
+        0,				// border
+        GL_LUMINANCE,	// format
+        GL_FLOAT,		// type
+        nullptr			// pixels
         );
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
 
 void
-client_gl_state::init_vertex_vbo()
+client_input_window_gl_state::init_vertex_vbo()
 {
     GLfloat verts[] = {
         1.0,  1.0,  // top right
@@ -89,7 +85,7 @@ client_gl_state::init_vertex_vbo()
 }
 
 void
-client_gl_state::init_texcoords_vbo()
+client_input_window_gl_state::init_texcoords_vbo()
 {
     GLfloat texcoords[] = {
         0.0, 0.0,   // lower left
@@ -104,13 +100,13 @@ client_gl_state::init_texcoords_vbo()
 }
 
 void
-client_gl_state::init_circle_vbo()
+client_input_window_gl_state::init_circle_vbo()
 {
 	gl::genBuffers(1, &circle_vbo_);
 }
 
 void
-client_gl_state::init_shader(char const * source, GLenum shader_type,
+client_input_window_gl_state::init_shader(char const * source, GLenum shader_type,
 							 GLuint * shader)
 {
     *shader = gl::createShader(shader_type);
@@ -126,7 +122,7 @@ client_gl_state::init_shader(char const * source, GLenum shader_type,
 }
 
 void
-client_gl_state::init_scope_frame_vshader()
+client_input_window_gl_state::init_scope_frame_vshader()
 {
     auto source =
         "#version 120\n"
@@ -143,7 +139,7 @@ client_gl_state::init_scope_frame_vshader()
 }
 
 void
-client_gl_state::init_scope_frame_fshader()
+client_input_window_gl_state::init_scope_frame_fshader()
 {
     auto source =
         "#version 120\n"
@@ -158,7 +154,7 @@ client_gl_state::init_scope_frame_fshader()
 }
 
 void
-client_gl_state::init_scope_frame_shader_program()
+client_input_window_gl_state::init_scope_frame_shader_program()
 {
     scope_frame_shader_program_ = gl::createProgram();
     gl::attachShader(scope_frame_shader_program_, scope_frame_vshader_);
@@ -173,7 +169,7 @@ client_gl_state::init_scope_frame_shader_program()
 }
 
 void
-client_gl_state::init_target_circle_vshader()
+client_input_window_gl_state::init_target_circle_vshader()
 {
 	auto source =
 		"#version 120\n"
@@ -187,7 +183,7 @@ client_gl_state::init_target_circle_vshader()
 }
 
 void
-client_gl_state::init_target_circle_fshader()
+client_input_window_gl_state::init_target_circle_fshader()
 {
 	auto source =
 		"#version 120\n"
@@ -199,7 +195,7 @@ client_gl_state::init_target_circle_fshader()
 }
 
 void
-client_gl_state::init_target_circle_shader_program()
+client_input_window_gl_state::init_target_circle_shader_program()
 {
     target_circle_shader_program_ = gl::createProgram();
     gl::attachShader(target_circle_shader_program_, target_circle_vshader_);
@@ -215,7 +211,7 @@ client_gl_state::init_target_circle_shader_program()
 }
 
 void
-client_gl_state::init_locations()
+client_input_window_gl_state::init_locations()
 {
 	// Initialize 'scope frame' locations:
 
@@ -253,14 +249,14 @@ client_gl_state::init_locations()
 }
 
 void
-client_gl_state::update_viewport(glfw::window const & window) const
+client_input_window_gl_state::update_viewport(glfw::window const & window) const
 {
     auto const size = window.get_framebuffer_size();
     gl::viewport(0, 0, size.width, size.height);
 }
 
 void
-client_gl_state::buffer_frame(frame const & f) const
+client_input_window_gl_state::buffer_frame(frame const & f) const
 {
     gl::bindBuffer(GL_PIXEL_PACK_BUFFER, pbo_);
     gl::bufferSubData(
@@ -273,7 +269,7 @@ client_gl_state::buffer_frame(frame const & f) const
 }
 
 void
-client_gl_state::texture_frame(frame const & f) const
+client_input_window_gl_state::texture_frame(frame const & f) const
 {
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_);
     gl::texSubImage2D(
@@ -291,7 +287,7 @@ client_gl_state::texture_frame(frame const & f) const
 }
 
 void
-client_gl_state::draw_texture() const
+client_input_window_gl_state::draw_texture() const
 {
     gl::clear(GL_COLOR_BUFFER_BIT);
 
@@ -318,13 +314,10 @@ client_gl_state::draw_texture() const
 }
 
 void
-client_gl_state::draw_target_circles(std::vector<target_point> const & pts)
+client_input_window_gl_state::draw_target_circles(std::vector<target_point> const & pts)
 	const
 {
 	// TODO: this is going to be really slow...
-
-	// TODO: need to buffer data and probably use another shader
-	// program to get this to work.
 
 	auto const r = target_point::screen_axicon_radius;
 	auto const dtheta = 360/(1.570796326794897*r);
@@ -355,7 +348,7 @@ client_gl_state::draw_target_circles(std::vector<target_point> const & pts)
 }
 
 void
-client_gl_state::cleanup()
+client_input_window_gl_state::cleanup()
 {
     gl::deleteBuffers(1, &pbo_);
     gl::deleteBuffers(1, &verts_vbo_);

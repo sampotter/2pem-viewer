@@ -1,7 +1,6 @@
-#ifndef __CLIENT_GL_STATE_HPP__
-#define __CLIENT_GL_STATE_HPP__
+#ifndef __CLIENT_INPUT_WINDOW_GL_STATE_HPP__
+#define __CLIENT_INPUT_WINDOW_GL_STATE_HPP__
 
-#include "client_options.hpp"
 #include "frame.hpp"
 #include "gl.hpp"
 #include "glfw.hpp"
@@ -10,10 +9,10 @@
 // TODO: this currently lives in client_app_state, but really should
 // be moved into client_input_window.
 
-struct client_gl_state {
+struct client_input_window_gl_state {
 	void init() const;
 	void init_texture();
-	void init_pbo(client_options const & options);
+	void init_pbo(std::size_t img_width, std::size_t img_height);
 	void init_vertex_vbo();
 	void init_texcoords_vbo();
 	void init_circle_vbo();
@@ -50,4 +49,4 @@ private:
 	GLint a_coord2d_target_circle_;
 };
 
-#endif // __CLIENT_GL_STATE_HPP__
+#endif // __CLIENT_INPUT_WINDOW_GL_STATE_HPP__
