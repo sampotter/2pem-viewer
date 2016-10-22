@@ -67,7 +67,7 @@ int main(int argc, char ** argv) {
             auto const num_frame_bytes = sizeof(float)*frame.size();
             
             error_code error_code;
-            auto const len = boost::asio::write(
+            boost::asio::write(
                 socket,
                 buffer((void *) &frame[0], num_frame_bytes),
                 error_code);
