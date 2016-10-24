@@ -8,11 +8,7 @@
 	2. Using the terminal, install the following packages using
        Homebrew: ~armadillo~, ~boost~, ~cmake~, ~fftw~, and ~glfw3~:
 
-	   - ~brew install armadillo~
-	   - ~brew install boost~
-	   - ~brew install cmake~
-	   - ~brew install fftw~
-	   - ~brew install glfw3~
+	   - ~brew install armadillo boost cmake fftw glfw3~
 		 
 	3. In a reasonable location, clone this git repository:
 
