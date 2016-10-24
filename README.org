@@ -9,6 +9,9 @@
        Homebrew: ~armadillo~, ~boost~, ~cmake~, ~fftw~, and ~glfw3~:
 
 	   - ~brew install armadillo boost cmake fftw glfw3~
+
+	   Along the way, Homebrew will probably complain to you about
+       needing to install the Xcode developer tools---do so.
 		 
 	3. In a reasonable location, clone this git repository:
 
