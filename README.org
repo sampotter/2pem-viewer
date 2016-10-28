@@ -31,7 +31,7 @@
 
 ** Using the Software
 
-   The two binaries that are built, ~./src/client~ and ~./src/server~
+   The two binaries that are built, ~./src/client~ and ~./src/server~,
    form a client-server pair. The server takes two arguments, a port
    and a ~.raw~ file containing recorded microscope output. For
    example, running:
@@ -45,3 +45,10 @@
 # ./src/client
 #+END_SRC
    is all that's necessary.
+
+   Both the client and server can be supplied with command-line
+   arguments to control their behavior:
+#+BEGIN_SRC
+# ./src/client -h
+# ./src/server -h
+#+END_SRC
