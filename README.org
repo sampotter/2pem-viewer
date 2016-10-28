@@ -31,6 +31,8 @@ $ make
 
 ** Using the Software
 
+*** Starting Up
+
    The two binaries that are built, ~./src/client~ and ~./src/server~,
    form a client-server pair. The server takes two arguments, a port
    and a ~.raw~ file containing recorded microscope output. For
@@ -68,3 +70,12 @@ Testing testing:
   --gs_iter_count arg (=10)   The default number of Gerchberg-Saxton iterations
                               used to compute the SLM phase mask.
 #+END_SRC
+
+*** Operation
+
+	There are only a few basic controls right now:
+
+	- Left-click to create a new ring.
+	- Right-click to delete an existing ring.
+	- Scroll the mouse wheel (or trackpad) to change the ring size.
+	- Press the spacebar to run Gerchberg-Saxton.
