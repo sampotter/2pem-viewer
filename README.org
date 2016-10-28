@@ -28,3 +28,20 @@
 
 	5. The resulting binaries in the ~build~ directory are
        ~./src/client~ and ~./src/server~.
+
+** Using the Software
+
+   The two binaries that are built, ~./src/client~ and ~./src/server~
+   form a client-server pair. The server takes two arguments, a port
+   and a ~.raw~ file containing recorded microscope output. For
+   example, running:
+#+BEGIN_SRC
+# ./src/server 8888 <path-to-raw-file>
+#+END_SRC
+   will start the server and ready it to receive a connection from the
+   client. The client tries to connect to localhost:8888 by default,
+   so simply running:
+#+BEGIN_SRC
+# ./src/client
+#+END_SRC
+   is all that's necessary.
