@@ -11,6 +11,7 @@ set (client_srcs
   viewer/client_options.hpp
   viewer/client_options.cpp
   viewer/client_signal_dispatcher.hpp
+  viewer/client_osc_state.cpp
   viewer/client_signal_dispatcher.cpp
   viewer/client_slm_state.hpp
   viewer/client_slm_state.cpp
@@ -38,6 +39,7 @@ set (server_srcs
 add_executable (client ${client_srcs})
 target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
+target_link_libraries (client ${lo_LIBRARY})
 target_link_libraries (client ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries (client ${Boost_SYSTEM_LIBRARY})
 target_link_libraries (client glfw)
@@ -45,6 +47,9 @@ target_link_libraries (client ${OPENGL_gl_LIBRARY})
 
 add_executable (server ${server_srcs})
 target_link_libraries (server ${Boost_SYSTEM_LIBRARY})
+
+add_executable (osc_test viewer/osc_test.cpp)
+target_link_libraries (osc_test ${lo_LIBRARY})
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -2,6 +2,7 @@ project (viewer CXX)
 cmake_minimum_required (VERSION 3.4)
 
 find_library(fftw3_LIBRARY NAMES fftw3)
+find_library (lo_LIBRARY NAMES lo)
 
 find_package (Armadillo REQUIRED)
 find_package (Boost QUIET COMPONENTS program_options system REQUIRED)
