@@ -7,25 +7,25 @@
 	1. Install [[http://brew.sh][Homebrew]] (follow the instructions on the Homebrew website).
 	2. Using the terminal, install the following packages using
        Homebrew: ~armadillo~, ~boost~, ~cmake~, ~fftw~, and ~glfw3~:
-
-	   - ~brew install armadillo boost cmake fftw glfw3~
-
+#+BEGIN_SRC
+$ brew install armadillo boost cmake fftw glfw3
+#+END_SRC
 	   Along the way, Homebrew will probably complain to you about
        needing to install the Xcode developer tools---do so.
 		 
 	3. In a reasonable location, clone this git repository:
-
-	   - ~git clone https://github.com/sampotter/2pem-viewer.git~
-
+#+BEGIN_SRC
+$ git clone https://github.com/sampotter/2pem-viewer.git
+#+END_SRC
 	4. Change directories into the repository, create a build
        directory (for an out-of-source build), run CMake, and build:
-
-	   - ~cd 2pem-viewer~
-	   - ~mkdir build~
-	   - ~cd build~
-	   - ~cmake -DCMAKE_BUILD_TYPE=Release ..~
-	   - ~make~
-
+#+BEGIN_SRC
+$ cd 2pem-viewer
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
+$ make
+#+END_SRC
 	5. The resulting binaries in the ~build~ directory are
        ~./src/client~ and ~./src/server~.
 
@@ -36,19 +36,35 @@
    and a ~.raw~ file containing recorded microscope output. For
    example, running:
 #+BEGIN_SRC
-# ./src/server 8888 <path-to-raw-file>
+$ ./src/server 8888 <path-to-raw-file>
 #+END_SRC
    will start the server and ready it to receive a connection from the
    client. The client tries to connect to localhost:8888 by default,
    so simply running:
 #+BEGIN_SRC
-# ./src/client
+$ ./src/client
 #+END_SRC
    is all that's necessary.
 
    Both the client and server can be supplied with command-line
-   arguments to control their behavior:
+   arguments to control their behavior. Running the following lines
+   will display their arguments:
 #+BEGIN_SRC
-# ./src/client -h
-# ./src/server -h
+$ ./src/client -h
+$ ./src/server -h
+#+END_SRC
+   For instance:
+#+BEGIN_SRC
+$ ./src/client -h
+Testing testing:
+  -h [ --help ]               Display help
+  --hostname arg (=localhost) The server hostname
+  --port arg (=8888)          The server port
+  --image_width arg (=512)    The width of the image in pixels
+  --image_height arg (=512)   The height of the image in pixels
+  --slm_width arg (=1024)     The width of the spatial light modulator (SLM) 
+                              display.
+  --slm_height arg (=768)     The height of the SLM display.
+  --gs_iter_count arg (=10)   The default number of Gerchberg-Saxton iterations
+                              used to compute the SLM phase mask.
 #+END_SRC
