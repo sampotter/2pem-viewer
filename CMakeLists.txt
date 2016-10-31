@@ -9,6 +9,8 @@ find_package (Boost QUIET COMPONENTS program_options system REQUIRED)
 find_package (glfw3 3.1 REQUIRED)
 find_package (OpenGL REQUIRED)
 
+include_directories (${OPENGL_INCLUDE_DIR})
+
 set (CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++1z")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DVIEWER_DEBUG")
 set (CMAKE_CXX_FLAGS_RELEASE "-O3")

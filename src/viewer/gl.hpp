@@ -1,7 +1,13 @@
 #ifndef __VIEWER_GL_HPP__
 #define __VIEWER_GL_HPP__
 
-#include <OpenGL/gl.h>
+#if __APPLE__ && __MACH__
+#    include <OpenGL/gl.h>
+#elif __gnu_linux__
+#    include <GL/gl.h>
+#else
+#    error This platform is not supported.
+#endif
 
 namespace gl {
     void activeTexture(GLenum texture);
