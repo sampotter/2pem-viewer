@@ -1,7 +1,14 @@
 #ifndef __VIEWER_GL_HPP__
 #define __VIEWER_GL_HPP__
 
-#include <OpenGL/gl.h>
+#ifdef _WIN64
+#    include <windows.h>
+#    include <GL/glew.h>
+#    include <GL/gl.h>
+#    include <GL/glu.h>
+#else
+#    include <OpenGL/gl.h>
+#endif
 
 namespace gl {
     void activeTexture(GLenum texture);

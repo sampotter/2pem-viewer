@@ -40,11 +40,20 @@ target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
 target_link_libraries (client ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries (client ${Boost_SYSTEM_LIBRARY})
+if (MINGW)
+  target_link_libraries (client wsock32)
+  target_link_libraries (client ws2_32)
+endif ()
+target_link_libraries (client ${GLEW_LIBRARIES})
 target_link_libraries (client glfw)
 target_link_libraries (client ${OPENGL_gl_LIBRARY})
 
 add_executable (server ${server_srcs})
 target_link_libraries (server ${Boost_SYSTEM_LIBRARY})
+if (MINGW)
+  target_link_libraries (server wsock32)
+  target_link_libraries (server ws2_32)
+endif ()
 
 # Local Variables:
 # indent-tabs-mode: nil
