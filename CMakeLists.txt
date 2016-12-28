@@ -1,12 +1,15 @@
 project (viewer CXX)
 cmake_minimum_required (VERSION 3.4)
 
-find_library(fftw3_LIBRARY NAMES fftw3)
+find_library (fftw3_LIBRARY NAMES fftw3)
 
 find_package (Armadillo REQUIRED)
 find_package (Boost QUIET COMPONENTS program_options system REQUIRED)
 find_package (glfw3 3.2 REQUIRED)
 find_package (OpenGL REQUIRED)
+if (MINGW)
+  find_package (GLEW REQUIRED)
+endif ()
 
 set (CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++1z")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DVIEWER_DEBUG")
