@@ -1,8 +1,11 @@
 #ifndef __VIEWER_GL_HPP__
 #define __VIEWER_GL_HPP__
 
-#ifdef _WIN64
+#if _WIN64
 #    include <windows.h>
+#endif
+
+#if __linux__ || _WIN64
 #    include <GL/glew.h>
 #    include <GL/gl.h>
 #    include <GL/glu.h>
