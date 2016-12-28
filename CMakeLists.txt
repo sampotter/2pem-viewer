@@ -17,3 +17,7 @@ set (CMAKE_CXX_FLAGS_RELEASE "-O3")
 set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
 add_subdirectory (src)
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
