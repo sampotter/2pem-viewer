@@ -1,13 +1,25 @@
 project (viewer CXX)
 cmake_minimum_required (VERSION 3.4)
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  set (LINUX 1)
+endif ()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  set (WINDOWS 1)
+endif ()
+
+if ((${LINUX}) OR (${WINDOWS}))
+  set (LINUX_OR_WINDOWS 1)
+endif ()
+
 find_library (fftw3_LIBRARY NAMES fftw3)
 
 find_package (Armadillo REQUIRED)
 find_package (Boost QUIET COMPONENTS program_options system REQUIRED)
 find_package (glfw3 3.2 REQUIRED)
 find_package (OpenGL REQUIRED)
-if (MINGW)
+if (${LINUX_OR_WINDOWS})
   find_package (GLEW REQUIRED)
 endif ()
 
