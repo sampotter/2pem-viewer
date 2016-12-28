@@ -1,0 +1,5 @@
+#cmakedefine SHOULD_USE_OSC @SHOULD_USE_OSC@
+
+// Local Variables:
+// indent-tabs-mode: nil
+// End:

@@ -28,7 +28,10 @@ set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DVIEWER_DEBUG")
 set (CMAKE_CXX_FLAGS_RELEASE "-O3")
 set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
+include_directories (${PROJECT_BINARY_DIR}/src/viewer)
+
 add_subdirectory (src)
+add_subdirectory (src/viewer)
 
 # Local Variables:
 # indent-tabs-mode: nil
