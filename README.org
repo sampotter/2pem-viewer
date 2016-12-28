@@ -20,6 +20,15 @@
 
 	4. Change directories into the repository, create a build
        directory (for an out-of-source build), run CMake, and build:
+#+BEGIN_SRC
+$ cd 2pem-viewer
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
+$ make
+#+END_SRC
+	5. The resulting binaries in the ~build~ directory are
+       ~./src/client~ and ~./src/server~.
 
 	   - ~cd 2pem-viewer~
 	   - ~mkdir build~
@@ -29,3 +38,27 @@
 
 	5. The resulting binaries in the ~build~ directory are
        ~./src/client~ and ~./src/server~.
+
+*** Windows (using MSYS2)
+
+    1. Download and install the 64-bit version of [[https://msys2.github.io/][MSYS2]].
+    2. Use Pacman to initially update the MSYS2 installation (follow
+       the post-installation instructions at the [[https://msys2.github.io/][MSYS2]] website).
+    3. When opening an MSYS2 terminal (e.g. from the Start menu),
+       always open "MSYS2 MinGW 64-bit" (the other options are "MSYS2
+       MSYS" and "MSYS2 MinGW 32-bit").
+    4. Install the necessary packages:
+       #+BEGIN_SRC
+# pacman -Sy git ninja mingw-w64-x86_64-armadillo mingw-w64-x86_64-boost mingw-w64-x86_64-cmake mingw-w64-x86_64-extra-cmake-modules mingw-w64-x86_64-fftw mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
+       #+END_SRC
+    5. Use ~git~ to clone this repository in an MSYS2 terminal (if you
+       haven't downloaded the repository by some other means).
+    6. Navigate to the root directory of the repository and build:
+       #+BEGIN_SRC
+# cd 2pem-viewer
+# mkdir -p build/Release
+# cd build/Release
+# cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
+# ninja
+       #+END_SRC
+    7. The binaries are placed in ~2pem-viewer/build/Release/src~.

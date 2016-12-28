@@ -5,6 +5,7 @@
 client_app_state::client_app_state(client_options const & options):
     options_ {options},
     asio_state_ {options},
+    osc_state_ {options_.get_osc_port()},
     input_window_ {
         options.get_img_width(),
         options.get_img_height(),
