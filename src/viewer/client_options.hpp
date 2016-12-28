@@ -12,11 +12,12 @@ struct client_options {
     std::size_t get_slm_width() const;
     std::size_t get_slm_height() const;
     std::size_t get_gs_iter_count() const;
+    std::size_t get_osc_port() const;
 private:
     client_options(std::string const & hostname, std::string const & port,
                    std::size_t img_width, std::size_t img_height,
                    std::size_t slm_width, std::size_t slm_height,
-                   std::size_t gs_iter_count);
+                   std::size_t gs_iter_count, std::size_t osc_port);
     std::string hostname_;
     std::string port_;
     std::size_t img_width_;
@@ -24,6 +25,7 @@ private:
     std::size_t slm_width_;
     std::size_t slm_height_;
     std::size_t gs_iter_count_;
+    std::size_t osc_port_;
 };
 
 #endif // __CLIENT_OPTIONS_HPP__

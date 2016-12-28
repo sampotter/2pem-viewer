@@ -20,6 +20,15 @@
 
 	4. Change directories into the repository, create a build
        directory (for an out-of-source build), run CMake, and build:
+#+BEGIN_SRC
+$ cd 2pem-viewer
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
+$ make
+#+END_SRC
+	5. The resulting binaries in the ~build~ directory are
+       ~./src/client~ and ~./src/server~.
 
 	   - ~cd 2pem-viewer~
 	   - ~mkdir build~

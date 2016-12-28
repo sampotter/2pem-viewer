@@ -1,43 +1,26 @@
 set (client_srcs
   viewer/client.cpp
-  viewer/client_app_state.hpp
   viewer/client_app_state.cpp
-  viewer/client_asio_state.hpp
   viewer/client_asio_state.cpp
-  viewer/client_input_window.hpp
   viewer/client_input_window.cpp
-  viewer/client_input_window_gl_state.hpp
   viewer/client_input_window_gl_state.cpp
-  viewer/client_options.hpp
   viewer/client_options.cpp
-  viewer/client_signal_dispatcher.hpp
+  viewer/client_osc_state.cpp
   viewer/client_signal_dispatcher.cpp
-  viewer/client_slm_state.hpp
   viewer/client_slm_state.cpp
-  viewer/client_slm_window.hpp
   viewer/client_slm_window.cpp
-  viewer/client_slm_window_gl_state.hpp
   viewer/client_slm_window_gl_state.cpp
-  viewer/frame.hpp
   viewer/frame.cpp
-  viewer/phase_retrieval.hpp
   viewer/phase_retrieval.cpp
-  viewer/glfw.hpp
   viewer/glfw.cpp
-  viewer/gl.hpp
   viewer/gl.cpp
-  viewer/target_point.hpp
   viewer/target_point.cpp
-  viewer/target_point_store.hpp
   viewer/target_point_store.cpp)
-set (server_srcs
-  viewer/server.cpp
-  viewer/raw_file.hpp
-  viewer/raw_file.impl.hpp)
 
 add_executable (client ${client_srcs})
 target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
+target_link_libraries (client ${lo_LIBRARY})
 target_link_libraries (client ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries (client ${Boost_SYSTEM_LIBRARY})
 if (MINGW)
@@ -48,12 +31,15 @@ target_link_libraries (client ${GLEW_LIBRARIES})
 target_link_libraries (client glfw)
 target_link_libraries (client ${OPENGL_gl_LIBRARY})
 
-add_executable (server ${server_srcs})
+add_executable (server viewer/server.cpp)
 target_link_libraries (server ${Boost_SYSTEM_LIBRARY})
 if (MINGW)
   target_link_libraries (server wsock32)
   target_link_libraries (server ws2_32)
 endif ()
+
+add_executable (osc_test viewer/osc_test.cpp)
+target_link_libraries (osc_test ${lo_LIBRARY})
 
 # Local Variables:
 # indent-tabs-mode: nil
