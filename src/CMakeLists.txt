@@ -5,7 +5,6 @@ set (client_srcs
   viewer/client_input_window.cpp
   viewer/client_input_window_gl_state.cpp
   viewer/client_options.cpp
-  viewer/client_osc_state.cpp
   viewer/client_signal_dispatcher.cpp
   viewer/client_slm_state.cpp
   viewer/client_slm_window.cpp
@@ -16,6 +15,10 @@ set (client_srcs
   viewer/gl.cpp
   viewer/target_point.cpp
   viewer/target_point_store.cpp)
+
+if (NOT MINGW)
+  set (client_srcs ${client_srcs} viewer/client_osc_state.cpp)
+endif ()
 
 add_executable (client ${client_srcs})
 target_link_libraries (client ${ARMADILLO_LIBRARIES})

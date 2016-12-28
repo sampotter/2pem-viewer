@@ -35,9 +35,12 @@ client_options::from_cli_args(int argc, char ** argv)
          value<std::size_t>()->default_value(10),
          "The default number of Gerchberg-Saxton iterations used to compute "
          "the SLM phase mask.")
+#ifndef _WIN64
         ("osc_port",
          value<std::size_t>()->default_value(9000),
-         "The port that will receive OSC messages");
+         "The port that will receive OSC messages")
+#endif // _WIN64
+      ;
 
     variables_map varmap;
     store(parse_command_line(argc, argv, desc), varmap);
@@ -49,14 +52,16 @@ client_options::from_cli_args(int argc, char ** argv)
     }
 
     return client_options {
-        varmap["hostname"].as<std::string>(),
-        varmap["port"].as<std::string>(),
-        varmap["image_width"].as<std::size_t>(),
-        varmap["image_height"].as<std::size_t>(),
-        varmap["slm_width"].as<std::size_t>(),
-        varmap["slm_height"].as<std::size_t>(),
-        varmap["gs_iter_count"].as<std::size_t>(),
-        varmap["osc_port"].as<std::size_t>()
+        varmap["hostname"].as<std::string>()
+      , varmap["port"].as<std::string>()
+      , varmap["image_width"].as<std::size_t>()
+      , varmap["image_height"].as<std::size_t>()
+      , varmap["slm_width"].as<std::size_t>()
+      , varmap["slm_height"].as<std::size_t>()
+      , varmap["gs_iter_count"].as<std::size_t>()
+#ifndef _WIN64
+      , varmap["osc_port"].as<std::size_t>()
+#endif // _WIN64
     };
 }
 
@@ -102,28 +107,35 @@ client_options::get_gs_iter_count() const
     return gs_iter_count_;
 }
 
+#ifndef _WIN64
 std::size_t
 client_options::get_osc_port() const
 {
     return osc_port_;
 }
+#endif // _WIN64
 
-client_options::client_options(std::string const & hostname,
-                               std::string const & port,
-                               std::size_t img_width,
-                               std::size_t img_height,
-                               std::size_t slm_width,
-                               std::size_t slm_height,
-                               std::size_t gs_iter_count,
-                               std::size_t osc_port):
-    hostname_ {hostname},
-    port_ {port},
-    img_width_ {img_width},
-    img_height_ {img_height},
-    slm_width_ {slm_width},
-    slm_height_ {slm_height},
-    gs_iter_count_ {gs_iter_count},
-    osc_port_ {osc_port}
+client_options::client_options(std::string const & hostname
+                             , std::string const & port
+                             , std::size_t img_width
+                             , std::size_t img_height
+                             , std::size_t slm_width
+                             , std::size_t slm_height
+                             , std::size_t gs_iter_count
+#ifndef _WIN64
+                             , std::size_t osc_port
+#endif // _WIN64
+                               ):
+    hostname_ {hostname}
+  , port_ {port}
+  , img_width_ {img_width}
+  , img_height_ {img_height}
+  , slm_width_ {slm_width}
+  , slm_height_ {slm_height}
+  , gs_iter_count_ {gs_iter_count}
+#ifndef _WIN64
+  , osc_port_ {osc_port}
+#endif // _WIN64
 {}
 
 // Local Variables:
