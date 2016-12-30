@@ -1,12 +1,16 @@
 #ifndef __VIEWER_GL_HPP__
 #define __VIEWER_GL_HPP__
 
-#if __APPLE__ && __MACH__
-#    include <OpenGL/gl.h>
-#elif __gnu_linux__
+#if _WIN64
+#    include <windows.h>
+#endif
+
+#if __linux__ || _WIN64
+#    include <GL/glew.h>
 #    include <GL/gl.h>
+#    include <GL/glu.h>
 #else
-#    error This platform is not supported.
+#    include <OpenGL/gl.h>
 #endif
 
 namespace gl {

@@ -1,12 +1,16 @@
 #ifndef __CLIENT_APP_STATE_HPP__
 #define __CLIENT_APP_STATE_HPP__
 
+#include "config.hpp"
+
 #include <boost/optional.hpp>
 
 #include "client_asio_state.hpp"
 #include "client_input_window.hpp"
 #include "client_options.hpp"
-#include "client_osc_state.hpp"
+#if SHOULD_USE_OSC
+#    include "client_osc_state.hpp"
+#endif // SHOULD_USE_OSC
 #include "client_signal_dispatcher.hpp"
 #include "client_slm_state.hpp"
 #include "client_slm_window.hpp"
@@ -20,7 +24,9 @@ private:
     client_options options_;
     client_signal_dispatcher signal_dispatcher_;
     client_asio_state asio_state_;
+#if SHOULD_USE_OSC
     client_osc_state osc_state_;
+#endif // SHOULD_USE_OSC
     glfw::library library_;
     client_input_window input_window_;
     client_slm_window slm_window_;

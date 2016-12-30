@@ -7,16 +7,17 @@
 	1. Install [[http://brew.sh][Homebrew]] (follow the instructions on the Homebrew website).
 	2. Using the terminal, install the following packages using
        Homebrew: ~armadillo~, ~boost~, ~cmake~, ~fftw~, and ~glfw3~:
-#+BEGIN_SRC
-$ brew install armadillo boost cmake fftw glfw3
-#+END_SRC
-	   Along the way, Homebrew will probably complain to you about
-       needing to install the Xcode developer tools---do so.
+
+	   - ~brew install armadillo~
+	   - ~brew install boost~
+	   - ~brew install cmake~
+	   - ~brew install fftw~
+	   - ~brew install glfw3~
 		 
 	3. In a reasonable location, clone this git repository:
-#+BEGIN_SRC
-$ git clone https://github.com/sampotter/2pem-viewer.git
-#+END_SRC
+
+	   - ~git clone https://github.com/sampotter/2pem-viewer.git~
+
 	4. Change directories into the repository, create a build
        directory (for an out-of-source build), run CMake, and build:
 #+BEGIN_SRC
@@ -29,53 +30,35 @@ $ make
 	5. The resulting binaries in the ~build~ directory are
        ~./src/client~ and ~./src/server~.
 
-** Using the Software
+	   - ~cd 2pem-viewer~
+	   - ~mkdir build~
+	   - ~cd build~
+	   - ~cmake -DCMAKE_BUILD_TYPE=Release ..~
+	   - ~make~
 
-*** Starting Up
+	5. The resulting binaries in the ~build~ directory are
+       ~./src/client~ and ~./src/server~.
 
-   The two binaries that are built, ~./src/client~ and ~./src/server~,
-   form a client-server pair. The server takes two arguments, a port
-   and a ~.raw~ file containing recorded microscope output. For
-   example, running:
-#+BEGIN_SRC
-$ ./src/server 8888 <path-to-raw-file>
-#+END_SRC
-   will start the server and ready it to receive a connection from the
-   client. The client tries to connect to localhost:8888 by default,
-   so simply running:
-#+BEGIN_SRC
-$ ./src/client
-#+END_SRC
-   is all that's necessary.
+*** Windows (using MSYS2)
 
-   Both the client and server can be supplied with command-line
-   arguments to control their behavior. Running the following lines
-   will display their arguments:
-#+BEGIN_SRC
-$ ./src/client -h
-$ ./src/server -h
-#+END_SRC
-   For instance:
-#+BEGIN_SRC
-$ ./src/client -h
-Testing testing:
-  -h [ --help ]               Display help
-  --hostname arg (=localhost) The server hostname
-  --port arg (=8888)          The server port
-  --image_width arg (=512)    The width of the image in pixels
-  --image_height arg (=512)   The height of the image in pixels
-  --slm_width arg (=1024)     The width of the spatial light modulator (SLM) 
-                              display.
-  --slm_height arg (=768)     The height of the SLM display.
-  --gs_iter_count arg (=10)   The default number of Gerchberg-Saxton iterations
-                              used to compute the SLM phase mask.
-#+END_SRC
-
-*** Operation
-
-	There are only a few basic controls right now:
-
-	- Left-click to create a new ring.
-	- Right-click to delete an existing ring.
-	- Scroll the mouse wheel (or trackpad) to change the ring size.
-	- Press the spacebar to run Gerchberg-Saxton.
+    1. Download and install the 64-bit version of [[https://msys2.github.io/][MSYS2]].
+    2. Use Pacman to initially update the MSYS2 installation (follow
+       the post-installation instructions at the [[https://msys2.github.io/][MSYS2]] website).
+    3. When opening an MSYS2 terminal (e.g. from the Start menu),
+       always open "MSYS2 MinGW 64-bit" (the other options are "MSYS2
+       MSYS" and "MSYS2 MinGW 32-bit").
+    4. Install the necessary packages:
+       #+BEGIN_SRC
+# pacman -Sy git ninja mingw-w64-x86_64-armadillo mingw-w64-x86_64-boost mingw-w64-x86_64-cmake mingw-w64-x86_64-extra-cmake-modules mingw-w64-x86_64-fftw mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
+       #+END_SRC
+    5. Use ~git~ to clone this repository in an MSYS2 terminal (if you
+       haven't downloaded the repository by some other means).
+    6. Navigate to the root directory of the repository and build:
+       #+BEGIN_SRC
+# cd 2pem-viewer
+# mkdir -p build/Release
+# cd build/Release
+# cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
+# ninja
+       #+END_SRC
+    7. The binaries are placed in ~2pem-viewer/build/Release/src~.

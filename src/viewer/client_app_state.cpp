@@ -1,11 +1,15 @@
 #include "client_app_state.hpp"
 
+#include "config.hpp"
+
 #include <algorithm>
 
 client_app_state::client_app_state(client_options const & options):
     options_ {options},
     asio_state_ {options},
+#if SHOULD_USE_OSC
     osc_state_ {options_.get_osc_port()},
+#endif // SHOULD_USE_OSC
     input_window_ {
         options.get_img_width(),
         options.get_img_height(),
