@@ -16,14 +16,14 @@ set (client_srcs
   viewer/target_point.cpp
   viewer/target_point_store.cpp)
 
-if (NOT ${WINDOWS})
+if (USE_OSC)
   set (client_srcs ${client_srcs} viewer/client_osc_state.cpp)
 endif ()
 
 add_executable (client ${client_srcs})
 target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
-if (NOT ${WINDOWS})
+if (USE_OSC)
   target_link_libraries (client ${lo_LIBRARY})
 endif ()
 target_link_libraries (client ${Boost_PROGRAM_OPTIONS_LIBRARY})

@@ -1,6 +1,7 @@
 project (viewer CXX)
 cmake_minimum_required (VERSION 3.4)
 
+option (USE_OSC "Build OSC support for triggering" ON)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set (LINUX 1)
 endif ()

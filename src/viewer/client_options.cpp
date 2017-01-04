@@ -35,11 +35,11 @@ client_options::from_cli_args(int argc, char ** argv)
          value<std::size_t>()->default_value(10),
          "The default number of Gerchberg-Saxton iterations used to compute "
          "the SLM phase mask.")
-#if SHOULD_USE_OSC
+#if USE_OSC
         ("osc_port",
          value<std::size_t>()->default_value(9000),
          "The port that will receive OSC messages")
-#endif // SHOULD_USE_OSC
+#endif // USE_OSC
       ;
 
     variables_map varmap;
@@ -59,9 +59,9 @@ client_options::from_cli_args(int argc, char ** argv)
       , varmap["slm_width"].as<std::size_t>()
       , varmap["slm_height"].as<std::size_t>()
       , varmap["gs_iter_count"].as<std::size_t>()
-#if SHOULD_USE_OSC
+#if USE_OSC
       , varmap["osc_port"].as<std::size_t>()
-#endif // SHOULD_USE_OSC
+#endif // USE_OSC
     };
 }
 
@@ -107,13 +107,13 @@ client_options::get_gs_iter_count() const
     return gs_iter_count_;
 }
 
-#if SHOULD_USE_OSC
+#if USE_OSC
 std::size_t
 client_options::get_osc_port() const
 {
     return osc_port_;
 }
-#endif // SHOULD_USE_OSC
+#endif // USE_OSC
 
 client_options::client_options(std::string const & hostname
                              , std::string const & port
@@ -122,9 +122,9 @@ client_options::client_options(std::string const & hostname
                              , std::size_t slm_width
                              , std::size_t slm_height
                              , std::size_t gs_iter_count
-#if SHOULD_USE_OSC
+#if USE_OSC
                              , std::size_t osc_port
-#endif // SHOULD_USE_OSC
+#endif // USE_OSC
                                ):
     hostname_ {hostname}
   , port_ {port}
@@ -133,9 +133,9 @@ client_options::client_options(std::string const & hostname
   , slm_width_ {slm_width}
   , slm_height_ {slm_height}
   , gs_iter_count_ {gs_iter_count}
-#if SHOULD_USE_OSC
+#if USE_OSC
   , osc_port_ {osc_port}
-#endif // SHOULD_USE_OSC
+#endif // USE_OSC
 {}
 
 // Local Variables:
