@@ -18,6 +18,7 @@ if ((${LINUX}) OR (${WINDOWS}))
 endif ()
 
 find_library (fftw3_LIBRARY NAMES fftw3)
+find_library (lo_LIBRARY NAMES lo)
 find_library (portaudio_LIBRARY NAMES portaudio)
 
 find_package (Armadillo REQUIRED)
