@@ -1,7 +1,10 @@
 project (viewer CXX)
 cmake_minimum_required (VERSION 3.4)
 
+option (USE_AUDIO_INPUT "Build audio input support for triggering" OFF)
 option (USE_OSC "Build OSC support for triggering" ON)
+option (USE_PORT_AUDIO "Use PortAudio for audio input" ON)
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set (LINUX 1)
 endif ()
@@ -15,6 +18,7 @@ if ((${LINUX}) OR (${WINDOWS}))
 endif ()
 
 find_library (fftw3_LIBRARY NAMES fftw3)
+find_library (portaudio_LIBRARY NAMES portaudio)
 
 find_package (Armadillo REQUIRED)
 find_package (Boost QUIET COMPONENTS program_options system REQUIRED)

@@ -16,6 +16,10 @@ set (client_srcs
   viewer/target_point.cpp
   viewer/target_point_store.cpp)
 
+if (USE_AUDIO_INPUT)
+  set (client_srcs ${client_srcs} viewer/client_audio_input.cpp)
+endif ()
+
 if (USE_OSC)
   set (client_srcs ${client_srcs} viewer/client_osc_state.cpp)
 endif ()
@@ -23,6 +27,9 @@ endif ()
 add_executable (client ${client_srcs})
 target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
+if (USE_PORT_AUDIO)
+  target_link_libraries (client ${portaudio_LIBRARY})
+endif ()
 if (USE_OSC)
   target_link_libraries (client ${lo_LIBRARY})
 endif ()

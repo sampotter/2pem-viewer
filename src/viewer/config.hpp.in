@@ -1,3 +1,4 @@
+#cmakedefine USE_AUDIO_INPUT @USE_AUDIO_INPUT@
 #cmakedefine USE_OSC @USE_OSC@
 
 // Local Variables:

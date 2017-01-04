@@ -6,6 +6,9 @@
 #include <boost/optional.hpp>
 
 #include "client_asio_state.hpp"
+#if USE_AUDIO_INPUT
+#    include "client_audio_input.hpp"
+#endif // USE_AUDIO_INPUT
 #include "client_input_window.hpp"
 #include "client_options.hpp"
 #if USE_OSC
@@ -24,6 +27,9 @@ private:
     client_options options_;
     client_signal_dispatcher signal_dispatcher_;
     client_asio_state asio_state_;
+#if USE_AUDIO_INPUT
+    client_audio_input audio_input_;
+#endif // USE_AUDIO_INPUT
 #if USE_OSC
     client_osc_state osc_state_;
 #endif // USE_OSC
