@@ -12,6 +12,7 @@ struct client_slm_window: public glfw::window {
     client_slm_window(std::size_t width, std::size_t height);
     virtual ~client_slm_window();
     void redraw(frame const & f) const;
+    void clear() const;
 private:
     virtual void cursor_pos_callback_impl(double xpos, double ypos);
     virtual void mouse_button_callback_impl(int button, int action, int mods);

@@ -24,6 +24,7 @@ struct client_slm_window_gl_state {
     void buffer_frame(frame const & f) const;
     void texture_frame(frame const & f) const;
     void draw_texture() const;
+    void clear() const;
     void cleanup();
 private:
     // TODO: this just replicates what's in the client_input_window_gl_state

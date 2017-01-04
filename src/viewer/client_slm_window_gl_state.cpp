@@ -255,6 +255,12 @@ client_slm_window_gl_state::draw_texture() const
 }
 
 void
+client_slm_window_gl_state::clear() const
+{
+    gl::clear(GL_COLOR_BUFFER_BIT);
+}
+
+void
 client_slm_window_gl_state::cleanup()
 {
     gl::deleteBuffers(1, &pbo_);
