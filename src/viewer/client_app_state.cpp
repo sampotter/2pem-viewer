@@ -47,8 +47,25 @@ client_app_state::run()
         
         glfw::pollEvents();
 
-        if (slm_state_.phase_mask_recomputed()) {
-            slm_window_.redraw(slm_state_.get_recomputed_phase_mask());
+        /**
+         * Pump SLM's event queue and handle events.
+         */
+        while (slm_state_.peek_event()) {
+            switch (slm_state_.pop_event()) {
+            case client_slm_state::event::became_hidden:
+                slm_window_.clear();
+                break;
+            case client_slm_state::event::became_visible:
+                slm_window_.redraw();
+                break;
+            case client_slm_state::event::phase_mask_recomputed:
+                if (slm_state_.visible()) {
+                    slm_window_.set_phase_mask(
+                        slm_state_.get_recomputed_phase_mask());
+                    slm_window_.redraw();
+                }
+                break;
+            }
         }
     } while (!input_window_.should_close());
 }

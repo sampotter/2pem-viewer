@@ -3,7 +3,8 @@
 #include <iostream>
 
 client_slm_window::client_slm_window(std::size_t width, std::size_t height):
-	window {width, height}
+	window {width, height},
+    phase_mask_ {width, height}
 {
     make_context_current();
     gl_state_.init();
@@ -18,14 +19,28 @@ client_slm_window::client_slm_window(std::size_t width, std::size_t height):
 }
 
 void
-client_slm_window::redraw(frame const & f) const
+client_slm_window::clear() const
+{
+    make_context_current();
+    gl_state_.clear();
+    swap_buffers();
+}
+
+void
+client_slm_window::redraw() const
 {
     make_context_current();
     gl_state_.update_viewport(*this);
-    gl_state_.buffer_frame(f);
-    gl_state_.texture_frame(f);
+    gl_state_.buffer_frame(phase_mask_);
+    gl_state_.texture_frame(phase_mask_);
     gl_state_.draw_texture();
     swap_buffers();
+}
+
+void
+client_slm_window::set_phase_mask(frame const & phase_mask)
+{
+    phase_mask_ = phase_mask;
 }
 
 client_slm_window::~client_slm_window()

@@ -52,6 +52,8 @@ client_slm_state::client_slm_state(
             [this] (int key, int /* mods */) {
                 if (key == GLFW_KEY_SPACE) {
                     recompute_phase_mask();
+                } else if (key == GLFW_KEY_V) {
+                    toggle_visibility();
                 }
             }
         };
@@ -85,20 +87,41 @@ client_slm_state::recompute_phase_mask()
             phase_retrieval::apply_axicon_phase_mask(
                 target_point::screen_axicon_radius,
                 phase_mask);
+
+            event_queue_.push(event::phase_mask_recomputed);
+
             return phase_mask;
         });
 }
 
 bool
-client_slm_state::phase_mask_recomputed() const
+client_slm_state::visible() const
 {
-    return recomputed_phase_mask_.valid() && is_ready(recomputed_phase_mask_);
+    return visible_;
 }
 
 frame
 client_slm_state::get_recomputed_phase_mask()
 {
     return recomputed_phase_mask_.get();
+}
+
+boost::optional<client_slm_state::event>
+client_slm_state::peek_event() const
+{
+    boost::optional<event> tmp;
+    if (!event_queue_.empty()) {
+        tmp = event_queue_.front();
+    }
+    return tmp;
+}
+
+client_slm_state::event
+client_slm_state::pop_event()
+{
+    auto const tmp = event_queue_.front();
+    event_queue_.pop();
+    return tmp;
 }
 
 void
@@ -108,6 +131,13 @@ client_slm_state::recompute_target()
     for (auto const & pt: get_target_points()) {
         target_[pt.get_y()*img_width_ + pt.get_x()] = 1.0;
     }
+}
+
+void
+client_slm_state::toggle_visibility()
+{
+    event_queue_.push(
+        (visible_ = !visible_) ? event::became_visible : event::became_hidden);
 }
 
 // Local Variables:
