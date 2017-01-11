@@ -69,3 +69,16 @@ $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
 $ ninja
 #+END_SRC
     7. The binaries are placed in ~2pem-viewer/build/Release/src~.
+
+** CMake Options
+
+   There are optional features which can be built (or not) by passing
+   arguments to CMake. For a complete list of these variables, run:
+#+BEGIN_SRC sh
+$ cmake -L
+#+END_SRC
+   To use these options, set them using ~-DOPTION_NAME={ON,OFF}~ when
+   calling ~cmake~ on the command line. For example:
+#+BEGIN_SRC sh
+$ cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DUSE_OSC=OFF <path-to-repo>
+#+END_SRC
