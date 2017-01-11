@@ -27,6 +27,8 @@ $ make
        ~./src/client~ and ~./src/server~.
 #+BEGIN_SRC sh
 $ cd 2pem-viewer
+$ git submodule init
+$ git submodule update
 $ mkdir build
 $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -59,8 +61,10 @@ $ pacman -Sy git ninja mingw-w64-x86_64-armadillo mingw-w64-x86_64-boost \
     6. Navigate to the root directory of the repository and build:
 #+BEGIN_SRC sh
 $ cd 2pem-viewer
-$ mkdir -p build/Release
-$ cd build/Release
+$ git submodule init
+$ git submodule update
+$ mkdir -p build
+$ cd build
 $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
 $ ninja
 #+END_SRC
