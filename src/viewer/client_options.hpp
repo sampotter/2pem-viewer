@@ -15,17 +15,19 @@ struct client_options {
 #if USE_OSC
     std::size_t get_osc_port() const;
 #endif // USE_OSC
+    std::size_t get_num_mean_frames() const;
 private:
 #if USE_OSC
     client_options(std::string const & hostname, std::string const & port,
                    std::size_t img_width, std::size_t img_height,
                    std::size_t slm_width, std::size_t slm_height,
-                   std::size_t gs_iter_count, std::size_t osc_port);
+                   std::size_t gs_iter_count, std::size_t osc_port,
+                   std::size_t num_mean_frames);
 #else // USE_OSC
     client_options(std::string const & hostname, std::string const & port,
                    std::size_t img_width, std::size_t img_height,
                    std::size_t slm_width, std::size_t slm_height,
-                   std::size_t gs_iter_count);
+                   std::size_t gs_iter_count, std::size_t num_mean_frames);
 #endif // USE_OSC
     std::string hostname_;
     std::string port_;
@@ -37,6 +39,7 @@ private:
 #if USE_OSC
     std::size_t osc_port_;
 #endif // USE_OSC
+    std::size_t num_mean_frames_;
 };
 
 #endif // __CLIENT_OPTIONS_HPP__

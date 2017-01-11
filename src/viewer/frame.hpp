@@ -8,6 +8,7 @@
 #include "gl.hpp"
 
 struct frame {
+    frame();
     frame(std::size_t width, std::size_t height);
     void translate(int ishift, int jshift);
     void align(frame const & other_frame);
@@ -16,14 +17,25 @@ struct frame {
     std::size_t size() const;
     GLfloat * data();
     GLfloat const * data() const;
+
+    frame & median_filter(int radius);
+
+    GLfloat const & operator()(int i, int j) const;
+    GLfloat & operator()(int i, int j);
+    frame & operator+=(frame const & f);
+    frame operator-(frame f) const;
+
+    template <class T> frame & operator+=(T const & t);
 private:
     std::vector<GLfloat> data_;
     std::size_t width_;
     std::size_t height_;
 };
 
-#endif // __FRAME_HPP__
+#include "frame.impl.hpp"
+#include "frame_ops.hpp"
 
+#endif // __FRAME_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

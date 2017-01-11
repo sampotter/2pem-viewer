@@ -2,6 +2,9 @@
 
 #include <algorithm>
 
+#include "frame.hpp"
+#include "statistics.hpp"
+
 client_app_state::client_app_state(client_options const & options):
     options_ {options},
     asio_state_ {options},
@@ -37,19 +40,40 @@ client_app_state::from_cli_args(int argc, char ** argv)
 void
 client_app_state::run()
 {
+    // Running mean for filtering input frames
+    static online_mean<frame> frame_mean {
+        static_cast<int>(options_.get_num_mean_frames())
+    };
+
     do {
+        /**
+         * Get frame onto input window:
+         */
+
+        // Receive frame from network
         asio_state_.receive_frame(frame_);
+
+        // Process received frame (alignment, filtering, ...)
         if (template_frame_) {
             frame_.align(*template_frame_);
         }
+        frame_mean.add_sample(frame_);
+        if (frame_mean.has_mean()) {
+            frame_ = frame_mean.get_mean().median_filter(1);
         
-        input_window_.redraw(frame_, slm_state_.get_target_points());
-        
+            // Draw frame
+            input_window_.redraw(frame_, slm_state_.get_target_points());
+        }
+
+        /**
+         * Poll for input events
+         */
         glfw::pollEvents();
 
         /**
-         * Pump SLM's event queue and handle events.
+         * Pump SLM's event queue and handle events:
          */
+
         while (slm_state_.peek_event()) {
             switch (slm_state_.pop_event()) {
             case client_slm_state::event::became_hidden:

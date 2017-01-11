@@ -1,7 +1,11 @@
 #include "frame.hpp"
 
+#include <algorithm>
+#include <array>
 #include <cstdio>
 #include <fftw3.h>
+
+frame::frame() {}
 
 frame::frame(std::size_t width, std::size_t height):
     data_(width*height),
@@ -152,6 +156,78 @@ GLfloat const *
 frame::data() const
 {
     return data_.data();
+}
+
+frame &
+frame::median_filter(int radius)
+{
+    // TODO: naive implementation for now
+
+    if (radius <= 0) {
+        return *this;
+    }
+
+    std::array<GLfloat, 9> sorted;
+
+    auto const median = [&] (int i0, int j0) {
+        int k = 0;
+        for (int i = -radius; i <= radius; ++i) {
+            for (int j = -radius; j <= radius; ++j) {
+                sorted[k++] =
+                    this->operator()((i0 + i) % height_, (j0 + j) % width_);
+            }
+        }
+        std::sort(sorted.begin(), sorted.end());
+        return sorted[4];
+    };
+
+    for (auto i {0ul}; i < height_; ++i) {
+        for (auto j {0ul}; j < width_; ++j) {
+            this->operator()(i, j) = median(i, j);
+        }
+    }
+
+    return *this;
+}
+
+GLfloat const &
+frame::operator()(int i, int j) const
+{
+    return data_[width_*i + j];
+}
+
+GLfloat &
+frame::operator()(int i, int j)
+{
+    return data_[width_*i + j];
+}
+
+frame &
+frame::operator+=(frame const & f)
+{
+#ifdef VIEWER_DEBUG
+    assert(get_width() == f.get_width());
+    assert(get_height() == f.get_height());
+#endif // VIEWER_DEBUG
+    auto const size = this->size();
+    for (auto i {0ul}; i < size; ++i) {
+        data_[i] += f.data_[i];
+    }
+    return *this;
+}
+
+frame
+frame::operator-(frame f) const
+{
+#ifdef VIEWER_DEBUG
+    assert(get_width() == f.get_width());
+    assert(get_height() == f.get_height());
+#endif // VIEWER_DEBUG
+    auto const size = this->size();
+    for (auto i {0ul}; i < size; ++i) {
+        f.data_[i] = (data_[i] - f.data_[i]);
+    }
+    return f;
 }
 
 // Local Variables:

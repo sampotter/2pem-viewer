@@ -40,6 +40,9 @@ client_options::from_cli_args(int argc, char ** argv)
          value<std::size_t>()->default_value(9000),
          "The port that will receive OSC messages")
 #endif // USE_OSC
+        ("num_mean_frames",
+         value<std::size_t>()->default_value(10),
+         "The number of frames to use to compute an average frame.")
       ;
 
     variables_map varmap;
@@ -62,6 +65,7 @@ client_options::from_cli_args(int argc, char ** argv)
 #if USE_OSC
       , varmap["osc_port"].as<std::size_t>()
 #endif // USE_OSC
+      , varmap["num_mean_frames"].as<std::size_t>()
     };
 }
 
@@ -115,6 +119,12 @@ client_options::get_osc_port() const
 }
 #endif // USE_OSC
 
+std::size_t
+client_options::get_num_mean_frames() const
+{
+    return num_mean_frames_;
+}
+
 client_options::client_options(std::string const & hostname
                              , std::string const & port
                              , std::size_t img_width
@@ -125,6 +135,7 @@ client_options::client_options(std::string const & hostname
 #if USE_OSC
                              , std::size_t osc_port
 #endif // USE_OSC
+                             , std::size_t num_mean_frames
                                ):
     hostname_ {hostname}
   , port_ {port}
@@ -136,6 +147,7 @@ client_options::client_options(std::string const & hostname
 #if USE_OSC
   , osc_port_ {osc_port}
 #endif // USE_OSC
+  , num_mean_frames_ {num_mean_frames}
 {}
 
 // Local Variables:
