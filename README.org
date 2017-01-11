@@ -11,9 +11,9 @@ $ brew install armadillo boost cmake fftw brew install glfw3
 $ brew install liblo portaudio # optional
 #+END_SRC
 	3. In a reasonable location, clone this git repository:
-
-	   - ~git clone https://github.com/sampotter/2pem-viewer.git~
-
+#+BEGIN_SRC sh
+$ git clone https://github.com/sampotter/2pem-viewer.git
+#+END_SRC
 	4. Change directories into the repository, create a build
        directory (for an out-of-source build), run CMake, and build:
 #+BEGIN_SRC sh
