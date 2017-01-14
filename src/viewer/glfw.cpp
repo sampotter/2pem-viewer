@@ -47,6 +47,8 @@ glfw::window::window(std::size_t width, std::size_t height, const char * title,
     share_ {share},
     window_ {glfwCreateWindow(width_, height_, title_, monitor_, share_)}
 {
+    make_context_current();
+
 #ifdef NUFFT_DEBUG
     assert(width <= std::numeric_limits<int>::max());
     assert(height <= std::numeric_limits<int>::max());
@@ -71,6 +73,19 @@ void
 glfw::window::make_context_current() const
 {
     glfwMakeContextCurrent(window_);
+
+#ifdef _WIN64
+    /**
+     * TODO: apparently for some library versions it may be necessary
+     * to call glewInit on every context change? Look into this and
+     * figure out what's really going on...
+     */
+    auto const error = glewInit();
+    if (error != GLEW_OK) {
+        throw std::runtime_error(
+            reinterpret_cast<char const *>(glewGetErrorString(error)));
+    }
+#endif // _WIN64
 }
 
 bool
