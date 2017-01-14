@@ -30,8 +30,8 @@ if (${OSX})
 endif ()
 
 find_package (Armadillo REQUIRED)
-find_package (Boost QUIET COMPONENTS filesystem program_options system thread
-  REQUIRED)
+find_package (Boost QUIET COMPONENTS filesystem iostreams program_options system
+  thread REQUIRED)
 find_package (glfw3 3.2 REQUIRED)
 find_package (OpenGL REQUIRED)
 if (${LINUX_OR_WINDOWS})

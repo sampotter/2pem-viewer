@@ -47,6 +47,7 @@ target_link_libraries (client ${OPENGL_gl_LIBRARY})
 
 add_executable (server viewer/server.cpp)
 target_link_libraries (server ${Boost_SYSTEM_LIBRARY})
+target_link_libraries (server ${Boost_IOSTREAMS_LIBRARY})
 if (${WINDOWS})
   target_link_libraries (server wsock32)
   target_link_libraries (server ws2_32)

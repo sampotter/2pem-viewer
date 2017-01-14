@@ -1,11 +1,9 @@
 #ifndef __RAW_FILE_HPP__
 #define __RAW_FILE_HPP__
 
-#include <memory>
 #include <string>
 
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
 
 struct raw_file_params {
     std::string path;
@@ -26,8 +24,7 @@ struct raw_file {
     std::size_t get_display_chan() const;
 private:
     raw_file_params params_;
-    boost::interprocess::file_mapping file_mapping_;
-    boost::interprocess::mapped_region mapped_region_;
+    boost::iostreams::mapped_file_source mapped_file_;
 };
 
 #include "raw_file.impl.hpp"

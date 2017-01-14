@@ -4,13 +4,7 @@
 template <typename elt_t>
 raw_file<elt_t>::raw_file(raw_file_params const & params):
     params_ {params},
-    file_mapping_ {params_.path.c_str(), boost::interprocess::read_only},
-    mapped_region_ {
-        file_mapping_,
-        boost::interprocess::read_only,
-        0,
-        get_file_size()
-    }
+    mapped_file_ {params_.path}
 {}
 
 template <typename elt_t>
@@ -35,7 +29,7 @@ raw_file<elt_t>::get_frame_data(std::size_t time_pt, std::size_t chan) const
     assert(time_pt < params_.time_pts);
     assert(chan < params_.num_chans);
 #endif // VIEWER_DEBUG
-    auto const addr = static_cast<elt_t *>(mapped_region_.get_address());
+    auto const addr = reinterpret_cast<elt_t const *>(mapped_file_.data());
     auto const offset = (time_pt*params_.num_chans + chan)*get_frame_size();
     return addr + offset;
 }
