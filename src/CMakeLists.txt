@@ -62,6 +62,10 @@ if (${OSX})
   target_link_libraries (tl_file_monitor ${CoreFoundation_LIBRARY})
   target_link_libraries (tl_file_monitor ${CoreServices_LIBRARY})
 endif ()
+if (${WINDOWS})
+  target_link_libraries (tl_file_monitor wsock32)
+  target_link_libraries (tl_file_monitor ws2_32)
+endif ()
 
 # Local Variables:
 # indent-tabs-mode: nil
