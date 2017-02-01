@@ -8,6 +8,8 @@
 #include "client_options.hpp"
 #include "client_signal_dispatcher.hpp"
 #include "frame.hpp"
+#include "lens_parameters.hpp"
+#include "slm_parameters.hpp"
 #include "target_point_store.hpp"
 
 struct client_slm_state {
@@ -34,9 +36,9 @@ private:
     // client-local service locator.
     std::size_t img_width_;
     std::size_t img_height_;
-    std::size_t slm_width_;
-    std::size_t slm_height_;
     std::size_t gs_iter_count_;
+    slm_parameters slm_params_;
+    lens_parameters lens_params_;
     bool dirty_ {false};
     bool visible_ {true};
 

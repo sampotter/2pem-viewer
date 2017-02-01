@@ -6,9 +6,11 @@
 #include <boost/asio.hpp>
 
 #include "gl.hpp"
+#include "slm_parameters.hpp"
 
 struct frame {
     frame();
+    frame(slm_parameters const & slm_params);
     frame(std::size_t width, std::size_t height);
     void translate(int ishift, int jshift);
     void align(frame const & other_frame);

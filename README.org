@@ -51,11 +51,21 @@ $ make
        MSYS" and "MSYS2 MinGW 32-bit").
     4. Install the necessary packages:
 #+BEGIN_SRC sh
-$ pacman -Sy git ninja mingw-w64-x86_64-armadillo mingw-w64-x86_64-boost \
-    mingw-w64-x86_64-cmake mingw-w64-x86_64-extra-cmake-modules \
-    mingw-w64-x86_64-fftw mingw-w64-x86_64-gcc mingw-w64-x86_64-glew \
-    mingw-w64-x86_64-glfw
+$ pacman -Sy git mingw-w64_x86-ninja mingw-w64-x86_64-armadillo \
+    mingw-w64-x86_64-boost mingw-w64-x86_64-cmake \
+    mingw-w64-x86_64-extra-cmake-modules mingw-w64-x86_64-fftw \
+    mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
+$ pacman -Sy mingw-w64-x86_64-portua
 #+END_SRC
+	5. MSYS2 doesn't currently provide a package for [[http://liblo.sourceforge.net/][liblo]]. To install
+       it from source, follow the following instructions:
+	   #+BEGIN_SRC sh
+$ pacman -S autoconf autoconf-archive automake make
+$ git clone git://liblo.git.sourceforge.net/gitroot/liblo/liblo
+$ cd liblo
+$ sh autogen.sh
+$ TODO
+	   #+END_SRC
     5. Use ~git~ to clone this repository in an MSYS2 terminal (if you
        haven't downloaded the repository by some other means).
     6. Navigate to the root directory of the repository and build:

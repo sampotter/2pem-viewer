@@ -12,9 +12,9 @@ client_slm_state::client_slm_state(
     client_signal_dispatcher & signal_dispatcher):
     img_width_ {options.get_img_width()},
     img_height_ {options.get_img_height()},
-    slm_width_ {options.get_slm_width()},
-    slm_height_ {options.get_slm_height()},
     gs_iter_count_ {options.get_gs_iter_count()},
+    slm_params_ {options.get_slm_parameters()},
+    lens_params_ {options.get_lens_parameters()},
     source_(img_width_*img_height_, 1.0),
     target_(img_width_*img_height_, 0.0)
 {
@@ -74,18 +74,21 @@ client_slm_state::recompute_phase_mask()
         std::launch::async,
         [this] () {
             recompute_target();
-            frame phase_mask {slm_width_, slm_height_};
+            frame phase_mask {slm_params_};
             phase_retrieval::compute_phase_mask(
                 &source_[0],
                 &target_[0],
                 img_width_,
                 img_height_,
-                slm_width_,
-                slm_height_,
+                slm_params_,
                 gs_iter_count_,
                 phase_mask);
             phase_retrieval::apply_axicon_phase_mask(
                 target_point::screen_axicon_radius,
+                phase_mask);
+            phase_retrieval::apply_lens_function(
+                slm_params_,
+                lens_params_,
                 phase_mask);
 
             event_queue_.push(event::phase_mask_recomputed);

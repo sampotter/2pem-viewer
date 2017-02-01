@@ -17,8 +17,8 @@ client_app_state::client_app_state(client_options const & options):
         signal_dispatcher_,
     },
     slm_window_ {
-        options.get_slm_width(),
-        options.get_slm_height()
+        options.get_slm_parameters().resolution.width,
+        options.get_slm_parameters().resolution.height
     },
     slm_state_ {
         options,

@@ -2,10 +2,12 @@
 
 #include <cassert>
 #include <cmath>
+#include <type_traits>
 
 #include <armadillo>
 
 #include "glfw.hpp"
+#include "math.hpp"
 
 void
 phase_retrieval::compute_phase_mask(
@@ -13,8 +15,7 @@ phase_retrieval::compute_phase_mask(
     double const * target,
     std::size_t in_width,
     std::size_t in_height,
-    std::size_t out_width,
-    std::size_t out_height,
+    slm_parameters const & slm_params,
     std::size_t iter_count,
     frame & phase_mask)
 {
@@ -73,10 +74,13 @@ phase_retrieval::compute_phase_mask(
 
     A = (A + datum::pi)/(2*datum::pi);
 
+    auto const w = slm_params.resolution.width;
+    auto const h = slm_params.resolution.height;
+
     auto tmp = phase_mask.data();
-    for (auto i {0ul}; i < out_height; ++i) {
-        for (auto j {0ul}; j < out_width; ++j) {
-            tmp[out_width*i + j] = A(i % in_height, j % in_width).real();
+    for (auto i {0ul}; i < h; ++i) {
+        for (auto j {0ul}; j < w; ++j) {
+            tmp[w*i + j] = A(i % in_height, j % in_width).real();
         }
     }
 }
@@ -98,6 +102,48 @@ phase_retrieval::apply_axicon_phase_mask(double axicon_radius, frame & mask)
             z = std::sqrt(x*x + y*y)/axicon_radius;
             
             tmp[w*i + j] = std::fmod(tmp[w*i + j] + z, 1.0);
+        }
+    }
+}
+
+void
+phase_retrieval::apply_lens_function(
+    slm_parameters const & slm_params,
+    lens_parameters const & lens_params,
+    frame & phase_mask)
+{
+    using namespace arma;
+    
+    auto const w = phase_mask.get_width();
+    auto const h = phase_mask.get_height();
+
+    auto const f = lens_params.focal_length;
+    auto const f_abs = std::fabs(f);
+    auto const f_sign = sign(f);
+    auto const f_sqr = f*f;
+
+    auto const scaled_wavelength = lens_params.wavelength*1e-6;
+
+    auto const pixel_width_mm =
+        slm_params.dimensions.width/static_cast<double>(w);
+    auto const pixel_height_mm =
+        slm_params.dimensions.height/static_cast<double>(h);
+
+    auto const center_x = (w + 1)/2.0;
+    auto const center_y = (h + 1)/2.0;
+
+    std::remove_const<decltype(center_x)>::type x;
+    decltype(x) y;
+
+    auto data = phase_mask.data();
+
+    for (auto j {0ul}; j < w; ++j) {
+        y = pixel_height_mm*(j - center_y);
+        for (auto i {0ul}; i < h; ++i) {
+            x = pixel_width_mm*(i - center_x);
+            data[w*i + j] = std::fmod(
+                f_sign*(sqrt(f_sqr + x*x + y*y) - f_abs)/scaled_wavelength,
+                1.0);
         }
     }
 }

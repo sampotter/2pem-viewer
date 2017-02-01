@@ -7,6 +7,12 @@
 
 frame::frame() {}
 
+frame::frame(slm_parameters const & slm_params):
+    data_(slm_params.resolution.width*slm_params.resolution.height),
+    width_ {slm_params.resolution.width},
+    height_ {slm_params.resolution.height}
+{}
+
 frame::frame(std::size_t width, std::size_t height):
     data_(width*height),
     width_ {width},
