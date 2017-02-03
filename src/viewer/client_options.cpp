@@ -25,12 +25,18 @@ client_options::from_cli_args(int argc, char ** argv)
         ("image_height",
          value<std::size_t>()->default_value(512),
          "The height of the image in pixels")
-        ("slm_width",
-         value<std::size_t>()->default_value(1024),
-         "The width of the spatial light modulator (SLM) display.")
-        ("slm_height",
-         value<std::size_t>()->default_value(768),
-         "The height of the SLM display.")
+        ("slm_res_x",
+         value<std::size_t>()->default_value(1920),
+         "The width in pixels of the spatial light modulator (SLM) display.")
+        ("slm_res_y",
+         value<std::size_t>()->default_value(1080),
+         "The height in pixels of the SLM display.")
+        ("slm_dim_x",
+         value<double>()->default_value(15.36),
+         "The width in mm of the SLM display.")
+        ("slm_dim_y",
+         value<double>()->default_value(8.64),
+         "The height in mm of the SLM display.")
         ("gs_iter_count",
          value<std::size_t>()->default_value(10),
          "The default number of Gerchberg-Saxton iterations used to compute "
@@ -67,10 +73,10 @@ client_options::from_cli_args(int argc, char ** argv)
     }
 
     slm_parameters slm_params;
-    slm_params.resolution.width = varmap["slm_dim_x"].as<std::size_t>();
-    slm_params.resolution.height = varmap["slm_dim_y"].as<std::size_t>();
-    slm_params.dimensions.width = varmap["slm_res_x"].as<double>();
-    slm_params.dimensions.height = varmap["slm_res_y"].as<double>();
+    slm_params.resolution.width = varmap["slm_res_x"].as<std::size_t>();
+    slm_params.resolution.height = varmap["slm_res_y"].as<std::size_t>();
+    slm_params.dimensions.width = varmap["slm_dim_x"].as<double>();
+    slm_params.dimensions.height = varmap["slm_dim_y"].as<double>();
 
     lens_parameters lens_params;
     lens_params.focal_length = varmap["focal_length"].as<double>();
