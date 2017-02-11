@@ -6,26 +6,26 @@
 
 	1. Install [[http://brew.sh][Homebrew]] (follow the instructions on the Homebrew website).
 	2. Use Homebrew to install the require packages:
-    #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ brew install armadillo boost cmake fftw brew install glfw3
 $ brew install liblo portaudio # optional
-    #+END_SRC
+#+END_SRC
 	3. In a reasonable location, clone this git repository:
-    #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ git clone https://github.com/sampotter/2pem-viewer.git
-    #+END_SRC
+#+END_SRC
 	4. Change directories into the repository, create a build
        directory (for an out-of-source build), run CMake, and build:
-    #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ cd 2pem-viewer
 $ mkdir build
 $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ make
-    #+END_SRC
+#+END_SRC
 	5. The resulting binaries in the ~build~ directory are
        ~./src/client~ and ~./src/server~.
-    #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ cd 2pem-viewer
 $ git submodule init
 $ git submodule update
@@ -33,7 +33,7 @@ $ mkdir build
 $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ make
-    #+END_SRC
+#+END_SRC
 	5. The resulting binaries in the ~build~ directory are
        ~./src/client~ and ~./src/server~.
 
@@ -50,26 +50,26 @@ $ make
        always open "MSYS2 MinGW 64-bit" (the other options are "MSYS2
        MSYS" and "MSYS2 MinGW 32-bit").
     4. Install the necessary packages:
-       #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ pacman -Sy git mingw-w64_x86-ninja mingw-w64-x86_64-armadillo \
     mingw-w64-x86_64-boost mingw-w64-x86_64-cmake \
     mingw-w64-x86_64-extra-cmake-modules mingw-w64-x86_64-fftw \
     mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
 $ pacman -Sy mingw-w64-x86_64-portua
-       #+END_SRC
+#+END_SRC
 	5. MSYS2 doesn't currently provide a package for [[http://liblo.sourceforge.net/][liblo]]. To install
        it from source, follow the following instructions:
-	   #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ pacman -S autoconf autoconf-archive automake make
 $ git clone git://liblo.git.sourceforge.net/gitroot/liblo/liblo
 $ cd liblo
 $ sh autogen.sh
 $ TODO
-	   #+END_SRC
+#+END_SRC
     5. Use ~git~ to clone this repository in an MSYS2 terminal (if you
        haven't downloaded the repository by some other means).
     6. Navigate to the root directory of the repository and build:
-       #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ cd 2pem-viewer
 $ git submodule init
 $ git submodule update
@@ -77,18 +77,18 @@ $ mkdir -p build
 $ cd build
 $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
 $ ninja
-       #+END_SRC
+#+END_SRC
     7. The binaries are placed in ~2pem-viewer/build/Release/src~.
 
 ** CMake Options
 
    There are optional features which can be built (or not) by passing
    arguments to CMake. For a complete list of these variables, run:
-    #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ cmake -L
-    #+END_SRC
+#+END_SRC
    To use these options, set them using ~-DOPTION_NAME={ON,OFF}~ when
    calling ~cmake~ on the command line. For example:
-    #+BEGIN_SRC sh
+#+BEGIN_SRC sh
 $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DUSE_OSC=OFF <path-to-repo>
-    #+END_SRC
+#+END_SRC
