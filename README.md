@@ -4,18 +4,20 @@
 
 ### OS X
 
-1.  Install [Homebrew](http://brew.sh) (follow the instructions on the Homebrew website).
+1.  Install [Homebrew](http://brew.sh) (follow the instructions on the
+Homebrew website).
+
 2.  Use Homebrew to install the require packages:
 
     $ brew install armadillo boost cmake fftw brew install glfw3
     $ brew install liblo portaudio # optional
 
-1.  In a reasonable location, clone this git repository:
+3.  In a reasonable location, clone this git repository:
 
     $ git clone https://github.com/sampotter/2pem-viewer.git
 
-1.  Change directories into the repository, create a build
-    directory (for an out-of-source build), run CMake, and build:
+4.  Change directories into the repository, create a build directory
+    (for an out-of-source build), run CMake, and build:
 
     $ cd 2pem-viewer
     $ mkdir build
@@ -23,8 +25,8 @@
     $ cmake -DCMAKE_BUILD_TYPE=Release ..
     $ make
 
-1.  The resulting binaries in the `build` directory are
-    `./src/client` and `./src/server`.
+5.  The resulting binaries in the `build` directory are `./src/client`
+    and `./src/server`.
 
     $ cd 2pem-viewer
     $ git submodule init
@@ -34,8 +36,8 @@
     $ cmake -DCMAKE_BUILD_TYPE=Release ..
     $ make
 
-1.  The resulting binaries in the `build` directory are
-    `./src/client` and `./src/server`.
+6.  The resulting binaries in the `build` directory are `./src/client`
+    and `./src/server`.
 
 ### Ubuntu Linux (and similar)
 
@@ -43,9 +45,11 @@
 
 ### Windows (using MSYS2)
 
-1.  Download and install the 64-bit version of [MSYS2](https://msys2.github.io/).
-2.  Use Pacman to initially update the MSYS2 installation (follow
-    the post-installation instructions at the [MSYS2](https://msys2.github.io/) website).
+1.  Download and install the 64-bit version of
+    [MSYS2](https://msys2.github.io/).
+2.  Use Pacman to initially update the MSYS2 installation (follow the
+    post-installation instructions at the
+    [MSYS2](https://msys2.github.io/) website).
 3.  When opening an MSYS2 terminal (e.g. from the Start menu),
     always open "MSYS2 MinGW 64-bit" (the other options are "MSYS2
     MSYS" and "MSYS2 MinGW 32-bit").
@@ -57,8 +61,9 @@
         mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
     $ pacman -Sy mingw-w64-x86_64-portua
 
-1.  MSYS2 doesn't currently provide a package for [liblo](http://liblo.sourceforge.net/). To install
-    it from source, follow the following instructions:
+5.  MSYS2 doesn't currently provide a package for
+    [liblo](http://liblo.sourceforge.net/). To install it from source,
+    follow the following instructions:
 
     $ pacman -S autoconf autoconf-archive automake make
     $ git clone git://liblo.git.sourceforge.net/gitroot/liblo/liblo
