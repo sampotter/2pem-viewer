@@ -8,6 +8,8 @@
 
 struct client_options {
     static client_options from_cli_args(int argc, char ** argv);
+    static client_options from_config_file(std::string const & path);
+    
     std::string get_hostname() const;
     std::string get_port() const;
     std::size_t get_img_width() const;

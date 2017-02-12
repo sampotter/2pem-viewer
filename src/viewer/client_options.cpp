@@ -1,8 +1,12 @@
 #include "client_options.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
+#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
+
+#include "lua.hpp"
 
 client_options
 client_options::from_cli_args(int argc, char ** argv)
@@ -13,6 +17,8 @@ client_options::from_cli_args(int argc, char ** argv)
 
     desc.add_options()
         ("help,h", "Display help")
+        ("config_file",
+         "The path to a configuration file to use to specify these options.")
         ("hostname",
          value<std::string>()->default_value("localhost"),
          "The server hostname")
@@ -42,7 +48,7 @@ client_options::from_cli_args(int argc, char ** argv)
          "The default number of Gerchberg-Saxton iterations used to compute "
          "the SLM phase mask.")
 #if USE_OSC
-        ("osc_port",
+        ("osc_port9",
          value<std::size_t>()->default_value(9000),
          "The port that will receive OSC messages")
 #endif // USE_OSC
@@ -72,6 +78,11 @@ client_options::from_cli_args(int argc, char ** argv)
         std::exit(EXIT_FAILURE);
     }
 
+    if (varmap.count("config_file")) {
+        auto const path = varmap["config_file"].as<std::string>();
+        return client_options::from_config_file(path);
+    }
+
     slm_parameters slm_params;
     slm_params.resolution.width = varmap["slm_res_x"].as<std::size_t>();
     slm_params.resolution.height = varmap["slm_res_y"].as<std::size_t>();
@@ -96,6 +107,115 @@ client_options::from_cli_args(int argc, char ** argv)
       , varmap["num_mean_frames"].as<std::size_t>()
       , slm_params
       , lens_params
+    };
+}
+
+client_options
+client_options::from_config_file(std::string const & path)
+{
+    boost::filesystem::path fs_path {path};
+    if (!boost::filesystem::exists(fs_path)) {
+        throw std::runtime_error(path + " does not exist");
+    }
+    
+
+    lua::state lua;
+    lua.do_file(fs_path.string());
+    
+
+    lua.get_global("hostname");
+    auto const hostname = lua.to_string(-1);
+    lua.pop(1);
+
+    lua.get_global("port");
+    auto const port = lua.to_string(-1);
+    lua.pop(1);
+
+    lua.get_global("image_parameters");
+
+    lua.get_field(-1, "width");
+    auto const image_width = lua.to_integer(-1);
+    lua.pop(1);
+
+    lua.get_field(-1, "height");
+    auto const image_height = lua.to_integer(-1);
+    lua.pop(2);
+
+    lua.get_global("gerchberg_saxton_iterations");
+    auto const gs_iters = lua.to_integer(-1);
+    lua.pop(1);
+
+#if USE_OSC
+    lua.get_global("osc_port");
+    auto const osc_port = lua.to_integer(-1);
+    lua.pop(1);
+#endif // USE_OSC
+
+    lua.get_global("num_mean_frames");
+    auto const num_mean_frames = lua.to_integer(-1);
+    lua.pop(1);
+    
+
+    slm_parameters slm_params;
+
+    lua.get_global("slm_parameters");
+    
+    lua.get_field(-1, "resolution");
+    
+    lua.get_field(-1, "width");
+    slm_params.resolution.width = lua.to_integer(-1);
+    lua.pop(1);
+
+    lua.get_field(-1, "height");
+    slm_params.resolution.height = lua.to_integer(-1);
+    lua.pop(2);
+
+    lua.get_field(-1, "dimensions");
+
+    lua.get_field(-1, "width");
+    slm_params.dimensions.width = lua.to_number(-1);
+    lua.pop(1);
+
+    lua.get_field(-1, "height");
+    slm_params.dimensions.height = lua.to_number(-1);
+    lua.pop(3);
+    
+
+    lens_parameters lens_params;
+
+    lua.get_global("lens_parameters");
+
+    lua.get_field(-1, "focal_length");
+    lens_params.focal_length = lua.to_number(-1);
+    lua.pop(1);
+
+    lua.get_field(-1, "wavelength");
+    lens_params.wavelength = lua.to_number(-1);
+    lua.pop(1);
+
+    lua.get_field(-1, "origin");
+
+    lua.get_field(-1, "x");
+    lens_params.origin.x = lua.to_integer(-1);
+    lua.pop(1);
+
+    lua.get_field(-1, "y");
+    lens_params.origin.y = lua.to_integer(-1);
+    lua.pop(3);
+
+    
+    return client_options {
+        hostname,
+        port,
+        static_cast<std::size_t>(image_width),
+        static_cast<std::size_t>(image_height),
+        static_cast<std::size_t>(gs_iters),
+#if USE_OSC
+        osc_port,
+#endif // USE_OSC
+        static_cast<std::size_t>(num_mean_frames),
+        slm_params,
+        lens_params
     };
 }
 
