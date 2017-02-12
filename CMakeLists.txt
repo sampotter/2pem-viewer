@@ -33,11 +33,13 @@ find_package (Armadillo REQUIRED)
 find_package (Boost QUIET COMPONENTS filesystem iostreams program_options system
   thread REQUIRED)
 find_package (glfw3 3.2 REQUIRED)
+find_package (Lua REQUIRED)
 find_package (OpenGL REQUIRED)
 if (${LINUX_OR_WINDOWS})
   find_package (GLEW REQUIRED)
 endif ()
 
+include_directories (${LUA_INCLUDE_DIR})
 include_directories (${OPENGL_INCLUDE_DIR})
 
 set (CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++1z")

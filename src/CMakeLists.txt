@@ -43,6 +43,7 @@ if (${LINUX_OR_WINDOWS})
   target_link_libraries (client ${GLEW_LIBRARIES})
 endif ()
 target_link_libraries (client glfw)
+target_link_libraries (client ${LUA_LIBRARY})
 target_link_libraries (client ${OPENGL_gl_LIBRARY})
 
 add_executable (server viewer/server.cpp)
