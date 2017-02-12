@@ -13,6 +13,7 @@ set (client_srcs
   viewer/phase_retrieval.cpp
   viewer/glfw.cpp
   viewer/gl.cpp
+  viewer/lua.cpp
   viewer/target_point.cpp
   viewer/target_point_store.cpp)
 
