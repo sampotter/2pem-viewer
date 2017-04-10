@@ -10,6 +10,8 @@
 $ brew install armadillo boost cmake fftw brew install glfw3
 $ brew install liblo portaudio # optional
 #+END_SRC
+	- If there are issues installing [[http://arma.sourceforge.net/download.html][Armadillo]] using Homebrew, just
+      download the latest stable release from the Armadillo website.
 	- In a reasonable location, clone this git repository:
 #+BEGIN_SRC sh
 $ git clone https://github.com/sampotter/2pem-viewer.git
