@@ -4,18 +4,18 @@
 
 *** OS X
 
-	1. Install [[http://brew.sh][Homebrew]] (follow the instructions on the Homebrew website).
-	2. Use Homebrew to install the require packages:
+	- Install [[http://brew.sh][Homebrew]] (follow the instructions on the Homebrew website).
+	- Use Homebrew to install the require packages:
 #+BEGIN_SRC sh
 $ brew install armadillo boost cmake fftw brew install glfw3
 $ brew install liblo portaudio # optional
 #+END_SRC
-	3. In a reasonable location, clone this git repository:
+	- In a reasonable location, clone this git repository:
 #+BEGIN_SRC sh
 $ git clone https://github.com/sampotter/2pem-viewer.git
 #+END_SRC
-	4. Change directories into the repository, create a build
-       directory (for an out-of-source build), run CMake, and build:
+	- Change directories into the repository, create a build
+      directory (for an out-of-source build), run CMake, and build:
 #+BEGIN_SRC sh
 $ cd 2pem-viewer
 $ mkdir build
@@ -23,8 +23,8 @@ $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ make
 #+END_SRC
-	5. The resulting binaries in the ~build~ directory are
-       ~./src/client~ and ~./src/server~.
+	- The resulting binaries in the ~build~ directory are
+      ~./src/client~ and ~./src/server~.
 #+BEGIN_SRC sh
 $ cd 2pem-viewer
 $ git submodule init
@@ -34,8 +34,8 @@ $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Release ..
 $ make
 #+END_SRC
-	5. The resulting binaries in the ~build~ directory are
-       ~./src/client~ and ~./src/server~.
+	- The resulting binaries in the ~build~ directory are
+      ~./src/client~ and ~./src/server~.
 
 *** Ubuntu Linux (and similar)
 
@@ -43,13 +43,13 @@ $ make
 
 *** Windows (using MSYS2)
 
-    1. Download and install the 64-bit version of [[https://msys2.github.io/][MSYS2]].
-    2. Use Pacman to initially update the MSYS2 installation (follow
-       the post-installation instructions at the [[https://msys2.github.io/][MSYS2]] website).
-    3. When opening an MSYS2 terminal (e.g. from the Start menu),
-       always open "MSYS2 MinGW 64-bit" (the other options are "MSYS2
-       MSYS" and "MSYS2 MinGW 32-bit").
-    4. Install the necessary packages:
+    - Download and install the 64-bit version of [[https://msys2.github.io/][MSYS2]].
+    - Use Pacman to initially update the MSYS2 installation (follow
+      the post-installation instructions at the [[https://msys2.github.io/][MSYS2]] website).
+    - When opening an MSYS2 terminal (e.g. from the Start menu),
+      always open "MSYS2 MinGW 64-bit" (the other options are "MSYS2
+      MSYS" and "MSYS2 MinGW 32-bit").
+    - Install the necessary packages:
 #+BEGIN_SRC sh
 $ pacman -Sy git mingw-w64_x86-ninja mingw-w64-x86_64-armadillo \
     mingw-w64-x86_64-boost mingw-w64-x86_64-cmake \
@@ -57,8 +57,8 @@ $ pacman -Sy git mingw-w64_x86-ninja mingw-w64-x86_64-armadillo \
     mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
 $ pacman -Sy mingw-w64-x86_64-portua
 #+END_SRC
-	5. MSYS2 doesn't currently provide a package for [[http://liblo.sourceforge.net/][liblo]]. To install
-       it from source, follow the following instructions:
+	- MSYS2 doesn't currently provide a package for [[http://liblo.sourceforge.net/][liblo]]. To install
+      it from source, follow the following instructions:
 #+BEGIN_SRC sh
 $ pacman -S autoconf autoconf-archive automake make
 $ git clone git://liblo.git.sourceforge.net/gitroot/liblo/liblo
@@ -66,9 +66,9 @@ $ cd liblo
 $ sh autogen.sh
 $ TODO
 #+END_SRC
-    5. Use ~git~ to clone this repository in an MSYS2 terminal (if you
-       haven't downloaded the repository by some other means).
-    6. Navigate to the root directory of the repository and build:
+    - Use ~git~ to clone this repository in an MSYS2 terminal (if you
+      haven't downloaded the repository by some other means).
+    - Navigate to the root directory of the repository and build:
 #+BEGIN_SRC sh
 $ cd 2pem-viewer
 $ git submodule init
@@ -78,7 +78,7 @@ $ cd build
 $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
 $ ninja
 #+END_SRC
-    7. The binaries are placed in ~2pem-viewer/build/Release/src~.
+    - The binaries are placed in ~2pem-viewer/build/Release/src~.
 
 ** CMake Options
 
