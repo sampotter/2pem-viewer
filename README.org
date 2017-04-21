@@ -70,7 +70,7 @@ $ git submodule init
 $ git submodule update
 $ mkdir -p build
 $ cd build
-$ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../..
+$ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 $ ninja
 #+END_SRC
     - The binaries are placed in ~2pem-viewer/build/Release/src~.
