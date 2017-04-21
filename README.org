@@ -47,7 +47,8 @@ $ make
 $ pacman -Sy git mingw-w64-x86_64-ninja mingw-w64-x86_64-armadillo \
     mingw-w64-x86_64-boost mingw-w64-x86_64-cmake \
     mingw-w64-x86_64-extra-cmake-modules mingw-w64-x86_64-fftw \
-    mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw
+    mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-glfw \
+    mingw-w64-x86_64-lua mingw-w64-x86_64-portaudioXS
 $ pacman -Sy mingw-w64-x86_64-portua
 #+END_SRC
 	- MSYS2 doesn't currently provide a package for [[http://liblo.sourceforge.net/][liblo]]. To install
