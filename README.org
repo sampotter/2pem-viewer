@@ -57,7 +57,9 @@ $ pacman -S autoconf autoconf-archive automake make libtool
 $ git clone git://liblo.git.sourceforge.net/gitroot/liblo/liblo
 $ cd liblo
 $ sh autogen.sh
-$ TODO
+$ ./configure
+$ make
+$ make install
 #+END_SRC
     - Use ~git~ to clone this repository in an MSYS2 terminal (if you
       haven't downloaded the repository by some other means).
