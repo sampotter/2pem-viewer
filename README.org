@@ -53,7 +53,7 @@ $ pacman -Sy mingw-w64-x86_64-portua
 	- MSYS2 doesn't currently provide a package for [[http://liblo.sourceforge.net/][liblo]]. To install
       it from source, follow the following instructions:
 #+BEGIN_SRC sh
-$ pacman -S autoconf autoconf-archive automake make
+$ pacman -S autoconf autoconf-archive automake make libtool
 $ git clone git://liblo.git.sourceforge.net/gitroot/liblo/liblo
 $ cd liblo
 $ sh autogen.sh
