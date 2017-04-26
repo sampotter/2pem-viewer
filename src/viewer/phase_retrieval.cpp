@@ -122,6 +122,8 @@ phase_retrieval::apply_lens_function(
     auto const f_sign = sign(f);
     auto const f_sqr = f*f;
 
+    // TODO: wavelength is in nanometers. We should probably use
+    // boost::units for this at some point.
     auto const scaled_wavelength = lens_params.wavelength*1e-6;
 
     auto const pixel_width_mm =
@@ -136,14 +138,15 @@ phase_retrieval::apply_lens_function(
     decltype(x) y;
 
     auto data = phase_mask.data();
+    std::remove_pointer<decltype(data)>::type lens_value;
 
     for (auto j {0ul}; j < w; ++j) {
         y = pixel_height_mm*(j - center_y);
         for (auto i {0ul}; i < h; ++i) {
             x = pixel_width_mm*(i - center_x);
-            data[w*i + j] = std::fmod(
-                f_sign*(sqrt(f_sqr + x*x + y*y) - f_abs)/scaled_wavelength,
-                1.0);
+            lens_value = f_sign*(sqrt(f_sqr + x*x + y*y) - f_abs)/
+                scaled_wavelength;
+            data[w*i + j] = std::fmod(data[w*i + j] + lens_value, 1.0);
         }
     }
 }
