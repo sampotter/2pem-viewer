@@ -21,15 +21,29 @@ lua::state::do_file(std::string const & path) const
     return luaL_dofile(lua_state_, path.c_str());
 }
 
+#ifdef USING_LUA_5_3
 int
+#else
+void
+#endif
 lua::state::get_field(int index, std::string const & key) const
 {
-    return lua_getfield(lua_state_, index, key.c_str());
+#ifdef USING_LUA_5_3
+    return
+#endif
+        lua_getfield(lua_state_, index, key.c_str());
 }
 
+#ifdef USING_LUA_5_3
 int
+#else
+void
+#endif
 lua::state::get_global(std::string const & name) const
 {
+#ifdef USING_LUA_5_3
+    return
+#endif
     return lua_getglobal(lua_state_, name.c_str());
 }
 

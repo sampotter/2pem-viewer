@@ -14,8 +14,16 @@ namespace lua {
         state();
         ~state();
         bool do_file(std::string const & path) const;
+#ifdef USING_LUA_5_3
         int get_field(int index, std::string const & key) const;
+#else
+        void get_field(int index, std::string const & key) const;
+#endif
+#ifdef USING_LUA_5_3
         int get_global(std::string const & name) const;
+#else
+        void get_global(std::string const & name) const;
+#endif
         void open_libs() const;
         void pop(int n) const;
         int to_integer(int index) const;

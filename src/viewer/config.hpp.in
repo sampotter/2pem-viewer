@@ -1,5 +1,7 @@
 #cmakedefine USE_AUDIO_INPUT @USE_AUDIO_INPUT@
 #cmakedefine USE_OSC @USE_OSC@
+#cmakedefine USING_LUA_5_3 @USING_LUA_5_3@
+#cmakedefine USING_LUA_5_2 @USING_LUA_5_2@
 
 // Local Variables:
 // indent-tabs-mode: nil
