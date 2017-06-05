@@ -5,3 +5,4 @@ build
 ._*
 .DS_Store
 *.raw
+*~
