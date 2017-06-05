@@ -56,20 +56,6 @@ if (${WINDOWS})
   target_link_libraries (server ws2_32)
 endif ()
 
-add_executable (tl_file_monitor util/tl_file_monitor.cpp)
-target_link_libraries (tl_file_monitor ${Boost_FILESYSTEM_LIBRARY})
-target_link_libraries (tl_file_monitor ${Boost_PROGRAM_OPTIONS_LIBRARY})
-target_link_libraries (tl_file_monitor ${Boost_SYSTEM_LIBRARY})
-target_link_libraries (tl_file_monitor ${Boost_THREAD_LIBRARY})
-if (${OSX})
-  target_link_libraries (tl_file_monitor ${CoreFoundation_LIBRARY})
-  target_link_libraries (tl_file_monitor ${CoreServices_LIBRARY})
-endif ()
-if (${WINDOWS})
-  target_link_libraries (tl_file_monitor wsock32)
-  target_link_libraries (tl_file_monitor ws2_32)
-endif ()
-
 # Local Variables:
 # indent-tabs-mode: nil
 # End:
