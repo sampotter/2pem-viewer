@@ -29,8 +29,8 @@ void
 asio_state::receive_frame(frame const & f)
 {
     boost::system::error_code error_code;
-    auto const data = static_cast<void *>(const_cast<GLfloat *>(f.data()));
-    auto const num_bytes = sizeof(GLfloat)*f.size();
+    auto const data = static_cast<void *>(const_cast<float *>(f.data()));
+    auto const num_bytes = sizeof(float)*f.size();
     auto buffer = boost::asio::buffer(data, num_bytes);
     boost::asio::read(socket_, buffer, error_code);
     if (error_code.value() != boost::system::errc::success) {
