@@ -61,6 +61,9 @@ if (${WINDOWS})
   target_link_libraries (server ws2_32)
 endif ()
 
+add_executable (wx wx/main.cpp)
+target_link_libraries (wx ${wxWidgets_LIBRARIES})
+
 # Local Variables:
 # indent-tabs-mode: nil
 # End:
