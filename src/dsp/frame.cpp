@@ -29,9 +29,9 @@ frame::translate(int ishift, int jshift)
     int i_zero_end = ishift >= 0 ? ishift : M;
 
     memmove(&data_[i_dst_start*N], &data_[i_src_start*N],
-            sizeof(double)*(i_src_end - i_src_start)*N);
+            sizeof(float)*(i_src_end - i_src_start)*N);
     memset(&data_[i_zero_start*N], 0x0,
-           sizeof(double)*(i_zero_end - i_zero_start)*N);
+           sizeof(float)*(i_zero_end - i_zero_start)*N);
 
     int j_src_start = std::max(0, -jshift);
     int j_src_end = M - std::max(0, jshift);
@@ -45,9 +45,9 @@ frame::translate(int ishift, int jshift)
     for (int i = i_dst_start; i < i_dst_end; ++i) {
         memmove(&data_[i*M + j_dst_start],
                 &data_[i*M + j_src_start],
-                sizeof(double)*(j_src_end - j_src_start));
+                sizeof(float)*(j_src_end - j_src_start));
         memset(&data_[i*M + j_zero_start], 0x0,
-               sizeof(double)*(j_zero_end - j_zero_start));
+               sizeof(float)*(j_zero_end - j_zero_start));
     }
 }
 
@@ -145,14 +145,14 @@ frame::size() const
     return data_.size();
 }
 
-double *
+float *
 frame::data()
 {
     return data_.data();
 }
 
 
-double const *
+float const *
 frame::data() const
 {
     return data_.data();
@@ -167,7 +167,7 @@ frame::median_filter(int radius)
         return *this;
     }
 
-    std::array<double, 9> sorted;
+    std::array<float, 9> sorted;
 
     auto const median = [&] (int i0, int j0) {
         int k = 0;
@@ -190,13 +190,13 @@ frame::median_filter(int radius)
     return *this;
 }
 
-double const &
+float const &
 frame::operator()(int i, int j) const
 {
     return data_[width_*i + j];
 }
 
-double &
+float &
 frame::operator()(int i, int j)
 {
     return data_[width_*i + j];

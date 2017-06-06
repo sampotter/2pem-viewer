@@ -13,19 +13,19 @@ struct frame {
     std::size_t get_width() const;
     std::size_t get_height() const;
     std::size_t size() const;
-    double * data();
-    double const * data() const;
+    float * data();
+    float const * data() const;
 
     frame & median_filter(int radius);
 
-    double const & operator()(int i, int j) const;
-    double & operator()(int i, int j);
+    float const & operator()(int i, int j) const;
+    float & operator()(int i, int j);
     frame & operator+=(frame const & f);
     frame operator-(frame f) const;
 
     template <class T> frame & operator+=(T const & t);
 private:
-    std::vector<double> data_;
+    std::vector<float> data_;
     std::size_t width_;
     std::size_t height_;
 };
