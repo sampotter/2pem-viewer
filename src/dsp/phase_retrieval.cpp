@@ -14,7 +14,8 @@ phase_retrieval::compute_phase_mask(
     double const * target,
     std::size_t in_width,
     std::size_t in_height,
-    slm_parameters const & slm_params,
+    std::size_t out_width,
+    std::size_t out_height,
     std::size_t iter_count,
     frame & phase_mask)
 {
@@ -73,8 +74,8 @@ phase_retrieval::compute_phase_mask(
 
     A = (A + datum::pi)/(2*datum::pi);
 
-    auto const w = slm_params.resolution.width;
-    auto const h = slm_params.resolution.height;
+    auto const w = out_width;
+    auto const h = out_height;
 
     auto tmp = phase_mask.data();
     for (auto i {0ul}; i < h; ++i) {
@@ -107,7 +108,8 @@ phase_retrieval::apply_axicon_phase_mask(double axicon_radius, frame & mask)
 
 void
 phase_retrieval::apply_lens_function(
-    slm_parameters const & slm_params,
+    double x_dim,
+    double y_dim,
     double focal_length,
     double wavelength,
     frame & phase_mask)
@@ -126,10 +128,8 @@ phase_retrieval::apply_lens_function(
     // boost::units for this at some point.
     auto const scaled_wavelength = wavelength*1e-6;
 
-    auto const pixel_width_mm =
-        slm_params.dimensions.width/static_cast<double>(w);
-    auto const pixel_height_mm =
-        slm_params.dimensions.height/static_cast<double>(h);
+    auto const pixel_width_mm = x_dim/static_cast<double>(w);
+    auto const pixel_height_mm = y_dim/static_cast<double>(h);
 
     auto const center_x = (w + 1)/2.0;
     auto const center_y = (h + 1)/2.0;
