@@ -12,7 +12,7 @@
 #include "input_window.hpp"
 #include "options.hpp"
 #if USE_OSC
-#    include "client_osc_state.hpp"
+#    include "osc_state.hpp"
 #endif // USE_OSC
 #include "signal_dispatcher.hpp"
 #include "slm_state.hpp"
@@ -31,7 +31,7 @@ private:
     client_audio_input audio_input_;
 #endif // USE_AUDIO_INPUT
 #if USE_OSC
-    client_osc_state osc_state_;
+    osc_state osc_state_;
 #endif // USE_OSC
     glfw::library library_;
     input_window input_window_;
