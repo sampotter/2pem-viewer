@@ -5,9 +5,10 @@
 #include <future>
 #include <queue>
 
+#include <dsp/frame.hpp>
+
 #include "options.hpp"
 #include "signal_dispatcher.hpp"
-#include "frame.hpp"
 #include "lens_parameters.hpp"
 #include "slm_parameters.hpp"
 #include "target_point_store.hpp"

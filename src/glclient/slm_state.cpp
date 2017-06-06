@@ -3,9 +3,10 @@
 #include <functional>
 #include <iostream>
 
-#include "phase_retrieval.hpp"
+#include <common/utility.hpp>
+#include <dsp/phase_retrieval.hpp>
+
 #include "glfw.hpp"
-#include "utility.hpp"
 
 slm_state::slm_state(
     options const & options,

@@ -3,8 +3,9 @@
 
 #include <boost/asio.hpp>
 
+#include <dsp/frame.hpp>
+
 #include "options.hpp"
-#include "frame.hpp"
 
 struct asio_state {
     asio_state(options const & options);

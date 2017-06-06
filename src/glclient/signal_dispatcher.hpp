@@ -5,7 +5,7 @@
 
 #include <boost/signals2.hpp>
 
-#include "frame.hpp"
+#include <dsp/frame.hpp>
 
 struct signal_dispatcher {
     void left_mouse_down(double xpos, double ypos) const;

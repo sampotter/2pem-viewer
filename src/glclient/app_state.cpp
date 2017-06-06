@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "frame.hpp"
-#include "statistics.hpp"
+#include <dsp/frame.hpp>
+#include <dsp/statistics.hpp>
 
 app_state::app_state(options const & options):
     options_ {options},

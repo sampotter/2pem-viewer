@@ -1,9 +1,11 @@
 #ifndef __APP_STATE_HPP__
 #define __APP_STATE_HPP__
 
-#include "config.hpp"
-
 #include <boost/optional.hpp>
+
+#include <dsp/frame.hpp>
+
+#include "config.hpp"
 
 #include "asio_state.hpp"
 #if USE_AUDIO_INPUT
@@ -17,7 +19,6 @@
 #include "signal_dispatcher.hpp"
 #include "slm_state.hpp"
 #include "slm_window.hpp"
-#include "frame.hpp"
 
 struct app_state {
     app_state(options const & options);

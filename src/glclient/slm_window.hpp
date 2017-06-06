@@ -3,9 +3,10 @@
 
 #include <functional>
 
+#include <dsp/frame.hpp>
+
 #include "options.hpp"
 #include "slm_window_gl_state.hpp"
-#include "frame.hpp"
 #include "glfw.hpp"
 
 struct slm_window: public glfw::window {

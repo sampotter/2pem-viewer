@@ -1,7 +1,8 @@
 #ifndef __SLM_WINDOW_GL_STATE_HPP__
 #define __SLM_WINDOW_GL_STATE_HPP__
 
-#include "frame.hpp"
+#include <dsp/frame.hpp>
+
 #include "gl.hpp"
 #include "glfw.hpp"
 
