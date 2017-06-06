@@ -1,18 +1,18 @@
-#ifndef __CLIENT_INPUT_WINDOW_HPP__
-#define __CLIENT_INPUT_WINDOW_HPP__
+#ifndef __INPUT_WINDOW_HPP__
+#define __INPUT_WINDOW_HPP__
 
 #include <functional>
 #include <vector>
 
-#include "client_input_window_gl_state.hpp"
-#include "client_signal_dispatcher.hpp"
+#include "input_window_gl_state.hpp"
+#include "signal_dispatcher.hpp"
 #include "glfw.hpp"
 #include "target_point.hpp"
 
-struct client_input_window: public glfw::window {
-    client_input_window(std::size_t width, std::size_t height,
-                        client_signal_dispatcher const & signal_dispatcher);
-    virtual ~client_input_window();
+struct input_window: public glfw::window {
+    input_window(std::size_t width, std::size_t height,
+                 signal_dispatcher const & signal_dispatcher);
+    virtual ~input_window();
     void redraw(frame const & f, std::vector<target_point> const & pts) const;
 private:
     virtual void cursor_pos_callback_impl(double xpos, double ypos);
@@ -20,7 +20,7 @@ private:
     virtual void scroll_callback_impl(double xoffset, double yoffset);
     virtual void key_callback_impl(int key, int scancode, int action, int mods);
 
-    client_input_window_gl_state gl_state_;
+    input_window_gl_state gl_state_;
 
     double xpos_;
     double ypos_;

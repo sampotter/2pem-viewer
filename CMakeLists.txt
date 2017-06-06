@@ -46,7 +46,9 @@ find_package (OpenGL REQUIRED)
 if (${LINUX_OR_WINDOWS})
   find_package (GLEW REQUIRED)
 endif ()
+find_package (wxWidgets COMPONENTS core base REQUIRED)
 
+include(${wxWidgets_USE_FILE}) // for precompiled header?
 include_directories (${LUA_INCLUDE_DIR})
 include_directories (${OPENGL_INCLUDE_DIR})
 
@@ -55,10 +57,11 @@ set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DVIEWER_DEBUG")
 set (CMAKE_CXX_FLAGS_RELEASE "-O3")
 set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
-include_directories (${PROJECT_BINARY_DIR}/src/viewer)
+include_directories (src)
+include_directories (${CMAKE_CURRENT_BINARY_DIR}/src/glclient)
 
 add_subdirectory (src)
-add_subdirectory (src/viewer)
+add_subdirectory (src/glclient)
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -1,16 +1,17 @@
-#ifndef __CLIENT_SLM_WINDOW_HPP__
-#define __CLIENT_SLM_WINDOW_HPP__
+#ifndef __SLM_WINDOW_HPP__
+#define __SLM_WINDOW_HPP__
 
 #include <functional>
 
-#include "client_options.hpp"
-#include "client_slm_window_gl_state.hpp"
-#include "frame.hpp"
+#include <dsp/frame.hpp>
+
+#include "options.hpp"
+#include "slm_window_gl_state.hpp"
 #include "glfw.hpp"
 
-struct client_slm_window: public glfw::window {
-    client_slm_window(std::size_t width, std::size_t height);
-    virtual ~client_slm_window();
+struct slm_window: public glfw::window {
+    slm_window(std::size_t width, std::size_t height);
+    virtual ~slm_window();
     void clear() const;
     void redraw() const;
     void set_phase_mask(frame const & phase_mask);
@@ -20,11 +21,11 @@ private:
     virtual void scroll_callback_impl(double xoffset, double yoffset);
     virtual void key_callback_impl(int key, int scancode, int action, int mods);
 
-    client_slm_window_gl_state gl_state_;
+    slm_window_gl_state gl_state_;
     frame phase_mask_;
 };
 
-#endif // __CLIENT_SLM_WINDOW_HPP__
+#endif // __SLM_WINDOW_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

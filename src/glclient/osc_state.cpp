@@ -1,16 +1,16 @@
-#include "client_osc_state.hpp"
+#include "osc_state.hpp"
 
 #include <iostream>
 
 #include <lo/lo.h>
 #include <lo/lo_cpp.h>
 
-struct client_osc_state::impl {
+struct osc_state::impl {
 	impl(std::size_t port);
 	lo::ServerThread server_thread_;
 };
 
-client_osc_state::impl::impl(std::size_t port): server_thread_ {port}
+osc_state::impl::impl(std::size_t port): server_thread_ {port}
 {
 	server_thread_.add_method(
 		"test",
@@ -21,9 +21,9 @@ client_osc_state::impl::impl(std::size_t port): server_thread_ {port}
 	server_thread_.start();
 }
 
-client_osc_state::client_osc_state(std::size_t port):
+osc_state::osc_state(std::size_t port):
 	impl_ {std::make_unique<impl>(port)}
 {}
 
-client_osc_state::~client_osc_state()
+osc_state::~osc_state()
 {}

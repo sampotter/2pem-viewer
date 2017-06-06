@@ -1,26 +1,27 @@
-#ifndef __CLIENT_SLM_STATE_HPP__
-#define __CLIENT_SLM_STATE_HPP__
+#ifndef __SLM_STATE_HPP__
+#define __SLM_STATE_HPP__
 
 #include <boost/optional.hpp>
 #include <future>
 #include <queue>
 
-#include "client_options.hpp"
-#include "client_signal_dispatcher.hpp"
-#include "frame.hpp"
+#include <dsp/frame.hpp>
+
+#include "options.hpp"
+#include "signal_dispatcher.hpp"
 #include "lens_parameters.hpp"
 #include "slm_parameters.hpp"
 #include "target_point_store.hpp"
 
-struct client_slm_state {
+struct slm_state {
     enum class event {
         became_hidden,
         became_visible,
         phase_mask_recomputed
     };
 
-    client_slm_state(client_options const & options,
-                     client_signal_dispatcher & signal_dispatcher);
+    slm_state(options const & options,
+              signal_dispatcher & signal_dispatcher);
     std::vector<target_point> const & get_target_points() const;
     void recompute_phase_mask();
 	bool phase_mask_recomputed() const;
@@ -51,7 +52,7 @@ private:
     std::queue<event> event_queue_;
 };
 
-#endif // __CLIENT_SLM_STATE_HPP__
+#endif // __SLM_STATE_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

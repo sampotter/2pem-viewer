@@ -1,15 +1,16 @@
-#include "client_slm_state.hpp"
+#include "slm_state.hpp"
 
 #include <functional>
 #include <iostream>
 
-#include "phase_retrieval.hpp"
-#include "glfw.hpp"
-#include "utility.hpp"
+#include <common/utility.hpp>
+#include <dsp/phase_retrieval.hpp>
 
-client_slm_state::client_slm_state(
-    client_options const & options,
-    client_signal_dispatcher & signal_dispatcher):
+#include "glfw.hpp"
+
+slm_state::slm_state(
+    options const & options,
+    signal_dispatcher & signal_dispatcher):
     img_width_ {options.get_img_width()},
     img_height_ {options.get_img_height()},
     gs_iter_count_ {options.get_gs_iter_count()},
@@ -62,33 +63,39 @@ client_slm_state::client_slm_state(
 }
 
 std::vector<target_point> const &
-client_slm_state::get_target_points() const
+slm_state::get_target_points() const
 {
     return point_store_.get_target_points();
 }
 
 void
-client_slm_state::recompute_phase_mask()
+slm_state::recompute_phase_mask()
 {
     recomputed_phase_mask_ = std::async(
         std::launch::async,
         [this] () {
             recompute_target();
-            frame phase_mask {slm_params_};
+            frame phase_mask {
+                slm_params_.resolution.width,
+                slm_params_.resolution.height
+            };
             phase_retrieval::compute_phase_mask(
                 &source_[0],
                 &target_[0],
                 img_width_,
                 img_height_,
-                slm_params_,
+                slm_params_.resolution.width,
+                slm_params_.resolution.height,
                 gs_iter_count_,
                 phase_mask);
             phase_retrieval::apply_axicon_phase_mask(
                 target_point::screen_axicon_radius,
                 phase_mask);
             phase_retrieval::apply_lens_function(
-                slm_params_,
-                lens_params_,
+                slm_params_.dimensions.width,
+                slm_params_.dimensions.height,
+                lens_params_.focal_length,
+                lens_params_.wavelength,
                 phase_mask);
 
             event_queue_.push(event::phase_mask_recomputed);
@@ -98,19 +105,19 @@ client_slm_state::recompute_phase_mask()
 }
 
 bool
-client_slm_state::visible() const
+slm_state::visible() const
 {
     return visible_;
 }
 
 frame
-client_slm_state::get_recomputed_phase_mask()
+slm_state::get_recomputed_phase_mask()
 {
     return recomputed_phase_mask_.get();
 }
 
-boost::optional<client_slm_state::event>
-client_slm_state::peek_event() const
+boost::optional<slm_state::event>
+slm_state::peek_event() const
 {
     boost::optional<event> tmp;
     if (!event_queue_.empty()) {
@@ -119,8 +126,8 @@ client_slm_state::peek_event() const
     return tmp;
 }
 
-client_slm_state::event
-client_slm_state::pop_event()
+slm_state::event
+slm_state::pop_event()
 {
     auto const tmp = event_queue_.front();
     event_queue_.pop();
@@ -128,7 +135,7 @@ client_slm_state::pop_event()
 }
 
 void
-client_slm_state::recompute_target()
+slm_state::recompute_target()
 {
     memset((char *) &target_[0], 0x0, sizeof(double)*target_.size());
     for (auto const & pt: get_target_points()) {
@@ -137,7 +144,7 @@ client_slm_state::recompute_target()
 }
 
 void
-client_slm_state::toggle_visibility()
+slm_state::toggle_visibility()
 {
     event_queue_.push(
         (visible_ = !visible_) ? event::became_visible : event::became_hidden);

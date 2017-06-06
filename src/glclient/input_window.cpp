@@ -1,14 +1,14 @@
-#include "client_input_window.hpp"
+#include "input_window.hpp"
 
 #include <boost/signals2.hpp>
 
 #include <cmath>
 #include <iostream>
 
-client_input_window::client_input_window(
+input_window::input_window(
     std::size_t width,
     std::size_t height,
-    client_signal_dispatcher const & signal_dispatcher):
+    signal_dispatcher const & signal_dispatcher):
     window(width, height),
     left_mouse_down_ {[&] () {
         signal_dispatcher.left_mouse_down(xpos_, ypos_);
@@ -39,15 +39,15 @@ client_input_window::client_input_window(
     gl_state_.init_locations();
 }
 
-client_input_window::~client_input_window()
+input_window::~input_window()
 {
     make_context_current();
     gl_state_.cleanup();
 }
 
 void
-client_input_window::redraw(frame const & f,
-                            std::vector<target_point> const & pts) const
+input_window::redraw(frame const & f,
+                     std::vector<target_point> const & pts) const
 {
     make_context_current();
     gl_state_.update_viewport(*this);
@@ -59,15 +59,15 @@ client_input_window::redraw(frame const & f,
 }
 
 void
-client_input_window::cursor_pos_callback_impl(double xpos, double ypos)
+input_window::cursor_pos_callback_impl(double xpos, double ypos)
 {
     xpos_ = xpos;
     ypos_ = ypos;
 }
 
 void
-client_input_window::mouse_button_callback_impl(int button, int action,
-                                                int /* mods */)
+input_window::mouse_button_callback_impl(int button, int action,
+                                         int /* mods */)
 {
     switch (button) {
     case GLFW_MOUSE_BUTTON_LEFT:
@@ -94,14 +94,14 @@ client_input_window::mouse_button_callback_impl(int button, int action,
 }
 
 void
-client_input_window::scroll_callback_impl(double xoffset, double yoffset)
+input_window::scroll_callback_impl(double xoffset, double yoffset)
 {
     scroll_(xoffset, yoffset);
 }
 
 void
-client_input_window::key_callback_impl(int key, int /* scancode */, int action,
-                                       int mods)
+input_window::key_callback_impl(int key, int /* scancode */, int action,
+                                int mods)
 {
     switch (action) {
     case GLFW_PRESS:

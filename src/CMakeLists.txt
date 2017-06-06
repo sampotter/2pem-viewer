@@ -1,31 +1,36 @@
+set (dsp_srcs
+  dsp/frame.cpp
+  dsp/phase_retrieval.cpp)
+
+add_library (dsp ${dsp_srcs})
+
 set (client_srcs
-  viewer/client.cpp
-  viewer/client_app_state.cpp
-  viewer/client_asio_state.cpp
-  viewer/client_input_window.cpp
-  viewer/client_input_window_gl_state.cpp
-  viewer/client_options.cpp
-  viewer/client_signal_dispatcher.cpp
-  viewer/client_slm_state.cpp
-  viewer/client_slm_window.cpp
-  viewer/client_slm_window_gl_state.cpp
-  viewer/frame.cpp
-  viewer/phase_retrieval.cpp
-  viewer/glfw.cpp
-  viewer/gl.cpp
-  viewer/lua.cpp
-  viewer/target_point.cpp
-  viewer/target_point_store.cpp)
+  glclient/main.cpp
+  glclient/app_state.cpp
+  glclient/asio_state.cpp
+  glclient/input_window.cpp
+  glclient/input_window_gl_state.cpp
+  glclient/options.cpp
+  glclient/signal_dispatcher.cpp
+  glclient/slm_state.cpp
+  glclient/slm_window.cpp
+  glclient/slm_window_gl_state.cpp
+  glclient/glfw.cpp
+  glclient/gl.cpp
+  glclient/lua.cpp
+  glclient/target_point.cpp
+  glclient/target_point_store.cpp)
 
 if (USE_AUDIO_INPUT)
-  set (client_srcs ${client_srcs} viewer/client_audio_input.cpp)
+  set (client_srcs ${client_srcs} glclient/audio_input.cpp)
 endif ()
 
 if (USE_OSC)
-  set (client_srcs ${client_srcs} viewer/client_osc_state.cpp)
+  set (client_srcs ${client_srcs} glclient/osc_state.cpp)
 endif ()
 
 add_executable (client ${client_srcs})
+target_link_libraries (client dsp)
 target_link_libraries (client ${ARMADILLO_LIBRARIES})
 target_link_libraries (client ${fftw3_LIBRARY})
 if (USE_PORT_AUDIO)
@@ -48,13 +53,16 @@ target_link_libraries (client glfw)
 target_link_libraries (client ${LUA_LIBRARY})
 target_link_libraries (client ${OPENGL_gl_LIBRARY})
 
-add_executable (server viewer/server.cpp)
+add_executable (server server/main.cpp)
 target_link_libraries (server ${Boost_SYSTEM_LIBRARY})
 target_link_libraries (server ${Boost_IOSTREAMS_LIBRARY})
 if (${WINDOWS})
   target_link_libraries (server wsock32)
   target_link_libraries (server ws2_32)
 endif ()
+
+add_executable (wx wx/main.cpp)
+target_link_libraries (wx ${wxWidgets_LIBRARIES})
 
 # Local Variables:
 # indent-tabs-mode: nil
