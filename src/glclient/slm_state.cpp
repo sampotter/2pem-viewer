@@ -75,21 +75,27 @@ slm_state::recompute_phase_mask()
         std::launch::async,
         [this] () {
             recompute_target();
-            frame phase_mask {slm_params_};
+            frame phase_mask {
+                slm_params_.resolution.width,
+                slm_params_.resolution.height
+            };
             phase_retrieval::compute_phase_mask(
                 &source_[0],
                 &target_[0],
                 img_width_,
                 img_height_,
-                slm_params_,
+                slm_params_.resolution.width,
+                slm_params_.resolution.height,
                 gs_iter_count_,
                 phase_mask);
             phase_retrieval::apply_axicon_phase_mask(
                 target_point::screen_axicon_radius,
                 phase_mask);
             phase_retrieval::apply_lens_function(
-                slm_params_,
-                lens_params_,
+                slm_params_.dimensions.width,
+                slm_params_.dimensions.height,
+                lens_params_.focal_length,
+                lens_params_.wavelength,
                 phase_mask);
 
             event_queue_.push(event::phase_mask_recomputed);
