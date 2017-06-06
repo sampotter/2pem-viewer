@@ -5,7 +5,6 @@
 
 #include <boost/asio.hpp>
 
-#include "gl.hpp"
 #include "slm_parameters.hpp"
 
 struct frame {
@@ -17,19 +16,19 @@ struct frame {
     std::size_t get_width() const;
     std::size_t get_height() const;
     std::size_t size() const;
-    GLfloat * data();
-    GLfloat const * data() const;
+    double * data();
+    double const * data() const;
 
     frame & median_filter(int radius);
 
-    GLfloat const & operator()(int i, int j) const;
-    GLfloat & operator()(int i, int j);
+    double const & operator()(int i, int j) const;
+    double & operator()(int i, int j);
     frame & operator+=(frame const & f);
     frame operator-(frame f) const;
 
     template <class T> frame & operator+=(T const & t);
 private:
-    std::vector<GLfloat> data_;
+    std::vector<double> data_;
     std::size_t width_;
     std::size_t height_;
 };
