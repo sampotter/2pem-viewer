@@ -6,7 +6,6 @@
 
 #include <armadillo>
 
-#include "glfw.hpp"
 #include "math.hpp"
 
 void
