@@ -1,15 +1,15 @@
-#ifndef __CLIENT_ASIO_STATE_HPP__
-#define __CLIENT_ASIO_STATE_HPP__
+#ifndef __ASIO_STATE_HPP__
+#define __ASIO_STATE_HPP__
 
 #include <boost/asio.hpp>
 
-#include "client_options.hpp"
+#include "options.hpp"
 #include "frame.hpp"
 
-struct client_asio_state {
-    client_asio_state(client_options const & options);
-    ~client_asio_state();
-    void connect(client_options const & options);
+struct asio_state {
+    asio_state(options const & options);
+    ~asio_state();
+    void connect(options const & options);
     void receive_frame(frame const & f);
     void disconnect();
 private:
@@ -17,7 +17,7 @@ private:
     boost::asio::ip::tcp::socket socket_ {io_};
 };
 
-#endif // __CLIENT_ASIO_STATE_HPP__
+#endif // __ASIO_STATE_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

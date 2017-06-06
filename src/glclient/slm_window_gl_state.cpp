@@ -1,4 +1,4 @@
-#include "client_slm_window_gl_state.hpp"
+#include "slm_window_gl_state.hpp"
 
 #include <string>
 
@@ -13,7 +13,7 @@ get_shader_info_log_(GLuint shader)
 }
 
 void
-client_slm_window_gl_state::init() const
+slm_window_gl_state::init() const
 {
     gl::disable(GL_DITHER);
     gl::disable(GL_ALPHA_TEST);
@@ -25,7 +25,7 @@ client_slm_window_gl_state::init() const
 }
 
 void
-client_slm_window_gl_state::init_texture()
+slm_window_gl_state::init_texture()
 {
     gl::genTextures(1, &texture_);
     gl::activeTexture(GL_TEXTURE0 + 0);
@@ -35,7 +35,7 @@ client_slm_window_gl_state::init_texture()
 }
 
 void
-client_slm_window_gl_state::init_pbo(std::size_t slm_width, std::size_t slm_height)
+slm_window_gl_state::init_pbo(std::size_t slm_width, std::size_t slm_height)
 {
     pbo_size_ = sizeof(GLfloat)*slm_width*slm_height;
 
@@ -71,7 +71,7 @@ client_slm_window_gl_state::init_pbo(std::size_t slm_width, std::size_t slm_heig
 }
 
 void
-client_slm_window_gl_state::init_vertex_vbo()
+slm_window_gl_state::init_vertex_vbo()
 {
     GLfloat verts[] = {
         1.0,  1.0,  // top right
@@ -85,7 +85,7 @@ client_slm_window_gl_state::init_vertex_vbo()
 }
 
 void
-client_slm_window_gl_state::init_texcoords_vbo()
+slm_window_gl_state::init_texcoords_vbo()
 {
     GLfloat texcoords[] = {
         0.0, 0.0,   // lower left
@@ -100,7 +100,7 @@ client_slm_window_gl_state::init_texcoords_vbo()
 }
 
 void
-client_slm_window_gl_state::init_shader(char const * source, GLenum shader_type,
+slm_window_gl_state::init_shader(char const * source, GLenum shader_type,
                              GLuint * shader)
 {
     *shader = gl::createShader(shader_type);
@@ -116,7 +116,7 @@ client_slm_window_gl_state::init_shader(char const * source, GLenum shader_type,
 }
 
 void
-client_slm_window_gl_state::init_vshader()
+slm_window_gl_state::init_vshader()
 {
     auto source =
         "#version 120\n"
@@ -133,7 +133,7 @@ client_slm_window_gl_state::init_vshader()
 }
 
 void
-client_slm_window_gl_state::init_fshader()
+slm_window_gl_state::init_fshader()
 {
     auto source =
         "#version 120\n"
@@ -148,7 +148,7 @@ client_slm_window_gl_state::init_fshader()
 }
 
 void
-client_slm_window_gl_state::init_shader_program()
+slm_window_gl_state::init_shader_program()
 {
     shader_program_ = gl::createProgram();
     gl::attachShader(shader_program_, vshader_);
@@ -163,7 +163,7 @@ client_slm_window_gl_state::init_shader_program()
 }
 
 void
-client_slm_window_gl_state::init_locations()
+slm_window_gl_state::init_locations()
 {
     // Initialize 'scope frame' locations:
 
@@ -190,14 +190,14 @@ client_slm_window_gl_state::init_locations()
 }
 
 void
-client_slm_window_gl_state::update_viewport(glfw::window const & window) const
+slm_window_gl_state::update_viewport(glfw::window const & window) const
 {
     auto const size = window.get_framebuffer_size();
     gl::viewport(0, 0, size.width, size.height);
 }
 
 void
-client_slm_window_gl_state::buffer_frame(frame const & f) const
+slm_window_gl_state::buffer_frame(frame const & f) const
 {
     gl::bindBuffer(GL_PIXEL_PACK_BUFFER, pbo_);
     gl::bufferSubData(
@@ -210,7 +210,7 @@ client_slm_window_gl_state::buffer_frame(frame const & f) const
 }
 
 void
-client_slm_window_gl_state::texture_frame(frame const & f) const
+slm_window_gl_state::texture_frame(frame const & f) const
 {
     gl::bindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo_);
     gl::texSubImage2D(
@@ -228,7 +228,7 @@ client_slm_window_gl_state::texture_frame(frame const & f) const
 }
 
 void
-client_slm_window_gl_state::draw_texture() const
+slm_window_gl_state::draw_texture() const
 {
     gl::clear(GL_COLOR_BUFFER_BIT);
 
@@ -255,13 +255,13 @@ client_slm_window_gl_state::draw_texture() const
 }
 
 void
-client_slm_window_gl_state::clear() const
+slm_window_gl_state::clear() const
 {
     gl::clear(GL_COLOR_BUFFER_BIT);
 }
 
 void
-client_slm_window_gl_state::cleanup()
+slm_window_gl_state::cleanup()
 {
     gl::deleteBuffers(1, &pbo_);
     gl::deleteBuffers(1, &verts_vbo_);

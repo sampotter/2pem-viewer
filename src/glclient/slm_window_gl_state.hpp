@@ -1,13 +1,13 @@
-#ifndef __CLIENT_SLM_WINDOW_GL_STATE_HPP__
-#define __CLIENT_SLM_WINDOW_GL_STATE_HPP__
+#ifndef __SLM_WINDOW_GL_STATE_HPP__
+#define __SLM_WINDOW_GL_STATE_HPP__
 
 #include "frame.hpp"
 #include "gl.hpp"
 #include "glfw.hpp"
 
-struct client_slm_window_gl_state {
+struct slm_window_gl_state {
     // TODO: most of these duplicate functions in
-    // client_input_window_gl_state and should be made into free
+    // input_window_gl_state and should be made into free
     // functions and put somewhere else.
     
     void init() const;
@@ -27,7 +27,7 @@ struct client_slm_window_gl_state {
     void clear() const;
     void cleanup();
 private:
-    // TODO: this just replicates what's in the client_input_window_gl_state
+    // TODO: this just replicates what's in the input_window_gl_state
     // struct... Need to figure out a good way to manage this.
     GLuint texture_;
     GLuint pbo_;
@@ -42,7 +42,7 @@ private:
     GLint u_tex_;
 };
 
-#endif // __CLIENT_SLM_WINDOW_GL_STATE_HPP__
+#endif // __SLM_WINDOW_GL_STATE_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

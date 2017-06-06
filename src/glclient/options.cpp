@@ -1,4 +1,4 @@
-#include "client_options.hpp"
+#include "options.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -8,8 +8,8 @@
 
 #include "lua.hpp"
 
-client_options
-client_options::from_cli_args(int argc, char ** argv)
+options
+options::from_cli_args(int argc, char ** argv)
 {
     using namespace boost::program_options;
 
@@ -80,7 +80,7 @@ client_options::from_cli_args(int argc, char ** argv)
 
     if (varmap.count("config_file")) {
         auto const path = varmap["config_file"].as<std::string>();
-        return client_options::from_config_file(path);
+        return options::from_config_file(path);
     }
 
     slm_parameters slm_params;
@@ -95,7 +95,7 @@ client_options::from_cli_args(int argc, char ** argv)
     lens_params.origin.x = varmap["origin_x"].as<std::size_t>();
     lens_params.origin.y = varmap["origin_y"].as<std::size_t>();
 
-    return client_options {
+    return options {
         varmap["hostname"].as<std::string>()
       , varmap["port"].as<std::string>()
       , varmap["image_width"].as<std::size_t>()
@@ -110,8 +110,8 @@ client_options::from_cli_args(int argc, char ** argv)
     };
 }
 
-client_options
-client_options::from_config_file(std::string const & path)
+options
+options::from_config_file(std::string const & path)
 {
     boost::filesystem::path fs_path {path};
     if (!boost::filesystem::exists(fs_path)) {
@@ -204,7 +204,7 @@ client_options::from_config_file(std::string const & path)
     lua.pop(3);
 
     
-    return client_options {
+    return options {
         hostname,
         port,
         static_cast<std::size_t>(image_width),
@@ -220,61 +220,60 @@ client_options::from_config_file(std::string const & path)
 }
 
 std::string
-client_options::get_hostname() const
+options::get_hostname() const
 {
     return hostname_;
 }
 
 std::string
-client_options::get_port() const
+options::get_port() const
 {
     return port_;
 }
 
 std::size_t
-client_options::get_img_width() const
+options::get_img_width() const
 {
     return img_width_;
 }
 
 std::size_t
-client_options::get_img_height() const
+options::get_img_height() const
 {
     return img_height_;
 }
 
 std::size_t
-client_options::get_gs_iter_count() const
+options::get_gs_iter_count() const
 {
     return gs_iter_count_;
 }
 
 #if USE_OSC
 std::size_t
-client_options::get_osc_port() const
+options::get_osc_port() const
 {
     return osc_port_;
 }
 #endif // USE_OSC
 
 std::size_t
-client_options::get_num_mean_frames() const
+options::get_num_mean_frames() const
 {
     return num_mean_frames_;
 }
 
-client_options::client_options(std::string const & hostname
-                             , std::string const & port
-                             , std::size_t img_width
-                             , std::size_t img_height
-                             , std::size_t gs_iter_count
+options::options(std::string const & hostname
+               , std::string const & port
+               , std::size_t img_width
+               , std::size_t img_height
+               , std::size_t gs_iter_count
 #if USE_OSC
-                             , std::size_t osc_port
+               , std::size_t osc_port
 #endif // USE_OSC
-                             , std::size_t num_mean_frames
-                             , slm_parameters slm_params
-                             , lens_parameters lens_params
-                               ):
+               , std::size_t num_mean_frames
+               , slm_parameters slm_params
+               , lens_parameters lens_params):
     hostname_ {hostname}
   , port_ {port}
   , img_width_ {img_width}
@@ -289,13 +288,13 @@ client_options::client_options(std::string const & hostname
 {}
 
 slm_parameters const &
-client_options::get_slm_parameters() const
+options::get_slm_parameters() const
 {
     return slm_params_;
 }
 
 lens_parameters const &
-client_options::get_lens_parameters() const
+options::get_lens_parameters() const
 {
     return lens_params_;
 }

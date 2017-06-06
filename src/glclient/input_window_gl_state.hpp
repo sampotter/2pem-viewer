@@ -1,15 +1,15 @@
-#ifndef __CLIENT_INPUT_WINDOW_GL_STATE_HPP__
-#define __CLIENT_INPUT_WINDOW_GL_STATE_HPP__
+#ifndef __INPUT_WINDOW_GL_STATE_HPP__
+#define __INPUT_WINDOW_GL_STATE_HPP__
 
 #include "frame.hpp"
 #include "gl.hpp"
 #include "glfw.hpp"
 #include "target_point.hpp"
 
-// TODO: this currently lives in client_app_state, but really should
+// TODO: this currently lives in app_state, but really should
 // be moved into client_input_window.
 
-struct client_input_window_gl_state {
+struct input_window_gl_state {
     void init() const;
     void init_texture();
     void init_pbo(std::size_t img_width, std::size_t img_height);
@@ -49,7 +49,7 @@ private:
     GLint a_coord2d_target_circle_;
 };
 
-#endif // __CLIENT_INPUT_WINDOW_GL_STATE_HPP__
+#endif // __INPUT_WINDOW_GL_STATE_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

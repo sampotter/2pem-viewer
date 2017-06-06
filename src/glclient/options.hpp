@@ -1,14 +1,14 @@
-#ifndef __CLIENT_OPTIONS_HPP__
-#define __CLIENT_OPTIONS_HPP__
+#ifndef __OPTIONS_HPP__
+#define __OPTIONS_HPP__
 
 #include <string>
 
 #include "lens_parameters.hpp"
 #include "slm_parameters.hpp"
 
-struct client_options {
-    static client_options from_cli_args(int argc, char ** argv);
-    static client_options from_config_file(std::string const & path);
+struct options {
+    static options from_cli_args(int argc, char ** argv);
+    static options from_config_file(std::string const & path);
     
     std::string get_hostname() const;
     std::string get_port() const;
@@ -23,16 +23,16 @@ struct client_options {
     lens_parameters const & get_lens_parameters() const;
 private:
 #if USE_OSC
-    client_options(std::string const & hostname, std::string const & port,
-                   std::size_t img_width, std::size_t img_height,
-                   std::size_t gs_iter_count, std::size_t osc_port,
-                   std::size_t num_mean_frames, slm_parameters slm_params,
-                   lens_parameters lens_params);
+    options(std::string const & hostname, std::string const & port,
+            std::size_t img_width, std::size_t img_height,
+            std::size_t gs_iter_count, std::size_t osc_port,
+            std::size_t num_mean_frames, slm_parameters slm_params,
+            lens_parameters lens_params);
 #else // USE_OSC
-    client_options(std::string const & hostname, std::string const & port,
-                   std::size_t img_width, std::size_t img_height,
-                   std::size_t gs_iter_count, std::size_t num_mean_frames,
-                   slm_parameters slm_params, lens_parameters lens_params);
+    options(std::string const & hostname, std::string const & port,
+            std::size_t img_width, std::size_t img_height,
+            std::size_t gs_iter_count, std::size_t num_mean_frames,
+            slm_parameters slm_params, lens_parameters lens_params);
 #endif // USE_OSC
     std::string hostname_;
     std::string port_;

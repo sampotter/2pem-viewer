@@ -1,17 +1,17 @@
-#include "client_asio_state.hpp"
+#include "asio_state.hpp"
 
-client_asio_state::client_asio_state(client_options const & options)
+asio_state::asio_state(options const & options)
 {
     connect(options);
 }
 
-client_asio_state::~client_asio_state()
+asio_state::~asio_state()
 {
     disconnect();
 }
 
 void
-client_asio_state::connect(client_options const & options)
+asio_state::connect(options const & options)
 {
     using namespace boost::asio;
     using namespace boost::asio::ip;
@@ -26,7 +26,7 @@ client_asio_state::connect(client_options const & options)
 }
 
 void
-client_asio_state::receive_frame(frame const & f)
+asio_state::receive_frame(frame const & f)
 {
     boost::system::error_code error_code;
     auto const data = static_cast<void *>(const_cast<GLfloat *>(f.data()));
@@ -39,7 +39,7 @@ client_asio_state::receive_frame(frame const & f)
 }
 
 void
-client_asio_state::disconnect()
+asio_state::disconnect()
 {
     boost::system::error_code error_code;
     socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, error_code);

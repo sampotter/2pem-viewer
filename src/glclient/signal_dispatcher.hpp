@@ -1,5 +1,5 @@
-#ifndef __CLIENT_SIGNAL_DISPATCHER_HPP__
-#define __CLIENT_SIGNAL_DISPATCHER_HPP__
+#ifndef __SIGNAL_DISPATCHER_HPP__
+#define __SIGNAL_DISPATCHER_HPP__
 
 #include <functional>
 
@@ -7,7 +7,7 @@
 
 #include "frame.hpp"
 
-struct client_signal_dispatcher {
+struct signal_dispatcher {
     void left_mouse_down(double xpos, double ypos) const;
     void connect_left_mouse_down_slot(std::function<void(double, double)> & cb);
     void right_mouse_down(double xpos, double ypos) const;
@@ -26,7 +26,7 @@ private:
     boost::signals2::signal<void(frame const &)> redraw_slm_window_signal_;
 };
 
-#endif // __CLIENT_SIGNAL_DISPATCHER_HPP__
+#endif // __SIGNAL_DISPATCHER_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

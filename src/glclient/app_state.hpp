@@ -1,32 +1,32 @@
-#ifndef __CLIENT_APP_STATE_HPP__
-#define __CLIENT_APP_STATE_HPP__
+#ifndef __APP_STATE_HPP__
+#define __APP_STATE_HPP__
 
 #include "config.hpp"
 
 #include <boost/optional.hpp>
 
-#include "client_asio_state.hpp"
+#include "asio_state.hpp"
 #if USE_AUDIO_INPUT
 #    include "client_audio_input.hpp"
 #endif // USE_AUDIO_INPUT
-#include "client_input_window.hpp"
-#include "client_options.hpp"
+#include "input_window.hpp"
+#include "options.hpp"
 #if USE_OSC
 #    include "client_osc_state.hpp"
 #endif // USE_OSC
-#include "client_signal_dispatcher.hpp"
-#include "client_slm_state.hpp"
-#include "client_slm_window.hpp"
+#include "signal_dispatcher.hpp"
+#include "slm_state.hpp"
+#include "slm_window.hpp"
 #include "frame.hpp"
 
-struct client_app_state {
-    client_app_state(client_options const & options);
-    static client_app_state from_cli_args(int argc, char ** argv);
+struct app_state {
+    app_state(options const & options);
+    static app_state from_cli_args(int argc, char ** argv);
     void run();
 private:
-    client_options options_;
-    client_signal_dispatcher signal_dispatcher_;
-    client_asio_state asio_state_;
+    options options_;
+    signal_dispatcher signal_dispatcher_;
+    asio_state asio_state_;
 #if USE_AUDIO_INPUT
     client_audio_input audio_input_;
 #endif // USE_AUDIO_INPUT
@@ -34,14 +34,14 @@ private:
     client_osc_state osc_state_;
 #endif // USE_OSC
     glfw::library library_;
-    client_input_window input_window_;
-    client_slm_window slm_window_;
-    client_slm_state slm_state_;
+    input_window input_window_;
+    slm_window slm_window_;
+    slm_state slm_state_;
     frame frame_;
     boost::optional<frame> template_frame_;
 };
 
-#endif // __CLIENT_APP_STATE_HPP__
+#endif // __APP_STATE_HPP__
 
 // Local Variables:
 // indent-tabs-mode: nil

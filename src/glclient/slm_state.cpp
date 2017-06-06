@@ -1,4 +1,4 @@
-#include "client_slm_state.hpp"
+#include "slm_state.hpp"
 
 #include <functional>
 #include <iostream>
@@ -7,9 +7,9 @@
 #include "glfw.hpp"
 #include "utility.hpp"
 
-client_slm_state::client_slm_state(
-    client_options const & options,
-    client_signal_dispatcher & signal_dispatcher):
+slm_state::slm_state(
+    options const & options,
+    signal_dispatcher & signal_dispatcher):
     img_width_ {options.get_img_width()},
     img_height_ {options.get_img_height()},
     gs_iter_count_ {options.get_gs_iter_count()},
@@ -62,13 +62,13 @@ client_slm_state::client_slm_state(
 }
 
 std::vector<target_point> const &
-client_slm_state::get_target_points() const
+slm_state::get_target_points() const
 {
     return point_store_.get_target_points();
 }
 
 void
-client_slm_state::recompute_phase_mask()
+slm_state::recompute_phase_mask()
 {
     recomputed_phase_mask_ = std::async(
         std::launch::async,
@@ -98,19 +98,19 @@ client_slm_state::recompute_phase_mask()
 }
 
 bool
-client_slm_state::visible() const
+slm_state::visible() const
 {
     return visible_;
 }
 
 frame
-client_slm_state::get_recomputed_phase_mask()
+slm_state::get_recomputed_phase_mask()
 {
     return recomputed_phase_mask_.get();
 }
 
-boost::optional<client_slm_state::event>
-client_slm_state::peek_event() const
+boost::optional<slm_state::event>
+slm_state::peek_event() const
 {
     boost::optional<event> tmp;
     if (!event_queue_.empty()) {
@@ -119,8 +119,8 @@ client_slm_state::peek_event() const
     return tmp;
 }
 
-client_slm_state::event
-client_slm_state::pop_event()
+slm_state::event
+slm_state::pop_event()
 {
     auto const tmp = event_queue_.front();
     event_queue_.pop();
@@ -128,7 +128,7 @@ client_slm_state::pop_event()
 }
 
 void
-client_slm_state::recompute_target()
+slm_state::recompute_target()
 {
     memset((char *) &target_[0], 0x0, sizeof(double)*target_.size());
     for (auto const & pt: get_target_points()) {
@@ -137,7 +137,7 @@ client_slm_state::recompute_target()
 }
 
 void
-client_slm_state::toggle_visibility()
+slm_state::toggle_visibility()
 {
     event_queue_.push(
         (visible_ = !visible_) ? event::became_visible : event::became_hidden);

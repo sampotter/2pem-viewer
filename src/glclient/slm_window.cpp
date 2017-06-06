@@ -1,8 +1,8 @@
-#include "client_slm_window.hpp"
+#include "slm_window.hpp"
 
 #include <iostream>
 
-client_slm_window::client_slm_window(std::size_t width, std::size_t height):
+slm_window::slm_window(std::size_t width, std::size_t height):
 	window {width, height},
     phase_mask_ {width, height}
 {
@@ -19,7 +19,7 @@ client_slm_window::client_slm_window(std::size_t width, std::size_t height):
 }
 
 void
-client_slm_window::clear() const
+slm_window::clear() const
 {
     make_context_current();
     gl_state_.clear();
@@ -27,7 +27,7 @@ client_slm_window::clear() const
 }
 
 void
-client_slm_window::redraw() const
+slm_window::redraw() const
 {
     make_context_current();
     gl_state_.update_viewport(*this);
@@ -38,38 +38,38 @@ client_slm_window::redraw() const
 }
 
 void
-client_slm_window::set_phase_mask(frame const & phase_mask)
+slm_window::set_phase_mask(frame const & phase_mask)
 {
     phase_mask_ = phase_mask;
 }
 
-client_slm_window::~client_slm_window()
+slm_window::~slm_window()
 {
     make_context_current();
     gl_state_.cleanup();
 }
 
 void
-client_slm_window::cursor_pos_callback_impl(double /* xpos */,
+slm_window::cursor_pos_callback_impl(double /* xpos */,
                                             double /* ypos */)
 {
 }
 
 void
-client_slm_window::mouse_button_callback_impl(int /* button */,
+slm_window::mouse_button_callback_impl(int /* button */,
                                               int /* action */,
                                               int /* mods */)
 {
 }
 
 void
-client_slm_window::scroll_callback_impl(double /* xoffset */,
+slm_window::scroll_callback_impl(double /* xoffset */,
                                         double /* yoffset */)
 {
 }
 
 void
-client_slm_window::key_callback_impl(int /* key */,
+slm_window::key_callback_impl(int /* key */,
                                      int /* scancode */,
                                      int /* action */,
                                      int /* mods */)
