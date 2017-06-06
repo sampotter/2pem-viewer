@@ -107,7 +107,7 @@ input_window_gl_state::init_circle_vbo()
 
 void
 input_window_gl_state::init_shader(char const * source, GLenum shader_type,
-                             GLuint * shader)
+                                   GLuint * shader)
 {
     *shader = gl::createShader(shader_type);
     gl::shaderSource(*shader, 1, &source, nullptr);

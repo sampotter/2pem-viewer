@@ -51,28 +51,28 @@ slm_window::~slm_window()
 
 void
 slm_window::cursor_pos_callback_impl(double /* xpos */,
-                                            double /* ypos */)
+                                     double /* ypos */)
 {
 }
 
 void
 slm_window::mouse_button_callback_impl(int /* button */,
-                                              int /* action */,
-                                              int /* mods */)
+                                       int /* action */,
+                                       int /* mods */)
 {
 }
 
 void
 slm_window::scroll_callback_impl(double /* xoffset */,
-                                        double /* yoffset */)
+                                 double /* yoffset */)
 {
 }
 
 void
 slm_window::key_callback_impl(int /* key */,
-                                     int /* scancode */,
-                                     int /* action */,
-                                     int /* mods */)
+                              int /* scancode */,
+                              int /* action */,
+                              int /* mods */)
 {
 }
 

@@ -67,7 +67,7 @@ input_window::cursor_pos_callback_impl(double xpos, double ypos)
 
 void
 input_window::mouse_button_callback_impl(int button, int action,
-                                                int /* mods */)
+                                         int /* mods */)
 {
     switch (button) {
     case GLFW_MOUSE_BUTTON_LEFT:
@@ -101,7 +101,7 @@ input_window::scroll_callback_impl(double xoffset, double yoffset)
 
 void
 input_window::key_callback_impl(int key, int /* scancode */, int action,
-                                       int mods)
+                                int mods)
 {
     switch (action) {
     case GLFW_PRESS:

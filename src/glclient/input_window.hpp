@@ -11,7 +11,7 @@
 
 struct input_window: public glfw::window {
     input_window(std::size_t width, std::size_t height,
-                        signal_dispatcher const & signal_dispatcher);
+                 signal_dispatcher const & signal_dispatcher);
     virtual ~input_window();
     void redraw(frame const & f, std::vector<target_point> const & pts) const;
 private:
