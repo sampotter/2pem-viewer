@@ -48,7 +48,7 @@ if (${LINUX_OR_WINDOWS})
 endif ()
 find_package (wxWidgets COMPONENTS core base REQUIRED)
 
-include(${wxWidgets_USE_FILE}) // for precompiled header?
+include(${wxWidgets_USE_FILE}) # for precompiled header?
 include_directories (${LUA_INCLUDE_DIR})
 include_directories (${OPENGL_INCLUDE_DIR})
 
