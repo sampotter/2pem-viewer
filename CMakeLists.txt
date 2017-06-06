@@ -58,7 +58,7 @@ set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 include_directories (${PROJECT_BINARY_DIR}/src/viewer)
 
 add_subdirectory (src)
-add_subdirectory (src/viewer)
+add_subdirectory (src/glclient)
 
 # Local Variables:
 # indent-tabs-mode: nil
