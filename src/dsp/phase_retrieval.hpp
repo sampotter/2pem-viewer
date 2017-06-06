@@ -4,7 +4,6 @@
 #include <cstddef>
 
 #include "frame.hpp"
-#include "lens_parameters.hpp"
 
 namespace phase_retrieval {
     void compute_phase_mask(
@@ -20,7 +19,8 @@ namespace phase_retrieval {
 
     void apply_lens_function(
         slm_parameters const & slm_params,
-        lens_parameters const & lens_params,
+        double focal_length,
+        double wavelength,
         frame & phase_mask);
 }
 

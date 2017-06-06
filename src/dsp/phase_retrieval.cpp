@@ -109,7 +109,8 @@ phase_retrieval::apply_axicon_phase_mask(double axicon_radius, frame & mask)
 void
 phase_retrieval::apply_lens_function(
     slm_parameters const & slm_params,
-    lens_parameters const & lens_params,
+    double focal_length,
+    double wavelength,
     frame & phase_mask)
 {
     using namespace arma;
@@ -117,14 +118,14 @@ phase_retrieval::apply_lens_function(
     auto const w = phase_mask.get_width();
     auto const h = phase_mask.get_height();
 
-    auto const f = lens_params.focal_length;
+    auto const f = focal_length;
     auto const f_abs = std::fabs(f);
     auto const f_sign = sign(f);
     auto const f_sqr = f*f;
 
     // TODO: wavelength is in nanometers. We should probably use
     // boost::units for this at some point.
-    auto const scaled_wavelength = lens_params.wavelength*1e-6;
+    auto const scaled_wavelength = wavelength*1e-6;
 
     auto const pixel_width_mm =
         slm_params.dimensions.width/static_cast<double>(w);
