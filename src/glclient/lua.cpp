@@ -44,7 +44,7 @@ lua::state::get_global(std::string const & name) const
 #ifdef USING_LUA_5_3
     return
 #endif
-    return lua_getglobal(lua_state_, name.c_str());
+        lua_getglobal(lua_state_, name.c_str());
 }
 
 void
