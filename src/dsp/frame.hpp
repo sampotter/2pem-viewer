@@ -8,15 +8,15 @@
 struct frame {
     frame();
     frame(std::size_t width, std::size_t height);
-    void translate(int ishift, int jshift);
-    void align(frame const & other_frame);
+    void translate(int ishift, int jshift); // TODO: kernel
+    void align(frame const & other_frame); // TODO: kernel
     std::size_t get_width() const;
     std::size_t get_height() const;
     std::size_t size() const;
     float * data();
     float const * data() const;
 
-    frame & median_filter(int radius);
+    frame & median_filter(int radius); // TODO: kernel
 
     float const & operator()(int i, int j) const;
     float & operator()(int i, int j);
