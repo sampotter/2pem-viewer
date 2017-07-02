@@ -3,11 +3,11 @@
 
 #include <functional>
 
-#include <boost/signals2.hpp>
-
 #include <dsp/frame.hpp>
 
 struct signal_dispatcher {
+    signal_dispatcher();
+    ~signal_dispatcher();
     void left_mouse_down(double xpos, double ypos) const;
     void connect_left_mouse_down_slot(std::function<void(double, double)> & cb);
     void right_mouse_down(double xpos, double ypos) const;
@@ -19,11 +19,8 @@ struct signal_dispatcher {
     void redraw_slm_window(frame const & f) const;
     void connect_redraw_slm_window_slot(std::function<void(frame const &)> & cb);
 private:
-    boost::signals2::signal<void(double, double)> left_mouse_down_signal_;
-    boost::signals2::signal<void(double, double)> right_mouse_down_signal_;
-    boost::signals2::signal<void(double, double)> scroll_signal_;
-    boost::signals2::signal<void(int, int)> key_down_signal_;
-    boost::signals2::signal<void(frame const &)> redraw_slm_window_signal_;
+    struct impl;
+    impl * m_;
 };
 
 #endif // __SIGNAL_DISPATCHER_HPP__

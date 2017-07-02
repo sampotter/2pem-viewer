@@ -4,9 +4,10 @@
 
 #include <algorithm>
 
+#include <boost/optional.hpp>
+
 #include <dsp/frame.hpp>
 #include <dsp/statistics.hpp>
-
 #include <glclient/asio_state.hpp>
 #if USE_AUDIO_INPUT
 #    include <glclient/audio_input.hpp>
