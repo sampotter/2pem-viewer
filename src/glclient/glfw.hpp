@@ -1,9 +1,9 @@
 #ifndef __VIEWER_GLFW_HPP__
 #define __VIEWER_GLFW_HPP__
 
-#include "glheaders.hpp"
-
 #include <cstddef>
+
+#include <glclient/glheaders.hpp>
 
 struct rect {
     rect();

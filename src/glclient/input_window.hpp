@@ -4,10 +4,10 @@
 #include <functional>
 #include <vector>
 
-#include "input_window_gl_state.hpp"
-#include "signal_dispatcher.hpp"
-#include "glfw.hpp"
-#include "target_point.hpp"
+#include <glclient/input_window_gl_state.hpp>
+#include <glclient/signal_dispatcher.hpp>
+#include <glclient/glfw.hpp>
+#include <glclient/target_point.hpp>
 
 struct input_window: public glfw::window {
     input_window(std::size_t width, std::size_t height,

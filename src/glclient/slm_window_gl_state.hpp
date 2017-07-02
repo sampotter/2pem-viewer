@@ -3,8 +3,8 @@
 
 #include <dsp/frame.hpp>
 
-#include "gl.hpp"
-#include "glfw.hpp"
+#include <glclient/gl.hpp>
+#include <glclient/glfw.hpp>
 
 struct slm_window_gl_state {
     // TODO: most of these duplicate functions in

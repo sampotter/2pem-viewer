@@ -5,9 +5,9 @@
 
 #include <dsp/frame.hpp>
 
-#include "options.hpp"
-#include "slm_window_gl_state.hpp"
-#include "glfw.hpp"
+#include <glclient/options.hpp>
+#include <glclient/slm_window_gl_state.hpp>
+#include <glclient/glfw.hpp>
 
 struct slm_window: public glfw::window {
     slm_window(std::size_t width, std::size_t height);

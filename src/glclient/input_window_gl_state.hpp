@@ -3,9 +3,9 @@
 
 #include <dsp/frame.hpp>
 
-#include "gl.hpp"
-#include "glfw.hpp"
-#include "target_point.hpp"
+#include <glclient/gl.hpp>
+#include <glclient/glfw.hpp>
+#include <glclient/target_point.hpp>
 
 // TODO: this currently lives in app_state, but really should
 // be moved into client_input_window.

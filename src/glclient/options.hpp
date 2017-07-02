@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "lens_parameters.hpp"
-#include "slm_parameters.hpp"
+#include <glclient/lens_parameters.hpp>
+#include <glclient/slm_parameters.hpp>
 
 struct options {
     static options from_cli_args(int argc, char ** argv);

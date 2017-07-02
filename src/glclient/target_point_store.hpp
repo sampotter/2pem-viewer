@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "target_point.hpp"
+#include <glclient/target_point.hpp>
 
 struct target_point_store {
     void add_target_point(double x, double y);

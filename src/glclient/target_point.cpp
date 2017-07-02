@@ -1,4 +1,4 @@
-#include "target_point.hpp"
+#include <glclient/target_point.hpp>
 
 double target_point::screen_axicon_radius = 25;
 

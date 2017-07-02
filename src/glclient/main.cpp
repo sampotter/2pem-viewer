@@ -1,4 +1,4 @@
-#include "app_state.hpp"
+#include <glclient/app_state.hpp>
 
 int main(int argc, char ** argv) {
 	app_state::from_cli_args(argc, argv).run();

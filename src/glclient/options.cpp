@@ -6,7 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
-#include "lua.hpp"
+#include <glclient/lua.hpp>
 
 options
 options::from_cli_args(int argc, char ** argv)

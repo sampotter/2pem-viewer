@@ -1,7 +1,7 @@
 #ifndef __VIEWER_GL_HPP__
 #define __VIEWER_GL_HPP__
 
-#include "glheaders.hpp"
+#include <glclient/glheaders.hpp>
 
 namespace gl {
     void activeTexture(GLenum texture);

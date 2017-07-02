@@ -5,8 +5,7 @@
 
 #include <common/utility.hpp>
 #include <dsp/phase_retrieval.hpp>
-
-#include "glfw.hpp"
+#include <glclient/glfw.hpp>
 
 slm_state::slm_state(
     options const & options,

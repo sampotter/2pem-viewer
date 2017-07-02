@@ -7,11 +7,11 @@
 
 #include <dsp/frame.hpp>
 
-#include "options.hpp"
-#include "signal_dispatcher.hpp"
-#include "lens_parameters.hpp"
-#include "slm_parameters.hpp"
-#include "target_point_store.hpp"
+#include <glclient/options.hpp>
+#include <glclient/signal_dispatcher.hpp>
+#include <glclient/lens_parameters.hpp>
+#include <glclient/slm_parameters.hpp>
+#include <glclient/target_point_store.hpp>
 
 struct slm_state {
     enum class event {

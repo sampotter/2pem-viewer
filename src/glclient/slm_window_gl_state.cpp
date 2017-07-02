@@ -1,4 +1,4 @@
-#include "slm_window_gl_state.hpp"
+#include <glclient/slm_window_gl_state.hpp>
 
 #include <string>
 

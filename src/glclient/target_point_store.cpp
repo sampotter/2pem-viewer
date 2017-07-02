@@ -1,4 +1,4 @@
-#include "target_point_store.hpp"
+#include <glclient/target_point_store.hpp>
 
 void
 target_point_store::add_target_point(double x, double y)
