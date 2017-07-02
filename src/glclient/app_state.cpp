@@ -1,11 +1,46 @@
 #include "app_state.hpp"
 
+#include "config.hpp"
+
 #include <algorithm>
 
 #include <dsp/frame.hpp>
 #include <dsp/statistics.hpp>
 
-app_state::app_state(options const & options):
+#include <glclient/asio_state.hpp>
+#if USE_AUDIO_INPUT
+#    include <glclient/client_audio_input.hpp>
+#endif // USE_AUDIO_INPUT
+#include <glclient/input_window.hpp>
+#if USE_OSC
+#    include <glclient/osc_state.hpp>
+#endif // USE_OSC
+#include <glclient/signal_dispatcher.hpp>
+#include <glclient/slm_state.hpp>
+#include <glclient/slm_window.hpp>
+
+struct app_state::impl {
+    impl(options const & options);
+    void run();
+
+    options options_;
+    signal_dispatcher signal_dispatcher_;
+    asio_state asio_state_;
+#if USE_AUDIO_INPUT
+    client_audio_input audio_input_;
+#endif // USE_AUDIO_INPUT
+#if USE_OSC
+    osc_state osc_state_;
+#endif // USE_OSC
+    glfw::library library_;
+    input_window input_window_;
+    slm_window slm_window_;
+    slm_state slm_state_;
+    frame frame_;
+    boost::optional<frame> template_frame_;
+};
+
+app_state::impl::impl(options const & options):
     options_ {options},
     asio_state_ {options},
 #if USE_OSC
@@ -31,14 +66,8 @@ app_state::app_state(options const & options):
     template_frame_ {boost::none}
 {}
 
-app_state
-app_state::from_cli_args(int argc, char ** argv)
-{
-    return {options::from_cli_args(argc, argv)};
-}
-
 void
-app_state::run()
+app_state::impl::run()
 {
     // Running mean for filtering input frames
     static online_mean<frame> frame_mean {
@@ -92,6 +121,31 @@ app_state::run()
             }
         }
     } while (!input_window_.should_close());
+}
+
+app_state
+app_state::from_options(options const & options)
+{
+    return {options};
+}
+
+app_state
+app_state::from_cli_args(int argc, char ** argv)
+{
+    return app_state::from_options(options::from_cli_args(argc, argv));
+}
+
+void
+app_state::run()
+{
+    _m->run();
+}
+
+app_state::app_state(options const & options): _m {new impl(options)} {}
+
+app_state::~app_state()
+{
+    delete _m;
 }
 
 // Local Variables:
