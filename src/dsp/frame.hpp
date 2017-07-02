@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include <boost/asio.hpp>
-
 struct frame {
     frame();
     frame(std::size_t width, std::size_t height);

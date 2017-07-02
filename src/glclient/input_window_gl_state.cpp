@@ -1,5 +1,6 @@
 #include "input_window_gl_state.hpp"
 
+#include <cmath>
 #include <string>
 
 std::string
