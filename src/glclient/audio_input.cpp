@@ -1,4 +1,4 @@
-#include <glclient/client_audio_input.hpp>
+#include <glclient/audio_input.hpp>
 
 #include <stdexcept>
 #include <string>
@@ -13,12 +13,12 @@ static void handle_error(PaError error)
     }
 }
 
-client_audio_input::client_audio_input()
+audio_input::audio_input()
 {
     handle_error(Pa_Initialize());
 }
 
-client_audio_input::~client_audio_input()
+audio_input::~audio_input()
 {
     handle_error(Pa_Terminate());
 }

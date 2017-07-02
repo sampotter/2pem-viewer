@@ -9,7 +9,7 @@
 
 #include <glclient/asio_state.hpp>
 #if USE_AUDIO_INPUT
-#    include <glclient/client_audio_input.hpp>
+#    include <glclient/audio_input.hpp>
 #endif // USE_AUDIO_INPUT
 #include <glclient/input_window.hpp>
 #if USE_OSC
@@ -27,7 +27,7 @@ struct app_state::impl {
     signal_dispatcher signal_dispatcher_;
     asio_state asio_state_;
 #if USE_AUDIO_INPUT
-    client_audio_input audio_input_;
+    audio_input audio_input_;
 #endif // USE_AUDIO_INPUT
 #if USE_OSC
     osc_state osc_state_;
