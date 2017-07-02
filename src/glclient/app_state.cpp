@@ -42,7 +42,7 @@ struct app_state::impl {
 
 app_state::impl::impl(options const & options):
     options_ {options},
-    asio_state_ {options},
+    asio_state_ {asio_state::from_options(options)},
 #if USE_OSC
     osc_state_ {options_.get_osc_port()},
 #endif // USE_OSC

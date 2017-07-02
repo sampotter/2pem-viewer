@@ -1,21 +1,17 @@
 #ifndef __ASIO_STATE_HPP__
 #define __ASIO_STATE_HPP__
 
-#include <boost/asio.hpp>
-
 #include <dsp/frame.hpp>
-
-#include "options.hpp"
+#include <glclient/options.hpp>
 
 struct asio_state {
-    asio_state(options const & options);
     ~asio_state();
-    void connect(options const & options);
+    static asio_state from_options(options const & options);
     void receive_frame(frame const & f);
-    void disconnect();
 private:
-    boost::asio::io_service io_;
-    boost::asio::ip::tcp::socket socket_ {io_};
+    asio_state(options const & options);
+    struct impl;
+    impl * m_;
 };
 
 #endif // __ASIO_STATE_HPP__
