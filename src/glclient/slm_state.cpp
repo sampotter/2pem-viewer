@@ -1,13 +1,46 @@
 #include "slm_state.hpp"
 
 #include <functional>
+#include <future>
 #include <iostream>
+#include <queue>
 
 #include <common/utility.hpp>
 #include <dsp/phase_retrieval.hpp>
 #include <glclient/glfw.hpp>
+#include <glclient/lens_parameters.hpp>
+#include <glclient/slm_parameters.hpp>
+#include <glclient/target_point_store.hpp>
 
-slm_state::slm_state(
+struct slm_state::impl {
+    impl(options const & options, signal_dispatcher & signal_dispatcher);
+    std::vector<target_point> const & get_target_points() const;
+    void recompute_phase_mask();
+    bool visible() const;
+	frame get_recomputed_phase_mask();
+    event peek_event() const;
+    event pop_event();
+    void recompute_target();
+    void toggle_visibility();
+
+    // TODO: eventually we want to just get these from some
+    // client-local service locator.
+    std::size_t img_width_;
+    std::size_t img_height_;
+    std::size_t gs_iter_count_;
+    slm_parameters slm_params_;
+    lens_parameters lens_params_;
+
+    bool dirty_ {false};
+    bool visible_ {true};
+    target_point_store point_store_;
+    std::vector<double> source_;
+    std::vector<double> target_;
+	std::future<frame> recomputed_phase_mask_;
+    std::queue<event> event_queue_;
+};
+
+slm_state::impl::impl(
     options const & options,
     signal_dispatcher & signal_dispatcher):
     img_width_ {options.get_img_width()},
@@ -62,13 +95,13 @@ slm_state::slm_state(
 }
 
 std::vector<target_point> const &
-slm_state::get_target_points() const
+slm_state::impl::get_target_points() const
 {
     return point_store_.get_target_points();
 }
 
 void
-slm_state::recompute_phase_mask()
+slm_state::impl::recompute_phase_mask()
 {
     recomputed_phase_mask_ = std::async(
         std::launch::async,
@@ -104,29 +137,25 @@ slm_state::recompute_phase_mask()
 }
 
 bool
-slm_state::visible() const
+slm_state::impl::visible() const
 {
     return visible_;
 }
 
 frame
-slm_state::get_recomputed_phase_mask()
+slm_state::impl::get_recomputed_phase_mask()
 {
     return recomputed_phase_mask_.get();
 }
 
-boost::optional<slm_state::event>
-slm_state::peek_event() const
+slm_state::event
+slm_state::impl::peek_event() const
 {
-    boost::optional<event> tmp;
-    if (!event_queue_.empty()) {
-        tmp = event_queue_.front();
-    }
-    return tmp;
+    return event_queue_.empty() ? slm_state::event::none : event_queue_.front();
 }
 
 slm_state::event
-slm_state::pop_event()
+slm_state::impl::pop_event()
 {
     auto const tmp = event_queue_.front();
     event_queue_.pop();
@@ -134,7 +163,7 @@ slm_state::pop_event()
 }
 
 void
-slm_state::recompute_target()
+slm_state::impl::recompute_target()
 {
     memset((char *) &target_[0], 0x0, sizeof(double)*target_.size());
     for (auto const & pt: get_target_points()) {
@@ -143,10 +172,56 @@ slm_state::recompute_target()
 }
 
 void
-slm_state::toggle_visibility()
+slm_state::impl::toggle_visibility()
 {
     event_queue_.push(
         (visible_ = !visible_) ? event::became_visible : event::became_hidden);
+}
+
+slm_state::slm_state(options const & options,
+                     signal_dispatcher & signal_dispatcher):
+    m_ {new impl(options, signal_dispatcher)}
+{}
+
+slm_state::~slm_state()
+{
+    delete m_;
+}
+
+std::vector<target_point> const &
+slm_state::get_target_points() const
+{
+    return m_->get_target_points();
+}
+
+void
+slm_state::recompute_phase_mask()
+{
+    m_->recompute_phase_mask();
+}
+
+bool
+slm_state::visible() const
+{
+    return m_->visible();
+}
+
+frame
+slm_state::get_recomputed_phase_mask()
+{
+    return m_->get_recomputed_phase_mask();
+}
+
+slm_state::event
+slm_state::peek_event() const
+{
+    return m_->peek_event();
+}
+
+slm_state::event
+slm_state::pop_event()
+{
+    return m_->pop_event();
 }
 
 // Local Variables:

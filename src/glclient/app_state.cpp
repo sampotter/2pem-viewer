@@ -103,7 +103,7 @@ app_state::impl::run()
          * Pump SLM's event queue and handle events:
          */
 
-        while (slm_state_.peek_event()) {
+        while (slm_state_.peek_event() != slm_state::event::none) {
             switch (slm_state_.pop_event()) {
             case slm_state::event::became_hidden:
                 slm_window_.clear();
@@ -117,6 +117,9 @@ app_state::impl::run()
                         slm_state_.get_recomputed_phase_mask());
                     slm_window_.redraw();
                 }
+                break;
+            default: // will never happen
+                assert(false);
                 break;
             }
         }
