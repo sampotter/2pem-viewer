@@ -42,6 +42,7 @@ if (${LUA_VERSION_MAJOR} EQUAL 5)
     set (USING_LUA_5_2 "ON")
   endif ()
 endif ()
+find_package (Matlab REQUIRED ENG_LIBRARY)
 find_package (OpenGL REQUIRED)
 if (${LINUX_OR_WINDOWS})
   find_package (GLEW REQUIRED)
@@ -50,6 +51,7 @@ find_package (wxWidgets COMPONENTS core base REQUIRED)
 
 include(${wxWidgets_USE_FILE}) # for precompiled header?
 include_directories (${LUA_INCLUDE_DIR})
+include_directories (${Matlab_INCLUDE_DIRS})
 include_directories (${OPENGL_INCLUDE_DIR})
 
 set (CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++1z")

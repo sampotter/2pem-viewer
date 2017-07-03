@@ -1,8 +1,11 @@
 set (dsp_srcs
   dsp/frame.cpp
+  dsp/kernel.cpp
+  dsp/matlab_kernel.cpp
   dsp/phase_retrieval.cpp)
 
 add_library (dsp ${dsp_srcs})
+target_link_libraries (dsp ${Matlab_ENG_LIBRARY})
 
 set (client_srcs
   glclient/main.cpp
