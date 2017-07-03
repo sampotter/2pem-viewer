@@ -1,6 +1,7 @@
 #include "kernel.hpp"
 
-kernel::apply(image const * const inputs, image * const outputs) {
+void
+kernel::apply(image const * const inputs, image * const outputs) const {
     apply_impl(inputs, outputs);
 }
 
