@@ -75,10 +75,10 @@ void
 input_window_gl_state::init_vertex_vbo()
 {
     GLfloat verts[] = {
+        -1.0,  1.0, // top left
         1.0,  1.0,  // top right
         1.0, -1.0,  // lower right
         -1.0, -1.0, // lower left
-        -1.0,  1.0, // top left
     };
     gl::genBuffers(1, &verts_vbo_);
     gl::bindBuffer(GL_ARRAY_BUFFER, verts_vbo_);
@@ -89,10 +89,10 @@ void
 input_window_gl_state::init_texcoords_vbo()
 {
     GLfloat texcoords[] = {
-        0.0, 0.0,   // lower left
+        0.0, 1.0,   // top left
+        1.0, 1.0,   // top right
         1.0, 0.0,   // lower right
-        1.0, 1.0,   // upper right
-        0.0, 1.0,   // upper left
+        0.0, 0.0,   // lower left
     };
     gl::genBuffers(1, &texcoords_vbo_);
     gl::bindBuffer(GL_ARRAY_BUFFER, texcoords_vbo_);
