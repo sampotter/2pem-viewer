@@ -8,6 +8,40 @@
 
 #include "math.hpp"
 
+template <class T>
+arma::Mat<T> fftshift(arma::Mat<T> const & X) {
+    using namespace arma;
+    auto m = X.n_rows;
+    auto n = X.n_cols;
+    Mat<T> Y = zeros<Mat<T>>(m, n);
+    auto r = m/2, p = r + 1;
+    auto s = n/2, q = s + 1;
+    auto I1 = span(0, r), I2 = span(m - p, m - 1);
+    auto J1 = span(0, s), J2 = span(n - q, n - 1);
+    Y(I1, J1) = X(I2, J2);
+    Y(I2, J2) = X(I1, J1);
+    Y(I1, J2) = X(I2, J1);
+    Y(I2, J1) = X(I1, J2);
+    return Y;
+}
+
+template <class T>
+arma::Mat<T> ifftshift(arma::Mat<T> const & X) {
+    using namespace arma;
+    auto m = X.n_rows;
+    auto n = X.n_cols;
+    auto Y = zeros<Mat<T>>(m, n);
+    auto r = m/2, p = r + 1;
+    auto s = n/2, q = s + 1;
+    auto I1 = span(0, r), I2 = span(p, m - 1);
+    auto J1 = span(0, s), J2 = span(q, n - 1);
+    Y(I1, J1) = X(I2, J2);
+    Y(I2, J2) = X(I1, J1);
+    Y(I1, J2) = X(I2, J1);
+    Y(I2, J1) = X(I1, J2);
+    return Y;
+}
+
 void
 phase_retrieval::compute_phase_mask(
     double const * source,
