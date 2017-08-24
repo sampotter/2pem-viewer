@@ -74,10 +74,10 @@ void
 slm_window_gl_state::init_vertex_vbo()
 {
     GLfloat verts[] = {
+        -1.0,  1.0, // top left
         1.0,  1.0,  // top right
         1.0, -1.0,  // lower right
         -1.0, -1.0, // lower left
-        -1.0,  1.0, // top left
     };
     gl::genBuffers(1, &verts_vbo_);
     gl::bindBuffer(GL_ARRAY_BUFFER, verts_vbo_);
@@ -88,10 +88,10 @@ void
 slm_window_gl_state::init_texcoords_vbo()
 {
     GLfloat texcoords[] = {
-        0.0, 0.0,   // lower left
+        0.0, 1.0,   // top left
+        1.0, 1.0,   // top right
         1.0, 0.0,   // lower right
-        1.0, 1.0,   // upper right
-        0.0, 1.0,   // upper left
+        0.0, 0.0,   // lower left
     };
     gl::genBuffers(1, &texcoords_vbo_);
     gl::bindBuffer(GL_ARRAY_BUFFER, texcoords_vbo_);
@@ -142,7 +142,7 @@ slm_window_gl_state::init_fshader()
         "uniform sampler2D tex;\n"
         "\n"
         "void main(void) {\n"
-        "    gl_FragColor = 2 * texture2D(tex, v_texcoord);\n"
+        "    gl_FragColor = texture2D(tex, v_texcoord);\n"
         "}";
     init_shader(source, GL_FRAGMENT_SHADER, &fshader_);
 }
