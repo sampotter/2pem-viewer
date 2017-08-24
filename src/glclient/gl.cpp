@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+static_assert(sizeof(float) == sizeof(GLfloat));
+
 #ifdef VIEWER_DEBUG
 std::string
 error_flag_to_string(GLenum error)
