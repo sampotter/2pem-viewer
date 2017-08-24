@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <iostream>
 #include <type_traits>
 
 #include <armadillo>
@@ -55,8 +56,8 @@ phase_retrieval::compute_phase_mask(
 {
     using namespace arma;
     
-    mat S(in_height, in_width);
-    mat T(in_height, in_width);
+    cx_mat S(in_height, in_width);
+    cx_mat T(in_height, in_width);
 
     for (auto i {0ul}; i < in_height; ++i) {
         for (auto j {0ul}; j < in_width; ++j) {
@@ -65,56 +66,27 @@ phase_retrieval::compute_phase_mask(
         }
     }
 
-    cx_mat A(in_height, in_width);
+    cx_mat A = ifft2(T);
     cx_mat B(in_height, in_width);
     cx_mat C(in_height, in_width);
     cx_mat D(in_height, in_width);
 
-    // TODO: very inefficient implementation for now, just to get
-    // things working.
-    
-    auto const atan2 = [] (double y, double x) {
-        if (x > 0) {
-            return atan(y/x);
-        } else if (x == 0) {
-            if (y == 0) {
-                return 0.0;
-            } else {
-                return y > 0 ? datum::pi/2 : -datum::pi/2;
-            }
-        } else {
-            return atan(y/x) + (y >= 0 ? datum::pi : -datum::pi);
-        }
-    };
-
-    auto const compute_angle = [&atan2] (cx_mat const & in, cx_mat & out) {
-        assert(in.size() == out.size());
-        for (auto i {0ul}; i < in.n_rows; ++i) {
-            for (auto j {0ul}; j < in.n_cols; ++j) {
-                out(i, j) = atan2(in(i, j).imag(), in(i, j).real());
-            }
-        }
-    };
-
-    A = atan(ifft2(A));
     decltype(iter_count) iter {2};
     while (iter <= iter_count) {
-        B = S % exp(cx_double(0, 1)*A);
-        compute_angle(fft2(B), C);
-        D = T % exp(cx_double(0, 1)*C);
-        compute_angle(ifft2(D), A);
+        B = S % exp(cx_double(0, 1)*arg(fftshift(A)));
+        C = fft2(B);
+        D = T % exp(cx_double(0, 1)*arg(C));
+        A = ifft2(fftshift(D));
         ++iter;
     }
 
-    A = (A + datum::pi)/(2*datum::pi);
-
-    auto const w = out_width;
-    auto const h = out_height;
+    mat A_arg = (arg(A) + datum::pi)/(2*datum::pi);
 
     auto tmp = phase_mask.data();
-    for (auto i {0ul}; i < h; ++i) {
-        for (auto j {0ul}; j < w; ++j) {
-            tmp[w*i + j] = A(i % in_height, j % in_width).real();
+    auto k {0ul};
+    for (auto i {0ul}; i < out_height; ++i) {
+        for (auto j {0ul}; j < out_width; ++j) {
+            tmp[k++] = A_arg(i % in_height, j % in_width);
         }
     }
 }
