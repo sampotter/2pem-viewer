@@ -48,7 +48,7 @@ options::from_cli_args(int argc, char ** argv)
          "The default number of Gerchberg-Saxton iterations used to compute "
          "the SLM phase mask.")
 #if USE_OSC
-        ("osc_port9",
+        ("osc_port",
          value<std::size_t>()->default_value(9000),
          "The port that will receive OSC messages")
 #endif // USE_OSC
