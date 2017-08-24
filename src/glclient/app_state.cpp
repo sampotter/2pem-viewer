@@ -113,12 +113,14 @@ app_state::impl::run()
                 slm_window_.redraw();
                 break;
             case slm_state::event::phase_mask_recomputed:
+            {
+                auto const & mask = slm_state_.get_recomputed_phase_mask();
+                slm_window_.set_phase_mask(mask);
                 if (slm_state_.visible()) {
-                    slm_window_.set_phase_mask(
-                        slm_state_.get_recomputed_phase_mask());
                     slm_window_.redraw();
                 }
                 break;
+            }
             default: // will never happen
                 assert(false);
                 break;
